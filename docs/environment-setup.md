@@ -60,7 +60,8 @@ console login does not automatically sign you into Foundry.
 
 1. Open [Microsoft Foundry](https://ai.azure.com/) in a second tab.
 2. Sign in with your own approved identity.
-3. Use the **direct project link supplied by coordinators**.
+3. Click your **team name in the roster above**, or use the direct project link
+   supplied by coordinators if you are reading the repository copy.
 4. Check the project selector: it must show your assigned `team-XX`.
 
 If prompted, switch to the workshop directory. Do not create a resource,

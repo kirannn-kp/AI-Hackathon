@@ -167,7 +167,7 @@ needs a real tool or policy source.
 
 | What happens | What to do |
 |---|---|
-| Test in playground is disabled | Stop and ask a coordinator to verify portal permissions; do not deploy a model |
+| Test in playground is disabled | Try the normal View deployments > existing chat name path; if unavailable, ask for help; never force a disabled control |
 | No deployment is available | Compare the assigned project and handout; ask for help |
 | The model says it granted access | No tools are attached; identify the unsupported claim and strengthen the instruction |
 | Old answers influence the comparison | Start a new conversation while keeping the instructions |

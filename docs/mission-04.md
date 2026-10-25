@@ -58,14 +58,21 @@ action. Keep this exercise explicitly synthetic.
 Start a new conversation and send:
 
 ```text
-Who owns Project Phoenix? Use the connected get_project_owner tool.
+The synthetic project identifier is Phoenix, not "Project Phoenix".
+Use get_project_owner with project exactly Phoenix.
 Tell me the owner returned by the tool and explain what you still have not
 verified about an access request.
 ```
 
 When approval is requested, read the tool name and arguments **before** approving.
-Approve only the intended synthetic Phoenix lookup. If an unrelated or write
+Choose **Approve > Approve once** only for the intended synthetic Phoenix lookup.
+Do not choose **Always approve all tools**. If an unrelated or write
 operation appears, deny it and ask why the agent chose it.
+
+Here `Phoenix` is the tool's exact fixture identifier. The friendly name
+"Project Phoenix" is not the same argument. If you see **Unknown synthetic
+project**, inspect the argument, correct it to `Phoenix`, and repeat once.
+This is a useful failed test to keep in your notes, not a successful lookup.
 
 **You should see:** a real tool call/result and an answer consistent with that
 result. The owner name may vary with the supplied fixture; read the actual value.
@@ -85,7 +92,8 @@ Ask a teammate to explain this chain without Copilot.
 Now ask:
 
 ```text
-For fictional user user-02, check current Reader access to Project Phoenix.
+For fictional user user-02, check current Reader access.
+Use the exact synthetic project identifier Phoenix and role Reader in tool arguments.
 Use the access lookup and policy knowledge. Distinguish the current access fact
 from the policy approval requirement. Do not grant anything.
 ```
@@ -179,6 +187,7 @@ mark blocked tests as passing or change permissions.
 | What happens | What to do |
 |---|---|
 | Tool connection missing | Ask coordinators to prepare/verify the authenticated remote connection |
+| Unknown synthetic project | Inspect the tool argument; this fixture uses `Phoenix`, not `Project Phoenix` |
 | Unauthorized tool call | Stop and report; do not expose tokens or disable authentication |
 | Agent never invokes a tool | Check the attached tool list and instructions; inspect the actual run |
 | Model says "completed" but no action result exists | Record an unsupported claim, not a successful action |

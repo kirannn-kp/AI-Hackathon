@@ -132,7 +132,7 @@ results. Let me predict the effect before I test the change in Foundry.
 
 | What happens | What to do |
 |---|---|
-| Create an agent is disabled / 403 | Ask for coordinator access verification; a working model call alone does not prove agent permission |
+| Home Create an agent is disabled | Use the normal Save as agent path from Mission 01; if that also fails, ask for access verification |
 | Another person's agent is open | Return to your own uniquely named agent |
 | Instructions seem unchanged | Save/apply, then test in a new conversation |
 | Agent says it checked policy | No knowledge is connected yet; record the unsupported claim |
