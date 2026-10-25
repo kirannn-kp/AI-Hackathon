@@ -32,8 +32,9 @@ prerequisite is missing.
 ## 2. Clone once, open VS Code, then open a terminal
 
 **Participant repository:** https://github.com/kirannn-kp/AI-Hackathon
-This public repository contains the unsolved workshop starter and synthetic data,
+This private repository contains the unsolved workshop starter and synthetic data,
 not private coordinator implementations or Azure credentials.
+Sign in to GitHub with an account granted repository access before cloning.
 
 If the folder is already prepared, skip cloning. Otherwise, in PowerShell:
 
@@ -191,6 +192,10 @@ Maintainers can rebuild the local review and console content without deployment:
 `index.html` is a local review reader, not an authentication/progress system.
 `console/challenges` is the import for the hosted console: four core missions
 plus supporting documents including the optional bonus guide.
+Both are generated outputs, ignored by Git and absent from a fresh clone.
+The command above recreates them from the tracked guides and web templates.
+Participants can read the guides in `docs` and run the offline tests without
+generating either output.
 The hosted console retains its original colourful Hackbox styling.
 
 ## Attribution and safe use

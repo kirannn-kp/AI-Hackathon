@@ -37,9 +37,9 @@ class ContractTests(unittest.TestCase):
                 validate_result(result, "TEST-01")
 
     def test_bonus_is_not_a_fifth_core_milestone(self) -> None:
-        imported = ROOT / "console" / "challenges"
-        self.assertEqual(len(list(imported.rglob("*challenge*.md"))), 4)
-        self.assertTrue((imported / "docs" / "bonus.md").is_file())
+        guides = ROOT / "docs"
+        self.assertEqual(len(list(guides.glob("mission-*.md"))), 4)
+        self.assertTrue((guides / "bonus.md").is_file())
 
 
 class McpContractTests(unittest.IsolatedAsyncioTestCase):

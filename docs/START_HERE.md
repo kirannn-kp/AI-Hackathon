@@ -132,7 +132,7 @@ run the code yourself and explain the result. Do not ask it to find private
 answers or change permissions. The workshop can be completed with your team
 and the written steps if Copilot is unavailable.
 
-**Access note:** public repository access does not grant Azure lab permissions.
+**Access note:** private GitHub repository access does not grant Azure lab permissions.
 Coordinators must separately authorize the nominated operator for the team's
 assigned resources. Never commit credentials or real business data.
 
