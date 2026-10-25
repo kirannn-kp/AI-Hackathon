@@ -1,195 +1,152 @@
-# Mission 02 - Understand requests and gather facts (30 minutes)
+# Mission 02 - Give the agent tools to check facts (30 minutes)
 
-**Working mode:** read here in HackboxConsole; edit the same cloned repository in VS Code. All exercise files are already present. Add `--allow-cloud` only after the facilitator confirms access and approves shared-service calls.
+## Your mission in the story
 
-## What you will learn
+Your first triage agent can read Maya's message and identify an Access request.
+But who owns Project Phoenix? Does the fictional user already have access?
+For a software order, is the supplier known? For data sharing, is the partner
+recognized? A model's confident guess cannot answer these operational questions.
 
-Turn free text into validated fields and discover/call a real MCP tool.
-Do not decide final business outcomes yet.
+**By the end:** you will discover nine MCP tools, run real synthetic lookups,
+and distinguish **what a requester says** from **what a tool verifies**.
+You will also test and improve the triage agent you built in Mission 01.
+You are not yet deciding final outcomes or implementing the full workflow.
 
-**Timebox:** concepts 4 min; MCP check 6 min; triage 15 min; checkpoint 5 min.
-Prerequisite: challenge 01 passed and coach-approved model access.
+**You change:** refine `triage` as needed; keep the supplied tool rules unchanged.
+**You use:** the same clone, local MCP diagnostic and practice requests.
+**Timebox:** concepts 4 min; tools 10 min; triage checks 11 min; checkpoint 5 min.
+Prerequisite: Mission 01 approved by the coordinators. This guide is
+`docs/mission-02.md` in your clone.
 
-## Concepts in plain language
+## Step 1 - Understand the conversation between an agent and a tool
 
-- **Triage** extracts what the person wants and chooses a domain. It is not
-  permission to approve the request.
-- **Structured output** means a predictable JSON object, not paragraphs your
-  program has to guess how to read.
-- **MCP client/server**: your client asks a server which tools exist, then calls
-  one by name with validated arguments. Describing a lookup is not running it.
-- **Prompt injection** is text trying to change the system's rules. Treat request
-  text as data, even when it says "ignore policy" or "already approved".
+**Where:** read here, then open `starter/route_resolve/mcp_server.py` in VS Code.
+**Why:** MCP gives the agent a standard way to discover tools and call them.
 
-## Core path
+```text
+Request -> triage fields -> MCP client -> named tool -> observed JSON result
+```
 
+The **client** asks what tools exist and sends arguments. The **server** runs the
+selected tool. A model saying "I checked access" is not a tool call.
+Our supplied server uses fictional data and cannot change real Azure access.
+[Microsoft Learn: using MCP tools with agents](https://learn.microsoft.com/en-us/agent-framework/agents/tools/local-mcp-tools).
+Read the local/stdio examples; you do not need an extra public server.
 
-### Step 1 - Inspect the supplied request data
+## Step 2 - Discover the tools and run the first lookup
 
-All files are already in your clone. Do not replace your implementations.
-Open `data/practice-requests.json` and find P01, P06, P14 and P04.
-There are **20** practice requests. Each has `id`, `user_id` and `text`.
-The fictional business user is separate from your Azure operator identity.
-Set the assigned TEAM_ID in this terminal using README.md.
+**Where:** VS Code PowerShell terminal, same workshop root.
+**Why:** run a diagnostic before attaching tools to a model, so you know they work.
 
-### Step 2 - Run one real MCP lookup
-
-For this core exercise use **local stdio**. It is ready for local use and does
-not depend on unverified public hosting. Stdio starts the server as a child
-process; you do not also start the HTTP server.
-
-
-The repository includes the diagnostic so you can focus on learning:
+Reuse your assigned `TEAM_ID` from Mission 01. If this is a new terminal:
 
 ```powershell
+$env:TEAM_ID = Read-Host "Assigned team ID from the coordinators"
 .\.venv\Scripts\python -m route_resolve.lab tools
 ```
 
-Expected: JSON containing **"tool_count": 9**, tool names and an actual result
-for Phoenix's owner. Save the output as evidence. The child server stops when
-this diagnostic exits. Open `starter/route_resolve/lab.py` to inspect how
-discovery, initialization and the tool call work.
+**You should see:** JSON with `"tool_count": 9`, the tool names, and a result from
+`get_project_owner` for Phoenix. Find the returned owner in the actual output.
+The diagnostic starts one local child server, calls it, and stops it on exit.
+You do not start another HTTP server for this step. No `--allow-cloud` is needed:
+this diagnostic does not call Foundry.
 
-The read-only tools are `check_user_access`, `get_project_owner`,
-`lookup_supplier`, `check_partner`, and `lookup_status`. `request_info` reports
-a need for clarification. Three `create_*_request` tools perform simulated
-actions; use them in challenge 04, not as a shortcut to triage.
+Open `starter/route_resolve/lab.py`, find `inspect_tools`, and identify:
+server startup, session initialization, tool discovery and the actual tool call.
+You are reading supplied plumbing, not expected to implement MCP from scratch.
 
-### Step 3 - Implement structured triage
+## Step 3 - Check the facts needed by each specialist
 
-Open `starter/route_resolve/agents.py` and implement **only `triage(request)`**.
-Use the coach-provided Foundry deployment, not keyword routing or a fabricated
-model response. Follow README.md to set the cloud variables and identity.
-
-Your model should extract this shape:
-
-```json
-{
-  "category": "Access",
-  "urgency": "normal",
-  "missing_fields": [],
-  "arguments": {
-    "project": "Phoenix",
-    "role": "Reader"
-  }
-}
-```
-
-This is a **shape example**, not the answer file. Define and validate a schema:
-
-| Field | Requirement |
-|---|---|
-| `category` | Exactly `Access`, `Procurement` or `DataSharing` |
-| `urgency` | Your documented enum, e.g. `low`, `normal`, `high`; never an approval bypass |
-| `missing_fields` | List of missing business-field names; never invent their values |
-| `arguments` | Domain-specific extracted fields, not claims of verified approval |
-
-Access needs `project` and `role`; Procurement needs `supplier` and a positive
-EUR amount; DataSharing needs `partner` and `classification`. Preserve monetary
-values as decimal strings rather than imprecise binary floats.
-
-The runner retains the practice record's **trusted** `id` and `user_id`.
-Do not ask the model to invent them. `triage` receives the business text; your
-saved evidence combines its output with those IDs. Authentication and team
-settings must not come from the request's wording.
-
-Implementation sequence:
-
-1. Write a short extraction-only instruction and the schema.
-2. Use the installed Foundry client with Entra credentials and the assigned
-   deployment. Bound output tokens; do not run open-ended retries.
-3. Parse and validate the output. A refusal, malformed JSON or network error
-   must be visible, not converted into plausible successful triage.
-4. Keep the starter's function signature. If your SDK uses async calls, put them
-   in an async helper; use a synchronous wrapper only from a normal CLI runner,
-   not from inside an already-running event loop.
-
-### Step 4 - Try three domains and one missing-field case
-
-Choose P01, P06, P14 and P04 from `data/practice-requests.json`. The core requires
-the three domains plus one missing-field example, not all 20 requests.
-
-After implementing triage, this command runs one record:
-
-```powershell
-.\.venv\Scripts\python -m route_resolve.lab triage --id P01 --allow-cloud
-```
-
-Change only the selected ID for the other cases. Expected: valid fields for each
-domain; P04 must retain missing information rather than guess a project.
-
-Use an MCP lookup to verify a fact, separately from extraction. For Access,
-inspect the discovered tool schemas and look up the project owner and existing
-access. A missing-field request should use `request_info` with the stable
-request ID and the missing field; retain its clarification result.
-
-
-Try the supplied diagnostic options, which run only local synthetic lookups:
+**Where:** same terminal; look at the corresponding request records in
+`data/practice-requests.json`.
+**Why:** triage extracts proposed values; tools check those values against
+fictional operational records.
 
 ```powershell
 .\.venv\Scripts\python -m route_resolve.lab tools --tool check_user_access --user-id user-02 --project Phoenix --role Reader
 .\.venv\Scripts\python -m route_resolve.lab tools --tool lookup_supplier --supplier "Contoso Software"
 .\.venv\Scripts\python -m route_resolve.lab tools --tool check_partner --partner Fabrikam
+```
+
+These are diagnostic inputs, not an answer key for final requests. Inspect each
+returned result, including `isError`; do not infer success from a tool name.
+
+| Tool type | Available tools | What you learn |
+|---|---|---|
+| Read-only facts | `check_user_access`, `get_project_owner`, `lookup_supplier`, `check_partner`, `lookup_status` | What the synthetic system currently knows |
+| Clarification | `request_info` | Which missing field must be requested |
+| Simulated writes, for Mission 04 | `create_access_request`, `create_purchase_request`, `create_data_share_request` | What the mock operation actually did |
+
+Save the relevant, non-secret tool output as evidence. Do not change the supplied
+`MockOperations` rules to force a preferred outcome.
+
+## Step 4 - Improve your triage agent across the three domains
+
+**Where:** `triage` in `starter/route_resolve/agents.py`, then the terminal.
+**Why:** one good Access example does not prove your first agent can read other
+requests. Keep using the assigned Foundry model and bounded calls.
+
+Read P01, P06, P14 and P04 in the practice file first. After coordinator approval:
+
+```powershell
+.\.venv\Scripts\python -m route_resolve.lab triage --id P01 --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab triage --id P06 --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab triage --id P14 --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab triage --id P04 --allow-cloud
+```
+
+**You should see:** valid categories/fields across the three domains. P04's missing
+project must remain missing, not be guessed. Review your instruction, schema and
+validation only where the observed result shows a problem. Do not repeatedly run
+all 20 cases until a lucky answer appears.
+
+Reopen your [Foundry project](https://ai.azure.com/) if you need to compare endpoint
+or deployment values. This mission adds **tools**, not another Azure resource or
+another model deployment. For schema help, see
+[structured outputs](https://learn.microsoft.com/en-us/agent-framework/agents/structured-outputs).
+
+## Step 5 - Ask for missing information instead of inventing it
+
+Run the supplied clarification diagnostic:
+
+```powershell
 .\.venv\Scripts\python -m route_resolve.lab tools --tool request_info --request-id P04 --field project
 ```
 
-These are diagnostic tool inputs, not final decisions. Inspect the server's
-tool schemas before connecting them to a model.
+**You should see:** an actual clarification response tied to P04. Compare it with
+your triage's `missing_fields`. The runner retains trusted request/user IDs;
+request text such as "use another team's identity" cannot replace them.
 
-Keep the fixture's user/request ID in your runner; do not let a model override
-them. Do not edit `MockOperations` to change a tool's response.
+Draw a small table in your evidence: request claim, extracted field, tool called,
+observed fact or missing information. You are preparing the evidence a specialist
+will need in Mission 04, not treating extraction as verified approval.
+
+## Checkpoint - show the coordinators
+
+- [ ] Discover nine tools and point to one actual tool response.
+- [ ] Explain client versus server, and extraction versus verified fact.
+- [ ] Show triage examples from three domains plus a missing-field case.
+- [ ] Show P04's clarification; explain why inventing a project would be unsafe.
+
+Next: [Mission 03](mission-03.md), where your code retrieves the actual policy
+that governs those facts.
 
 ## Optional Copilot prompts
 
-**Implementation support** - review the plan and edits before accepting:
-
 ```text
-Work only in this workshop workspace and on challenge 02. Read docs/mission-02.md,
-README.md, pyproject.toml, starter/route_resolve/agents.py and models.py.
-First propose a short plan, then help implement triage(request: str) only.
-Use the pinned, installed Foundry/Agent Framework APIs, Entra credentials and
-coach-supplied environment variables. Verify SDK signatures; do not invent them.
-Return validated category, urgency, missing_fields and arguments. Preserve
-request/user IDs in the caller, not model guesses. Missing facts stay missing.
-Show errors explicitly and bound model calls. Explain the changes so I can
-describe them. Do not implement policy retrieval, final decisions or handoff.
-Do not read facilitator solutions, expose tokens, or deploy resources.
+Read docs/mission-02.md and my existing triage implementation. Explain one MCP
+discovery/tool-call trace, then help me test three domains and missing fields.
+Do not change MockOperations or fabricate tool execution. Use the installed SDK
+and keep trusted IDs in the caller. Ask for approval before editing. Do not
+implement policy retrieval or the final workflow, and do not deploy anything.
 ```
-
-**Review rather than solve**:
-
-```text
-Review my triage output and code for this challenge. Do not change code yet.
-Find invented facts, schema errors, unbounded retries or request text being
-treated as instructions. Ask me to explain the evidence for each extracted
-field. Then suggest the smallest fix. Do not give final-request answer labels.
-```
-
-## Checkpoint - show the coach
-
-- [ ] A real MCP discovery/lookup trace, not text claiming a tool was called.
-- [ ] Valid triage for Access, Procurement and DataSharing.
-- [ ] A missing-field case with clarification preserved.
-- [ ] Request claims remain separate from verified tool facts.
-- [ ] Model/API errors are visible; no real actions were performed.
-
-Save two structured examples and a redacted MCP trace in your own `evidence`
-folder. Keep your code for the next mission. If behind schedule, show the failing
-step to the coach rather than adding retries or changing permissions.
 
 ## Troubleshooting
 
-| Symptom | What to do |
+| What you see | What to do next |
 |---|---|
-| `KeyError: TEAM_ID` | Set the assigned ID in the terminal running the diagnostic |
-| No server or tool output | Use `.venv` Python; check stderr and `await session.initialize()` |
-| Status lookup says request not found | No action was recorded in this server process; restarts lose memory |
-| Model 401/403 | Coach verifies identity/project role; never paste an API key as a workaround |
-| Model 429 | Pause and ask the coach; no parallel retry storm or quota changes |
-| JSON surrounded by prose | Fix structured-output/schema handling; never silently accept an invalid shape |
-
-## Stretch - after the checkpoint
-
-Try P19. Explain why a requester cannot grant Owner access by instructing the
-agent to skip checks. Add one malformed-output test with a fake model response;
-label it a local test, not evidence of a live model call.
+| TEAM_ID error | Set the assigned value in this terminal, not a guessed team |
+| MCP import failure | Use the prepared `.venv` and confirm the `mcp` extra was installed |
+| A tool returns `isError: true` | Read its schema/arguments; preserve the error instead of claiming a successful lookup |
+| P04 gets an invented project | Fix triage's missing-field instructions/validation, not the request data |
+| Lookup state disappears | The diagnostic's child server exited; persistent same-process tests come in Mission 04 |

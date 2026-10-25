@@ -1,90 +1,79 @@
-# Mission: Route & Resolve
+# AI Hackathon - Mission: Route & Resolve
 
-## Your team is the engineering team
+Build an evidence-driven request assistant for fictional Contoso Manufacturing.
+Start with one triage agent, add operational tools and policy evidence, then
+connect specialists into a bounded workflow. All data and actions are synthetic.
 
-An employee asks for access. A buyer requests software. A colleague wants to
-share a dataset. The requests look simple, but the right response depends on
-policy, existing facts and approval authority.
+**Read in HackboxConsole; edit and run in VS Code.** This repository contains
+your exercise code, not the console platform. Keep the same clone for all four
+missions. [Read the full story](docs/START_HERE.md).
 
-Your mission is to build an evidence-driven AI workflow that understands the
-request, selects a specialist and reports what can happen next. This is a
-professional hands-on workshop using a **fictional manufacturing case study**.
-No real customer data or business systems are connected.
+## 1. Before you type commands
 
-**Where to read:** open your facilitator's HackboxConsole link, sign in, and
-start on its workshop home page. Read each mission there while editing this
-repository in VS Code. The same guides are under [docs/](docs/START_HERE.md)
-for reference. This repository is the working codebase, not a replacement for
-the guided console experience.
+The coordinators supply your console login, approved workshop source, team ID,
+Azure operator/tenant, direct Foundry project link, project endpoint, shared
+chat deployment, Search endpoint and team knowledge-base name.
+Do not use another team's values or a personal Azure project.
 
-## 1. Read the mission before coding
+| You sign into | Why | Where |
+|---|---|---|
+| HackboxConsole with your team login | Read missions and see team progress | Browser |
+| Your approved GitHub account | Clone the approved repository; optional Copilot | Git / VS Code |
+| The assigned Azure operator identity | Call the lab's Foundry/Search services | Azure CLI and Foundry browser |
 
-- [Mission briefing and definition of success](docs/START_HERE.md)
-- [Architecture and component responsibilities](docs/architecture.md)
-- [Optional bonus missions for early finishers](docs/bonus.md)
-- Four missions, one working folder, approximately **150 minutes**.
-- All exercise materials are available from the initial clone. Console
-  milestones pace the workshop; they do not make repository files secret.
-- Agent implementations are deliberately unfinished. You will build them.
-  Facilitator answers and the answer-key grader are not included.
+One nominated operator uses the Azure lab identity while the team collaborates.
+Do not share passwords, TAPs or MFA. GitHub/Copilot access is not automatically
+included with an Azure training identity. Copilot is optional.
 
-## 2. Clone once and open VS Code
+Use a prepared workstation or install Git, VS Code, Python 3.12+ and Azure CLI
+before the timed workshop. Docker is not required. Ask the coordinators if a
+prerequisite is missing.
 
-Before the workshop, install Git, VS Code, Python 3.12+ and Azure CLI, or use the
-facilitator's prepared workstation. Docker is not required.
+## 2. Clone once, open VS Code, then open a terminal
 
-The repository URL will be supplied after the customer review/publishing step.
-There is no published remote configured in this local review copy.
+**Participant repository:** https://github.com/kirannn-kp/AI-Hackathon
+This public repository contains the unsolved workshop starter and synthetic data,
+not private coordinator implementations or Azure credentials.
 
-For the organizer's local review, this is also a standalone Git repository
-named `route-resolve-workshop`, with a `main` branch and no remote. You can clone
-its local path into a different working directory; no GitHub publication is needed:
+If the folder is already prepared, skip cloning. Otherwise, in PowerShell:
 
 ```powershell
-git clone "C:\Github Repo\route-resolve-workshop" "$env:TEMP\route-resolve-team-review"
-```
-
-Use a fresh target folder and open that clone in VS Code. This organizer-only
-path is not the address customers will receive after publishing.
-
-```powershell
-$repositoryUrl = Read-Host "Paste the workshop Git repository URL supplied by your facilitator"
-git clone $repositoryUrl route-resolve-workshop
-cd route-resolve-workshop
+git clone https://github.com/kirannn-kp/AI-Hackathon.git
+cd AI-Hackathon
 code .
 ```
 
-Expected: VS Code opens the folder containing this README and `pyproject.toml`.
-Keep this same folder for all four missions. Do not download replacement source
-folders, overwrite your work, or clone the private facilitator repository.
+For an approved extracted folder, use VS Code **File > Open Folder** instead.
+Do not clone a ZIP file. In VS Code use **Terminal > New Terminal** and select
+PowerShell. Check that it is at the workshop root:
 
-## 3. Sign in to GitHub Copilot
-
-1. In VS Code open the **Accounts** menu and sign in to your approved GitHub
-   account. If prompted, complete the browser authorization and return to VS Code.
-2. Open **Chat** and choose GitHub Copilot. Follow the setup/sign-in prompt if
-   it appears; interface labels can vary by VS Code version.
-3. Confirm this account has Copilot access. An Azure training identity or TAP
-   does **not** automatically provide a GitHub account or Copilot license.
-4. Try the following in explanation/read-only mode:
-
-```text
-I am joining this workshop. Read README.md and docs/START_HERE.md in this
-workspace only. Do not edit files or run commands. Explain the business problem,
-the architecture and my first task in simple terms. Ask me one question to
-check understanding. Do not look for facilitator solutions.
+```powershell
+Get-Location
+Get-ChildItem README.md, pyproject.toml
 ```
 
-Expected: an explanation of this case study, not a deployment proposal.
-Copilot is optional. If it is unavailable, pair with your team or ask the
-facilitator; the guides contain the steps without requiring Copilot.
+**Expected:** the Explorer shows `README.md`, `pyproject.toml`, `starter`, `data`
+and `tests`. Stay in this same folder through Mission 04 and optional bonus tasks.
 
-For coding prompts, ask for a plan first and review edits/terminal commands.
-Never paste passwords, TAPs, keys, tokens or real customer information into chat.
+## 3. Optional: sign in to Copilot for explanations and coding help
 
-## 4. Prepare the local Python environment
+1. Use VS Code's **Accounts** menu to sign in to your approved GitHub account.
+2. Open Chat and follow the Copilot sign-in/setup prompt if needed.
+3. Ask it to explain this workspace before letting it edit:
 
-In a VS Code PowerShell terminal, from this repository root:
+```text
+Read README.md and docs/START_HERE.md in this workspace only. Do not edit files,
+run commands or search for private answers. Explain the story, what my first
+triage agent does, and the first three setup actions in simple words.
+```
+
+**Expected:** an explanation, not a deployment proposal. If Copilot is unavailable,
+continue with your team and the numbered mission steps. Never paste credentials,
+real business data or customer documents into chat.
+
+## 4. Prepare Python and check local imports
+
+Skip creating/installing again if this same environment is already prepared:
 
 ```powershell
 python --version
@@ -93,99 +82,93 @@ python -m venv .venv
 .\.venv\Scripts\python -m route_resolve.lab check
 ```
 
-Expected: Python 3.12+ and **Contracts ready**. The check does not call a model.
-Select **Python: Select Interpreter** in the command palette and select this
-folder's `.venv`. Using the explicit executable avoids activation-policy changes.
-The functions in `starter/route_resolve/agents.py` remain unfinished on purpose.
+**Expected:** Python 3.12+ and **Contracts ready**. Use **Ctrl+Shift+P > Python:
+Select Interpreter** to select this folder's `.venv`. Explicit executable paths
+avoid activation-policy changes. This check does not call a model or prove Azure
+access; the three agent functions are deliberately unfinished.
 
-On a facilitator-supported macOS/Linux machine, create the environment with
-`python3` and replace `.\.venv\Scripts\python` with `.venv/bin/python`.
+On a coordinator-supported macOS/Linux workstation use `python3` and replace
+`.\.venv\Scripts\python` with `.venv/bin/python`.
 
-## 5. Cloud configuration: a separate identity
+## 5. Sign in to Azure and identify your existing Foundry project
 
-You have three separate sign-ins:
-
-| Sign-in | Purpose |
-|---|---|
-| HackboxConsole team login | Read missions, see credentials and obtain milestone approval |
-| Your approved GitHub account | Access this code repository and optional Copilot |
-| Facilitator-provided Entra identity | Access the assigned Azure/Foundry lab |
-
-Do not reuse or share passwords between them. One nominated operator uses the
-team's Azure identity while teammates collaborate.
-
-Only continue when the facilitator confirms resources and permissions are ready:
+First check the cached account:
 
 ```powershell
-$tenantId = Read-Host "Paste the facilitator-provided tenant ID"
-az login --tenant $tenantId --allow-no-subscriptions
-az account show --query user.name --output tsv
-$env:TEAM_ID = Read-Host "Enter the assigned team ID, for example team-01"
-$env:FOUNDRY_PROJECT_ENDPOINT = Read-Host "Paste the assigned Foundry project endpoint"
-$env:FOUNDRY_MODEL = Read-Host "Paste the shared chat deployment name"
-$env:SEARCH_ENDPOINT = Read-Host "Paste the assigned HTTPS Search endpoint"
-$env:TEAM_KNOWLEDGE_BASE = Read-Host "Paste the assigned knowledge-base name"
+az account show --query "{operator:user.name,tenant:tenantId}" --output json
 ```
 
-Expected: your assigned operator identity, not a personal account. A successful
-sign-in alone does not prove resource access; the facilitator verifies it.
-Variables apply to this terminal. A new terminal needs its own assignments.
+If it is already the assigned operator/tenant, reuse it. Otherwise:
 
-The root `.env.example` documents the variable names. It does **not** load
-automatically. If you use a local `.env`, keep it out of Git and load it
-explicitly in your code. Never print tokens to prove authentication.
+```powershell
+$tenantId = Read-Host "Azure tenant ID from the coordinators"
+az login --tenant $tenantId --allow-no-subscriptions --use-device-code
+az account show --query "{operator:user.name,tenant:tenantId}" --output json
+```
 
-All runner commands that could invoke shared cloud services require an explicit
-`--allow-cloud` flag. Add it only after facilitator approval. A budget alert or
-rate limit is not a spending cap.
+Open the coordinator's direct project link or [Microsoft Foundry](https://ai.azure.com/)
+as that same operator. Match the assigned project name, then locate its
+**Project endpoint** and the existing chat deployment. A browser page URL is
+not an SDK endpoint; a model family name is not necessarily a deployment name.
 
-## 6. Follow the missions in the console
+Portal labels and visibility vary. If a listing is absent, use verified handout
+values and ask the coordinators; do not create resources or broaden permissions.
+[Learn about project endpoints](https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/sdk-overview).
 
-| Mission | You build | Time | Local guide |
-|---|---|---:|---|
-| 01 - Establish the base | Explain the flow and verify your setup | 30 min | [Mission 01](docs/mission-01.md) |
-| 02 - Investigate the request | Structured triage and operational fact lookup | 30 min | [Mission 02](docs/mission-02.md) |
-| 03 - Find the evidence | Policy retrieval and faithful citations | 45 min | [Mission 03](docs/mission-03.md) |
-| 04 - Route and resolve | Bounded specialist handoff and simulated actions | 45 min | [Mission 04](docs/mission-04.md) |
+## 6. Set configuration in the terminal that runs your code
 
-For each mission: read the story, understand the concept, follow the numbered
-steps, run the check, explain the evidence and ask for facilitator approval.
-Optional Copilot prompts and stretch tasks are in each guide. You do not need
-to complete stretch tasks to finish the core workshop.
+```powershell
+$env:TEAM_ID = Read-Host "Assigned team ID"
+$env:FOUNDRY_PROJECT_ENDPOINT = Read-Host "Assigned Foundry project endpoint"
+$env:FOUNDRY_MODEL = Read-Host "Shared chat deployment name"
+$env:SEARCH_ENDPOINT = Read-Host "Assigned HTTPS Search endpoint"
+$env:TEAM_KNOWLEDGE_BASE = Read-Host "Assigned team knowledge-base name"
+```
 
-Finished early? Choose one [bonus mission](docs/bonus.md): failure-path testing,
-evidence challenges or an offline evaluation report. Each takes approximately
-20-30 extra minutes. They do not add a fifth required console milestone.
+These values apply to this terminal only. A second terminal needs its own
+assignments. `.env.example` documents the names but is **not automatically loaded**.
+Keep any local `.env` out of Git. Use the assigned CLI identity in your adapters
+and never print access tokens. A successful login is not proof of model/retrieval
+authorization; the real mission calls test those permissions.
+
+Commands that can invoke shared services require `--allow-cloud`. Add it only
+with coordinator approval. Budget alerts/rate limits are not spending caps.
+
+## 7. Build in order - do not implement everything at once
+
+| Mission | Edit/build | Check | Guide |
+|---|---|---|---|
+| 01 / 30 min | Your first model-backed `triage` agent | One real P01 triage result | [Mission 01](docs/mission-01.md) |
+| 02 / 30 min | MCP fact lookup; improve triage | Nine tools, three domains, missing fields | [Mission 02](docs/mission-02.md) |
+| 03 / 45 min | `retrieve_policy` adapter | Real passages and references | [Mission 03](docs/mission-03.md) |
+| 04 / 45 min | `resolve` specialist workflow | Ten Results and an evidence-based demo | [Mission 04](docs/mission-04.md) |
+| Optional / 20-30 min each | Resilience, evidence challenges or evaluation | Offline bonus evidence | [Bonus missions](docs/bonus.md) |
+
+Read the purpose, perform the numbered action, compare its expected result, then
+show the coordinators at the checkpoint. The console's **Optional bonus missions**
+button stays available after Challenge 4. Bonus is not a fifth required milestone.
+
+### Files you will work with
+
+| Path | Responsibility |
+|---|---|
+| `starter/route_resolve/agents.py` | Your three unfinished agent functions |
+| `starter/route_resolve/models.py` | Supplied Result/category/outcome contract |
+| `starter/route_resolve/tools.py` | Supplied synthetic operational rules; do not bypass |
+| `starter/route_resolve/mcp_server.py` | Supplied nine-tool MCP server |
+| `starter/route_resolve/lab.py` | Diagnostics and CLI runners, not agent solutions |
+| `data/practice-requests.json` | Twenty development requests with trusted IDs |
+| `data/policies` | Four fictional policies, also loaded into the assigned knowledge base |
+| `data/final-requests.json` | Ten final requests, without answer labels |
 
 ## Definition of done
 
-- Ten final request results with the required shape and `simulation: true`.
-- Actual traces for handoff, retrieval and required mock tool calls.
-- No fabricated approvals, citations or successful actions.
-- A three-minute team demonstration of a completed mock action, an approval
-  route, a sensitive escalation and one limitation.
-- No real access grant, purchase or data transfer.
+Ten saved Results with required fields and `simulation: true`, genuine retrieval
+references, actual handoff/tool traces and a three-minute team demonstration.
+Show a mock action, an approval route, an escalation and one limitation.
+The runner checks shape, not business correctness; coordinators review evidence.
 
-The runner checks structure, not business correctness. Facilitator review is
-still needed. Keep evidence local and free of credentials.
-
-## Local customer review
-
-Open `index.html` for a self-contained preview of the story and mission content.
-It is a **review preview**, not another deployed workshop platform or an
-authentication/approval system. Production guidance is intended for HackboxConsole.
-No GitHub remote, live console address or customer resource configuration is
-included in this local review copy.
-
-The reader uses a **MOAW-style learning flow**: a section outline, topic links,
-timeboxes and Previous/Next reading navigation. It is not the MOAW framework.
-Reading position is not a completion score; HackboxConsole owns coach approvals.
-
-## Repository checks and contribution workflow
-
-Use a feature branch for your implementation, keep credentials out of commits,
-and review changes before merging. Do not edit the supplied operational rules
-to manufacture a successful result.
+## Local checks and rebuilding documentation
 
 ```powershell
 git switch -c team/my-implementation
@@ -193,30 +176,28 @@ git switch -c team/my-implementation
 git status --short
 ```
 
-The public tests check fixtures, contracts and local tool registration, not
-hidden answer labels or live Azure access. They do not require completed agents.
-Add tests for your implementation as you progress.
+The supplied offline tests do not require solved agents or Azure. Add your own
+tests as you implement. No answer-key grader or private implementations are
+included. The GitHub Actions workflow is offline-only and has not run on GitHub
+until a GitHub run is independently verified.
 
-The included GitHub Actions workflow runs offline checks only if this repository
-is later hosted on GitHub. It does not deploy infrastructure or use Azure secrets.
-It has not been run on GitHub during this local review.
-
-Maintainers can rebuild the review page and console import files:
+Maintainers can rebuild the local review and console content without deployment:
 
 ```powershell
 .\.venv\Scripts\python -m pip install -e ".[authoring]"
 .\.venv\Scripts\python scripts\build_workshop.py
 ```
 
-`console/challenges` contains the workshop home, four console mission files and
-supporting documents. Use the console's source-directory import; this repository
-does not provision Azure resources or contain coach solutions.
+`index.html` is a local review reader, not an authentication/progress system.
+`console/challenges` is the import for the hosted console: four core missions
+plus supporting documents including the optional bonus guide.
+The hosted console retains its original colourful Hackbox styling.
 
 ## Attribution and safe use
 
 Adapted from Microsoft's MIT-licensed Fraud Intelligence MicroHack, revision
 `3a3c15c9119b9b926c897a17332783c6dc055e3c`.
-See [LICENSE](LICENSE) and the
+See the supplied `LICENSE`, the [upstream licence](https://github.com/microsoft/MicroHack/blob/main/LICENSE), and the
 [upstream MicroHack](https://github.com/microsoft/MicroHack/tree/main/03-Azure/01-04-AI/07_Fraud_Intelligence).
-All organizations, requests, policies and operational actions in the case study
-are fictional. Do not run deployment commands or change subscription roles.
+All organizations, requests, policies and operational actions are fictional.
+Do not deploy resources, change roles or delete shared services.

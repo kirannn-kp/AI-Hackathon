@@ -3,20 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mission: Route &amp; Resolve - Customer Review</title>
+<title>AI Hackathon - Mission: Route &amp; Resolve</title>
 <script>
   (() => {
     const param = new URLSearchParams(window.location.search).get("scoutTheme");
-    const theme =
-      param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const theme = param || "light";
     document.documentElement.setAttribute("data-theme", theme);
   })();
 </script>
 <style>
 :root {
   color-scheme: light;
-  --cp-bg: #f7f4ef;
-  --cp-bg-elevated: #fcfbf8;
+  --cp-bg: #ffffff;
+  --cp-bg-elevated: #ffffff;
   --cp-surface: #ffffff;
   --cp-surface-soft: #f5f5f5;
   --cp-border: #dedede;
@@ -24,9 +23,9 @@
   --cp-text: #242424;
   --cp-text-muted: #5c5c5c;
   --cp-text-soft: #6f6f6f;
-  --cp-accent: #b11f4b;
-  --cp-accent-hover: #9a1a41;
-  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent: #0078d4;
+  --cp-accent-hover: #106ebe;
+  --cp-accent-soft: rgba(0, 120, 212, 0.08);
   --cp-accent-fg: #ffffff;
   --cp-success: #16a34a;
   --cp-danger: #dc2626;
@@ -37,7 +36,7 @@
   --cp-panel: rgba(255, 255, 255, 0.86);
   --cp-panel-strong: rgba(255, 255, 255, 0.96);
   --cp-sheen: rgba(255, 255, 255, 0.55);
-  --cp-highlight: rgba(177, 31, 75, 0.12);
+  --cp-highlight: rgba(0, 120, 212, 0.12);
 }
 html[data-theme="dark"] {
   color-scheme: dark;
@@ -50,9 +49,9 @@ html[data-theme="dark"] {
   --cp-text: #dedede;
   --cp-text-muted: #919191;
   --cp-text-soft: #b0b0b0;
-  --cp-accent: #fd8ea1;
-  --cp-accent-hover: #fb7b91;
-  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent: #4da6ff;
+  --cp-accent-hover: #77baff;
+  --cp-accent-soft: rgba(77, 166, 255, 0.14);
   --cp-accent-fg: #1a1a1a;
   --cp-success: #4ade80;
   --cp-danger: #f87171;
@@ -63,7 +62,7 @@ html[data-theme="dark"] {
   --cp-panel: rgba(41, 41, 41, 0.72);
   --cp-panel-strong: rgba(41, 41, 41, 0.96);
   --cp-sheen: rgba(255, 255, 255, 0.04);
-  --cp-highlight: rgba(253, 142, 161, 0.12);
+  --cp-highlight: rgba(77, 166, 255, 0.12);
 }
 .workshop {
   font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -173,7 +172,7 @@ html[data-theme="dark"] {
   <div class="eyebrow">Customer engineering workshop</div>
   <h1>Mission: Route &amp; Resolve</h1>
   <p class="muted">An evidence-driven AI workflow. 150-minute core + optional bonus missions.</p>
-  <p class="muted">Local review only - not published. This preview has no sign-in or approval backend.</p>
+  <p class="muted">AI Hackathon learning guide. This reader has no sign-in or approval backend.</p>
 </header>
 <div class="review-layout">
   <nav aria-label="Workshop sections">
@@ -181,15 +180,15 @@ html[data-theme="dark"] {
     <a href="#brief" data-time="Orientation">Start here: the story</a>
     <a href="#architecture" data-time="Orientation">Architecture</a>
     <a href="#setup" data-time="Preparation">Clone and sign in</a>
-    <a href="#mission-01" data-time="30 minutes">01 / Establish the base</a>
-    <a href="#mission-02" data-time="30 minutes">02 / Investigate</a>
+    <a href="#mission-01" data-time="30 minutes">01 / Your first triage agent</a>
+    <a href="#mission-02" data-time="30 minutes">02 / Check facts with tools</a>
     <a href="#mission-03" data-time="45 minutes">03 / Find evidence</a>
     <a href="#mission-04" data-time="45 minutes">04 / Route and resolve</a>
     <a href="#bonus" data-time="Optional / 20-30 min each">Bonus / Go further</a>
   </nav>
   <main class="review-main">
     <p class="notice">Production guidance belongs in HackboxConsole. This is a review of the same content,
-      not a second platform. Shared Azure resources and participant authorization are not yet live-verified.</p>
+      not a second platform. Use only the project and configuration assigned by your coordinators.</p>
     <div class="reading-status">
       <span id="section-position" role="status" aria-live="polite"></span>
       <span id="section-time"></span>
@@ -200,122 +199,201 @@ html[data-theme="dark"] {
     </details>
     <p id="copy-status" role="status" aria-live="polite"></p>
     <section id="brief" class="review-card" hidden><h1>Mission: Route &amp; Resolve</h1>
-<h2>The story: a request arrives</h2>
-<p>It is the start of a busy working day at fictional <strong>Contoso Manufacturing</strong>.
-Three requests arrive:</p>
+<h2>The story: Monday morning at Contoso Manufacturing</h2>
+<p>At 08:15, the service desk at fictional <strong>Contoso Manufacturing</strong> opens its queue.
+Maya joins Project Phoenix next week and needs Reader access. Arun needs a
+software licence from Contoso Software. Leah wants to send a dataset to partner
+Fabrikam. Each message looks like a simple request:</p>
 <blockquote>
 <p>"I join Project Phoenix next week. Please give me Reader access."</p>
-<p>"We need a EUR 600 software license from Contoso Software."</p>
+<p>"We need a EUR 600 software licence from Contoso Software."</p>
 <p>"Can we share an Internal dataset with Fabrikam?"</p>
 </blockquote>
-<p>Today, people manually read these requests, check facts, look up policy and find
-the right approver. A plausible reply is not enough: an incorrect approval can
-grant excessive access, spend money or expose information.</p>
-<p><strong>You are the engineering team.</strong> Build a small AI-powered workflow that does
-the investigation, chooses the right specialist and explains the next action
-using real evidence from this fictional lab.</p>
-<h2>Your problem statement</h2>
-<p>Given an unstructured request and a trusted request/user ID:</p>
-<ol>
-<li>Understand the domain and identify missing information.</li>
-<li>Gather operational facts through MCP tools.</li>
-<li>Retrieve the relevant policy and preserve its citations.</li>
-<li>Hand off to Access, Procurement or Data Sharing.</li>
-<li>Perform only a permitted <strong>simulated</strong> operation, or route/escalate it.</li>
-<li>Explain the outcome with evidence.</li>
-</ol>
-<p>The four outcomes are <strong>Resolve</strong>, <strong>Execute</strong>, <strong>Route</strong>, and <strong>Escalate</strong>.
-You will learn their differences as you build. This is not a general support
-chatbot, and fluent text is not proof that an operation happened.</p>
-<h2>The architecture you will build</h2>
-<pre><code class="language-text">Trusted request ID + synthetic user + request text
-                         |
-                      Triage
-                         |
-            one specialist handoff
-           /             |             \
-       Access       Procurement      Data Sharing
-           \             |             /
-            policy retrieval + MCP facts
-                         |
-          mock action or clarification
-                         |
-       Result + citations + actual trace
-</code></pre>
-<p>The facilitator supplies the shared Foundry models and Search knowledge base.
-Your code runs in VS Code. The local MCP server has fictional operational data;
-it cannot change real business systems. Read the detailed
-<a href="#architecture">architecture</a> in the repository.</p>
-<h2>How this workshop works</h2>
-<p><strong>One console link. One repository clone. One working folder.</strong></p>
-<ol>
-<li>Sign in to this console using the credentials supplied by the facilitator.</li>
-<li>Read this briefing, then open <strong>Challenges</strong> to start Mission 01.</li>
-<li>Follow the repository onboarding in <strong>README.md</strong>: clone, open VS Code,
-   sign in to optional Copilot and prepare Python.</li>
-<li>Follow the current console mission alongside your code.</li>
-<li>Use its commands and expected results to check each step. If stuck for
-   three minutes, ask the facilitator with the step number and a redacted error.</li>
-<li>Show your evidence and obtain approval before moving on.</li>
-</ol>
-<p>The console controls the guided pace, not secrecy of files in your repository.
-All exercise materials are included in the initial clone; facilitator solutions
-and the answer-key grader are kept separately.</p>
-<h2>The four missions</h2>
+<p>Today a person reads the message, finds the right team, checks the system,
+searches the policy and asks for approvals or missing information. Requests bounce
+between teams. A fast but unsupported answer can grant too much access, spend
+money without authority or expose data. A fluent chatbot alone does not fix that.</p>
+<p><strong>You are the engineering team building a safer request assistant.</strong> Its job is
+not to say "yes" to everything. It should investigate, select the right specialist
+and explain the next action with evidence. Sometimes the correct next step is
+to ask a question, route for approval or stop and escalate.</p>
+<p>Everything here is synthetic: people, business requests, policies and operations.
+No real access grant, purchase or data transfer is possible through the mock tools.</p>
+<h2>What problem are we solving?</h2>
+<table>
+<thead>
+<tr>
+<th>Today</th>
+<th>What your workflow should do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Someone manually reads every request</td>
+<td>A triage agent extracts the domain and missing fields</td>
+</tr>
+<tr>
+<td>Staff guess which team owns it</td>
+<td>Triage hands off to the relevant specialist</td>
+</tr>
+<tr>
+<td>A requester claims something is approved</td>
+<td>The specialist checks actual facts and policy</td>
+</tr>
+<tr>
+<td>An answer gives no supporting evidence</td>
+<td>The result includes retrieved references and observed tool results</td>
+</tr>
+<tr>
+<td>A failed dependency becomes a plausible reply</td>
+<td>Errors remain visible and unsupported actions stop</td>
+</tr>
+</tbody>
+</table>
+<p>You will build three unfinished functions in <code>starter/route_resolve/agents.py</code>:
+<code>triage</code>, <code>retrieve_policy</code> and <code>resolve</code>. The repository supplies runners,
+contracts, synthetic data and MCP tools, but not completed agent implementations.</p>
+<h2>Follow the story through four missions</h2>
 <table>
 <thead>
 <tr>
 <th>Mission</th>
-<th>Question you will answer</th>
+<th>What you build</th>
+<th>What you should be able to show</th>
 <th style="text-align: right;">Time</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>01 - Establish the base</td>
-<td>What are we building, and can my environment run it?</td>
+<td>01 - Your first triage agent</td>
+<td>Connect the existing Foundry project/model and extract a request into fields</td>
+<td>A real model-backed triage result</td>
 <td style="text-align: right;">30 min</td>
 </tr>
 <tr>
-<td>02 - Investigate</td>
-<td>What is being requested, and which facts can I verify?</td>
+<td>02 - Operational facts</td>
+<td>Discover and call MCP tools; improve triage across three domains</td>
+<td>Actual fact lookups and missing-information handling</td>
 <td style="text-align: right;">30 min</td>
 </tr>
 <tr>
-<td>03 - Find evidence</td>
-<td>Which policy supports the next step?</td>
+<td>03 - Policy evidence</td>
+<td>Query the assigned Foundry IQ / Search knowledge base</td>
+<td>Retrieved passages with genuine references</td>
 <td style="text-align: right;">45 min</td>
 </tr>
 <tr>
-<td>04 - Route and resolve</td>
-<td>Which specialist should act, and what actually happened?</td>
+<td>04 - Specialist workflow</td>
+<td>Hand off, use evidence and perform permitted simulated operations</td>
+<td>Ten Results and an explainable demonstration</td>
 <td style="text-align: right;">45 min</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Early finishers:</strong> choose one <a href="#bonus">optional bonus mission</a>:
-make failure safe, challenge the evidence or build a repeatable evaluation
-report. Allow 20-30 extra minutes. These are not required console milestones.</p>
-<p>The 150-minute core assumes tools, identities and shared resources are ready.
-Stretch tasks are optional. First-time learner timing still needs a rehearsal.</p>
-<h2>Use Copilot as a partner, not an authority</h2>
-<p>Each mission includes prompts to explain a concept, help implement one component
-or review your evidence. Ask for a plan first and review edits before accepting.
-You must still run the code and explain why the result is justified.</p>
-<p>Never send passwords, TAPs, tokens, real business data or customer documents to
-chat. Do not authorize Copilot to deploy resources or broaden permissions.
-No Copilot entitlement? Continue with the guide, your team and the facilitator.</p>
-<h2>Your final demonstration</h2>
-<p>Show one permitted mock action, one approval route and one escalation. Point to
-the retrieved policy and actual tool trace. Explain one limitation. Every result
-must say <code>simulation: true</code>.</p>
-<p><strong>Local review status:</strong> this content and the working code skeleton are prepared
-for customer review. Publishing, live Foundry integration, participant resource
-permissions and automated cleanup are separate readiness gates.</p>
+<p>The 150-minute core assumes tools, identities and shared resources are prepared.
+Newcomers may need more time; the first-time learner timing is not yet certified.
+Coordinators can help rather than having you guess at configuration.</p>
+<pre><code class="language-text">Trusted request ID + fictional user + request text
+                    |
+              Your triage agent
+                    |
+           one specialist handoff
+          /         |          \
+       Access   Procurement   Data Sharing
+          \         |          /
+       MCP operational facts + retrieved policy evidence
+                    |
+       mock action / clarification / review
+                    |
+       Result + citations + actual trace
+</code></pre>
+<h2>What the four outcomes mean</h2>
+<table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th>In everyday language</th>
+<th>What it does not mean</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resolve</td>
+<td>An evidence-backed answer is enough; no action is needed</td>
+<td>A business operation was secretly performed</td>
+</tr>
+<tr>
+<td>Execute</td>
+<td>A permitted <strong>mock</strong> operation completed</td>
+<td>Real access, money or data moved</td>
+</tr>
+<tr>
+<td>Route</td>
+<td>More information or approval is needed</td>
+<td>Approval already exists</td>
+</tr>
+<tr>
+<td>Escalate</td>
+<td>A specialist/reviewer must assess the request</td>
+<td>A review was bypassed</td>
+</tr>
+</tbody>
+</table>
+<p>A model-written "I checked the policy" is not evidence. You must show the actual
+retrieval and tool trace. Read the <a href="#architecture">architecture</a> if the
+responsibilities are unclear.</p>
+<h2>Start here: browser, VS Code and Foundry have different jobs</h2>
+<ol>
+<li><strong>Stay in this console</strong> to read the current challenge and use Prev/Next.
+   Coordinators approve team milestones here.</li>
+<li><strong>Clone the <a href="https://github.com/kirannn-kp/AI-Hackathon">AI Hackathon participant repository</a></strong>
+   once, or open an approved source folder supplied by the coordinators.
+   The console platform repository is not the participant starter.</li>
+<li><strong>Open that folder in VS Code.</strong> Keep its PowerShell terminal and files open.
+   Mission 01 gives the clone, Python setup and first-agent steps in full.</li>
+<li><strong>Use the assigned Azure identity in Foundry when a step asks.</strong> The portal
+   helps you locate the existing project, model and configuration. Your code runs
+   locally; you do not deploy more resources or create agents manually in a portal.</li>
+<li><strong>At every numbered step:</strong> read the purpose, do the action, compare the expected
+   result, and stop for help if it differs. Tell the coordinators the mission/step
+   number and a redacted error. Do not paste passwords or tokens.</li>
+<li><strong>At each checkpoint:</strong> show the coordinators your result and explain it.
+   Only then proceed to the next core mission.</li>
+</ol>
+<p><strong>One clone, one working folder:</strong> all exercise materials are already supplied.
+Do not replace your code between missions. The console paces learning; it is
+not a secrecy mechanism for files already present in the repository.</p>
+<h2>Finished the four core missions? Bonus is inside Challenges too</h2>
+<p>Click <strong>Optional bonus missions</strong> in the Challenges toolbar, or open the
+<a href="#bonus">bonus guide</a>. Choose one:</p>
+<ul>
+<li>Make failure safe with offline resilience tests.</li>
+<li>Challenge the evidence with synthetic approval/prompt-injection cases.</li>
+<li>Build an offline, repeatable evaluation report.</li>
+</ul>
+<p>Allow 20-30 extra minutes per bonus. These are optional extensions, not a fifth
+required milestone, and do not grant permission for extra cloud calls.</p>
+<h2>Help and reading</h2>
+<ul>
+<li><a href="#setup">Repository and sign-in guide</a></li>
+<li><a href="https://learn.microsoft.com/en-us/agent-framework/get-started/your-first-agent">Microsoft Learn: your first agent</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/overview">Microsoft Learn: Foundry Agent Service</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/sdk-overview">Microsoft Learn: Foundry SDKs and project endpoints</a></li>
+</ul>
+<p>Each challenge links the specific Learn topic needed at that step. Use the Python
+examples with the installed SDK versions. Skip resource-creation sections in
+generic tutorials; the coordinators have already prepared the lab services.</p>
+<p>Copilot is optional. Ask it to explain or plan one component, review its edits,
+run the code yourself and explain the result. Do not ask it to find private
+answers or change permissions. The workshop can be completed with your team
+and the written steps if Copilot is unavailable.</p>
+<p><strong>Access note:</strong> public repository access does not grant Azure lab permissions.
+Coordinators must separately authorize the nominated operator for the team's
+assigned resources. Never commit credentials or real business data.</p>
 <p><a href="#mission-01">Open Challenges and begin Mission 01</a></p></section>
 <section id="architecture" class="review-card" hidden><h1>Architecture: evidence before action</h1>
 <h2>The complete picture</h2>
-<pre><code class="language-text">Participant                             Facilitator-provided Azure lab
+<pre><code class="language-text">Participant                             Coordinator-provided Azure lab
 -----------                             ------------------------------
 HackboxConsole: read the guided mission
 GitHub/Copilot: optional coding help
@@ -385,7 +463,7 @@ component of the request-processing system.</p>
 <tr>
 <td><code>data/policies</code></td>
 <td>Fictional policy documents</td>
-<td>Supplied and preloaded by facilitator</td>
+<td>Supplied and preloaded by coordinators</td>
 </tr>
 <tr>
 <td><code>data/final-requests.json</code></td>
@@ -395,7 +473,7 @@ component of the request-processing system.</p>
 <tr>
 <td>Shared Foundry/Search services</td>
 <td>Approved model and policy retrieval</td>
-<td>Facilitator provides</td>
+<td>Coordinators provide</td>
 </tr>
 </tbody>
 </table>
@@ -412,7 +490,7 @@ operations only while that same process retains its state.</p>
   system rules.</li>
 <li>A model saying "approved" is not verified authorization.</li>
 <li>A queued request is not a completed operation.</li>
-<li>Naming a knowledge base after a team is not access control. The facilitator
+<li>Naming a knowledge base after a team is not access control. The coordinators
   must verify actual team authorization.</li>
 <li>The local MCP endpoint binds to loopback and is unauthenticated. Never expose
   it through a public tunnel. Any hosted tool endpoint needs separately verified
@@ -422,440 +500,442 @@ operations only while that same process retains its state.</p>
 </ul>
 <p>The exercise does not require participants to deploy resources, administer
 identities or obtain subscription Owner.</p></section>
-<section id="setup" class="review-card" hidden><h1>Mission: Route &amp; Resolve</h1>
-<h2>Your team is the engineering team</h2>
-<p>An employee asks for access. A buyer requests software. A colleague wants to
-share a dataset. The requests look simple, but the right response depends on
-policy, existing facts and approval authority.</p>
-<p>Your mission is to build an evidence-driven AI workflow that understands the
-request, selects a specialist and reports what can happen next. This is a
-professional hands-on workshop using a <strong>fictional manufacturing case study</strong>.
-No real customer data or business systems are connected.</p>
-<p><strong>Where to read:</strong> open your facilitator's HackboxConsole link, sign in, and
-start on its workshop home page. Read each mission there while editing this
-repository in VS Code. The same guides are under <a href="#brief">docs/</a>
-for reference. This repository is the working codebase, not a replacement for
-the guided console experience.</p>
-<h2>1. Read the mission before coding</h2>
-<ul>
-<li><a href="#brief">Mission briefing and definition of success</a></li>
-<li><a href="#architecture">Architecture and component responsibilities</a></li>
-<li><a href="#bonus">Optional bonus missions for early finishers</a></li>
-<li>Four missions, one working folder, approximately <strong>150 minutes</strong>.</li>
-<li>All exercise materials are available from the initial clone. Console
-  milestones pace the workshop; they do not make repository files secret.</li>
-<li>Agent implementations are deliberately unfinished. You will build them.
-  Facilitator answers and the answer-key grader are not included.</li>
-</ul>
-<h2>2. Clone once and open VS Code</h2>
-<p>Before the workshop, install Git, VS Code, Python 3.12+ and Azure CLI, or use the
-facilitator's prepared workstation. Docker is not required.</p>
-<p>The repository URL will be supplied after the customer review/publishing step.
-There is no published remote configured in this local review copy.</p>
-<p>For the organizer's local review, this is also a standalone Git repository
-named <code>route-resolve-workshop</code>, with a <code>main</code> branch and no remote. You can clone
-its local path into a different working directory; no GitHub publication is needed:</p>
-<pre><code class="language-powershell">git clone &quot;C:\Github Repo\route-resolve-workshop&quot; &quot;$env:TEMP\route-resolve-team-review&quot;
-</code></pre>
-<p>Use a fresh target folder and open that clone in VS Code. This organizer-only
-path is not the address customers will receive after publishing.</p>
-<pre><code class="language-powershell">$repositoryUrl = Read-Host &quot;Paste the workshop Git repository URL supplied by your facilitator&quot;
-git clone $repositoryUrl route-resolve-workshop
-cd route-resolve-workshop
+<section id="setup" class="review-card" hidden><h1>AI Hackathon - Mission: Route &amp; Resolve</h1>
+<p>Build an evidence-driven request assistant for fictional Contoso Manufacturing.
+Start with one triage agent, add operational tools and policy evidence, then
+connect specialists into a bounded workflow. All data and actions are synthetic.</p>
+<p><strong>Read in HackboxConsole; edit and run in VS Code.</strong> This repository contains
+your exercise code, not the console platform. Keep the same clone for all four
+missions. <a href="#brief">Read the full story</a>.</p>
+<h2>1. Before you type commands</h2>
+<p>The coordinators supply your console login, approved workshop source, team ID,
+Azure operator/tenant, direct Foundry project link, project endpoint, shared
+chat deployment, Search endpoint and team knowledge-base name.
+Do not use another team's values or a personal Azure project.</p>
+<table>
+<thead>
+<tr>
+<th>You sign into</th>
+<th>Why</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HackboxConsole with your team login</td>
+<td>Read missions and see team progress</td>
+<td>Browser</td>
+</tr>
+<tr>
+<td>Your approved GitHub account</td>
+<td>Clone the approved repository; optional Copilot</td>
+<td>Git / VS Code</td>
+</tr>
+<tr>
+<td>The assigned Azure operator identity</td>
+<td>Call the lab's Foundry/Search services</td>
+<td>Azure CLI and Foundry browser</td>
+</tr>
+</tbody>
+</table>
+<p>One nominated operator uses the Azure lab identity while the team collaborates.
+Do not share passwords, TAPs or MFA. GitHub/Copilot access is not automatically
+included with an Azure training identity. Copilot is optional.</p>
+<p>Use a prepared workstation or install Git, VS Code, Python 3.12+ and Azure CLI
+before the timed workshop. Docker is not required. Ask the coordinators if a
+prerequisite is missing.</p>
+<h2>2. Clone once, open VS Code, then open a terminal</h2>
+<p><strong>Participant repository:</strong> https://github.com/kirannn-kp/AI-Hackathon
+This public repository contains the unsolved workshop starter and synthetic data,
+not private coordinator implementations or Azure credentials.</p>
+<p>If the folder is already prepared, skip cloning. Otherwise, in PowerShell:</p>
+<pre><code class="language-powershell">git clone https://github.com/kirannn-kp/AI-Hackathon.git
+cd AI-Hackathon
 code .
 </code></pre>
-<p>Expected: VS Code opens the folder containing this README and <code>pyproject.toml</code>.
-Keep this same folder for all four missions. Do not download replacement source
-folders, overwrite your work, or clone the private facilitator repository.</p>
-<h2>3. Sign in to GitHub Copilot</h2>
-<ol>
-<li>In VS Code open the <strong>Accounts</strong> menu and sign in to your approved GitHub
-   account. If prompted, complete the browser authorization and return to VS Code.</li>
-<li>Open <strong>Chat</strong> and choose GitHub Copilot. Follow the setup/sign-in prompt if
-   it appears; interface labels can vary by VS Code version.</li>
-<li>Confirm this account has Copilot access. An Azure training identity or TAP
-   does <strong>not</strong> automatically provide a GitHub account or Copilot license.</li>
-<li>Try the following in explanation/read-only mode:</li>
-</ol>
-<pre><code class="language-text">I am joining this workshop. Read README.md and docs/START_HERE.md in this
-workspace only. Do not edit files or run commands. Explain the business problem,
-the architecture and my first task in simple terms. Ask me one question to
-check understanding. Do not look for facilitator solutions.
+<p>For an approved extracted folder, use VS Code <strong>File &gt; Open Folder</strong> instead.
+Do not clone a ZIP file. In VS Code use <strong>Terminal &gt; New Terminal</strong> and select
+PowerShell. Check that it is at the workshop root:</p>
+<pre><code class="language-powershell">Get-Location
+Get-ChildItem README.md, pyproject.toml
 </code></pre>
-<p>Expected: an explanation of this case study, not a deployment proposal.
-Copilot is optional. If it is unavailable, pair with your team or ask the
-facilitator; the guides contain the steps without requiring Copilot.</p>
-<p>For coding prompts, ask for a plan first and review edits/terminal commands.
-Never paste passwords, TAPs, keys, tokens or real customer information into chat.</p>
-<h2>4. Prepare the local Python environment</h2>
-<p>In a VS Code PowerShell terminal, from this repository root:</p>
+<p><strong>Expected:</strong> the Explorer shows <code>README.md</code>, <code>pyproject.toml</code>, <code>starter</code>, <code>data</code>
+and <code>tests</code>. Stay in this same folder through Mission 04 and optional bonus tasks.</p>
+<h2>3. Optional: sign in to Copilot for explanations and coding help</h2>
+<ol>
+<li>Use VS Code's <strong>Accounts</strong> menu to sign in to your approved GitHub account.</li>
+<li>Open Chat and follow the Copilot sign-in/setup prompt if needed.</li>
+<li>Ask it to explain this workspace before letting it edit:</li>
+</ol>
+<pre><code class="language-text">Read README.md and docs/START_HERE.md in this workspace only. Do not edit files,
+run commands or search for private answers. Explain the story, what my first
+triage agent does, and the first three setup actions in simple words.
+</code></pre>
+<p><strong>Expected:</strong> an explanation, not a deployment proposal. If Copilot is unavailable,
+continue with your team and the numbered mission steps. Never paste credentials,
+real business data or customer documents into chat.</p>
+<h2>4. Prepare Python and check local imports</h2>
+<p>Skip creating/installing again if this same environment is already prepared:</p>
 <pre><code class="language-powershell">python --version
 python -m venv .venv
 .\.venv\Scripts\python -m pip install -e &quot;.[mcp,cloud]&quot;
 .\.venv\Scripts\python -m route_resolve.lab check
 </code></pre>
-<p>Expected: Python 3.12+ and <strong>Contracts ready</strong>. The check does not call a model.
-Select <strong>Python: Select Interpreter</strong> in the command palette and select this
-folder's <code>.venv</code>. Using the explicit executable avoids activation-policy changes.
-The functions in <code>starter/route_resolve/agents.py</code> remain unfinished on purpose.</p>
-<p>On a facilitator-supported macOS/Linux machine, create the environment with
-<code>python3</code> and replace <code>.\.venv\Scripts\python</code> with <code>.venv/bin/python</code>.</p>
-<h2>5. Cloud configuration: a separate identity</h2>
-<p>You have three separate sign-ins:</p>
-<table>
-<thead>
-<tr>
-<th>Sign-in</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HackboxConsole team login</td>
-<td>Read missions, see credentials and obtain milestone approval</td>
-</tr>
-<tr>
-<td>Your approved GitHub account</td>
-<td>Access this code repository and optional Copilot</td>
-</tr>
-<tr>
-<td>Facilitator-provided Entra identity</td>
-<td>Access the assigned Azure/Foundry lab</td>
-</tr>
-</tbody>
-</table>
-<p>Do not reuse or share passwords between them. One nominated operator uses the
-team's Azure identity while teammates collaborate.</p>
-<p>Only continue when the facilitator confirms resources and permissions are ready:</p>
-<pre><code class="language-powershell">$tenantId = Read-Host &quot;Paste the facilitator-provided tenant ID&quot;
-az login --tenant $tenantId --allow-no-subscriptions
-az account show --query user.name --output tsv
-$env:TEAM_ID = Read-Host &quot;Enter the assigned team ID, for example team-01&quot;
-$env:FOUNDRY_PROJECT_ENDPOINT = Read-Host &quot;Paste the assigned Foundry project endpoint&quot;
-$env:FOUNDRY_MODEL = Read-Host &quot;Paste the shared chat deployment name&quot;
-$env:SEARCH_ENDPOINT = Read-Host &quot;Paste the assigned HTTPS Search endpoint&quot;
-$env:TEAM_KNOWLEDGE_BASE = Read-Host &quot;Paste the assigned knowledge-base name&quot;
+<p><strong>Expected:</strong> Python 3.12+ and <strong>Contracts ready</strong>. Use <strong>Ctrl+Shift+P &gt; Python:
+Select Interpreter</strong> to select this folder's <code>.venv</code>. Explicit executable paths
+avoid activation-policy changes. This check does not call a model or prove Azure
+access; the three agent functions are deliberately unfinished.</p>
+<p>On a coordinator-supported macOS/Linux workstation use <code>python3</code> and replace
+<code>.\.venv\Scripts\python</code> with <code>.venv/bin/python</code>.</p>
+<h2>5. Sign in to Azure and identify your existing Foundry project</h2>
+<p>First check the cached account:</p>
+<pre><code class="language-powershell">az account show --query &quot;{operator:user.name,tenant:tenantId}&quot; --output json
 </code></pre>
-<p>Expected: your assigned operator identity, not a personal account. A successful
-sign-in alone does not prove resource access; the facilitator verifies it.
-Variables apply to this terminal. A new terminal needs its own assignments.</p>
-<p>The root <code>.env.example</code> documents the variable names. It does <strong>not</strong> load
-automatically. If you use a local <code>.env</code>, keep it out of Git and load it
-explicitly in your code. Never print tokens to prove authentication.</p>
-<p>All runner commands that could invoke shared cloud services require an explicit
-<code>--allow-cloud</code> flag. Add it only after facilitator approval. A budget alert or
-rate limit is not a spending cap.</p>
-<h2>6. Follow the missions in the console</h2>
+<p>If it is already the assigned operator/tenant, reuse it. Otherwise:</p>
+<pre><code class="language-powershell">$tenantId = Read-Host &quot;Azure tenant ID from the coordinators&quot;
+az login --tenant $tenantId --allow-no-subscriptions --use-device-code
+az account show --query &quot;{operator:user.name,tenant:tenantId}&quot; --output json
+</code></pre>
+<p>Open the coordinator's direct project link or <a href="https://ai.azure.com/">Microsoft Foundry</a>
+as that same operator. Match the assigned project name, then locate its
+<strong>Project endpoint</strong> and the existing chat deployment. A browser page URL is
+not an SDK endpoint; a model family name is not necessarily a deployment name.</p>
+<p>Portal labels and visibility vary. If a listing is absent, use verified handout
+values and ask the coordinators; do not create resources or broaden permissions.
+<a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/sdk-overview">Learn about project endpoints</a>.</p>
+<h2>6. Set configuration in the terminal that runs your code</h2>
+<pre><code class="language-powershell">$env:TEAM_ID = Read-Host &quot;Assigned team ID&quot;
+$env:FOUNDRY_PROJECT_ENDPOINT = Read-Host &quot;Assigned Foundry project endpoint&quot;
+$env:FOUNDRY_MODEL = Read-Host &quot;Shared chat deployment name&quot;
+$env:SEARCH_ENDPOINT = Read-Host &quot;Assigned HTTPS Search endpoint&quot;
+$env:TEAM_KNOWLEDGE_BASE = Read-Host &quot;Assigned team knowledge-base name&quot;
+</code></pre>
+<p>These values apply to this terminal only. A second terminal needs its own
+assignments. <code>.env.example</code> documents the names but is <strong>not automatically loaded</strong>.
+Keep any local <code>.env</code> out of Git. Use the assigned CLI identity in your adapters
+and never print access tokens. A successful login is not proof of model/retrieval
+authorization; the real mission calls test those permissions.</p>
+<p>Commands that can invoke shared services require <code>--allow-cloud</code>. Add it only
+with coordinator approval. Budget alerts/rate limits are not spending caps.</p>
+<h2>7. Build in order - do not implement everything at once</h2>
 <table>
 <thead>
 <tr>
 <th>Mission</th>
-<th>You build</th>
-<th style="text-align: right;">Time</th>
-<th>Local guide</th>
+<th>Edit/build</th>
+<th>Check</th>
+<th>Guide</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>01 - Establish the base</td>
-<td>Explain the flow and verify your setup</td>
-<td style="text-align: right;">30 min</td>
+<td>01 / 30 min</td>
+<td>Your first model-backed <code>triage</code> agent</td>
+<td>One real P01 triage result</td>
 <td><a href="#mission-01">Mission 01</a></td>
 </tr>
 <tr>
-<td>02 - Investigate the request</td>
-<td>Structured triage and operational fact lookup</td>
-<td style="text-align: right;">30 min</td>
+<td>02 / 30 min</td>
+<td>MCP fact lookup; improve triage</td>
+<td>Nine tools, three domains, missing fields</td>
 <td><a href="#mission-02">Mission 02</a></td>
 </tr>
 <tr>
-<td>03 - Find the evidence</td>
-<td>Policy retrieval and faithful citations</td>
-<td style="text-align: right;">45 min</td>
+<td>03 / 45 min</td>
+<td><code>retrieve_policy</code> adapter</td>
+<td>Real passages and references</td>
 <td><a href="#mission-03">Mission 03</a></td>
 </tr>
 <tr>
-<td>04 - Route and resolve</td>
-<td>Bounded specialist handoff and simulated actions</td>
-<td style="text-align: right;">45 min</td>
+<td>04 / 45 min</td>
+<td><code>resolve</code> specialist workflow</td>
+<td>Ten Results and an evidence-based demo</td>
 <td><a href="#mission-04">Mission 04</a></td>
+</tr>
+<tr>
+<td>Optional / 20-30 min each</td>
+<td>Resilience, evidence challenges or evaluation</td>
+<td>Offline bonus evidence</td>
+<td><a href="#bonus">Bonus missions</a></td>
 </tr>
 </tbody>
 </table>
-<p>For each mission: read the story, understand the concept, follow the numbered
-steps, run the check, explain the evidence and ask for facilitator approval.
-Optional Copilot prompts and stretch tasks are in each guide. You do not need
-to complete stretch tasks to finish the core workshop.</p>
-<p>Finished early? Choose one <a href="#bonus">bonus mission</a>: failure-path testing,
-evidence challenges or an offline evaluation report. Each takes approximately
-20-30 extra minutes. They do not add a fifth required console milestone.</p>
+<p>Read the purpose, perform the numbered action, compare its expected result, then
+show the coordinators at the checkpoint. The console's <strong>Optional bonus missions</strong>
+button stays available after Challenge 4. Bonus is not a fifth required milestone.</p>
+<h3>Files you will work with</h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>starter/route_resolve/agents.py</code></td>
+<td>Your three unfinished agent functions</td>
+</tr>
+<tr>
+<td><code>starter/route_resolve/models.py</code></td>
+<td>Supplied Result/category/outcome contract</td>
+</tr>
+<tr>
+<td><code>starter/route_resolve/tools.py</code></td>
+<td>Supplied synthetic operational rules; do not bypass</td>
+</tr>
+<tr>
+<td><code>starter/route_resolve/mcp_server.py</code></td>
+<td>Supplied nine-tool MCP server</td>
+</tr>
+<tr>
+<td><code>starter/route_resolve/lab.py</code></td>
+<td>Diagnostics and CLI runners, not agent solutions</td>
+</tr>
+<tr>
+<td><code>data/practice-requests.json</code></td>
+<td>Twenty development requests with trusted IDs</td>
+</tr>
+<tr>
+<td><code>data/policies</code></td>
+<td>Four fictional policies, also loaded into the assigned knowledge base</td>
+</tr>
+<tr>
+<td><code>data/final-requests.json</code></td>
+<td>Ten final requests, without answer labels</td>
+</tr>
+</tbody>
+</table>
 <h2>Definition of done</h2>
-<ul>
-<li>Ten final request results with the required shape and <code>simulation: true</code>.</li>
-<li>Actual traces for handoff, retrieval and required mock tool calls.</li>
-<li>No fabricated approvals, citations or successful actions.</li>
-<li>A three-minute team demonstration of a completed mock action, an approval
-  route, a sensitive escalation and one limitation.</li>
-<li>No real access grant, purchase or data transfer.</li>
-</ul>
-<p>The runner checks structure, not business correctness. Facilitator review is
-still needed. Keep evidence local and free of credentials.</p>
-<h2>Local customer review</h2>
-<p>Open <code>index.html</code> for a self-contained preview of the story and mission content.
-It is a <strong>review preview</strong>, not another deployed workshop platform or an
-authentication/approval system. Production guidance is intended for HackboxConsole.
-No GitHub remote, live console address or customer resource configuration is
-included in this local review copy.</p>
-<p>The reader uses a <strong>MOAW-style learning flow</strong>: a section outline, topic links,
-timeboxes and Previous/Next reading navigation. It is not the MOAW framework.
-Reading position is not a completion score; HackboxConsole owns coach approvals.</p>
-<h2>Repository checks and contribution workflow</h2>
-<p>Use a feature branch for your implementation, keep credentials out of commits,
-and review changes before merging. Do not edit the supplied operational rules
-to manufacture a successful result.</p>
+<p>Ten saved Results with required fields and <code>simulation: true</code>, genuine retrieval
+references, actual handoff/tool traces and a three-minute team demonstration.
+Show a mock action, an approval route, an escalation and one limitation.
+The runner checks shape, not business correctness; coordinators review evidence.</p>
+<h2>Local checks and rebuilding documentation</h2>
 <pre><code class="language-powershell">git switch -c team/my-implementation
 .\.venv\Scripts\python -m unittest discover -s tests -v
 git status --short
 </code></pre>
-<p>The public tests check fixtures, contracts and local tool registration, not
-hidden answer labels or live Azure access. They do not require completed agents.
-Add tests for your implementation as you progress.</p>
-<p>The included GitHub Actions workflow runs offline checks only if this repository
-is later hosted on GitHub. It does not deploy infrastructure or use Azure secrets.
-It has not been run on GitHub during this local review.</p>
-<p>Maintainers can rebuild the review page and console import files:</p>
+<p>The supplied offline tests do not require solved agents or Azure. Add your own
+tests as you implement. No answer-key grader or private implementations are
+included. The GitHub Actions workflow is offline-only and has not run on GitHub
+until a GitHub run is independently verified.</p>
+<p>Maintainers can rebuild the local review and console content without deployment:</p>
 <pre><code class="language-powershell">.\.venv\Scripts\python -m pip install -e &quot;.[authoring]&quot;
 .\.venv\Scripts\python scripts\build_workshop.py
 </code></pre>
-<p><code>console/challenges</code> contains the workshop home, four console mission files and
-supporting documents. Use the console's source-directory import; this repository
-does not provision Azure resources or contain coach solutions.</p>
+<p><code>index.html</code> is a local review reader, not an authentication/progress system.
+<code>console/challenges</code> is the import for the hosted console: four core missions
+plus supporting documents including the optional bonus guide.
+The hosted console retains its original colourful Hackbox styling.</p>
 <h2>Attribution and safe use</h2>
 <p>Adapted from Microsoft's MIT-licensed Fraud Intelligence MicroHack, revision
 <code>3a3c15c9119b9b926c897a17332783c6dc055e3c</code>.
-See <a href="LICENSE">LICENSE</a> and the
+See the supplied <code>LICENSE</code>, the <a href="https://github.com/microsoft/MicroHack/blob/main/LICENSE">upstream licence</a>, and the
 <a href="https://github.com/microsoft/MicroHack/tree/main/03-Azure/01-04-AI/07_Fraud_Intelligence">upstream MicroHack</a>.
-All organizations, requests, policies and operational actions in the case study
-are fictional. Do not run deployment commands or change subscription roles.</p></section>
-<section id="mission-01" class="review-card" hidden><h1>Mission 01 - Prepare the mission (30 minutes)</h1>
-<p><strong>Working mode:</strong> read here in HackboxConsole; edit the same cloned repository in VS Code. All exercise files are already present. Add <code>--allow-cloud</code> only after the facilitator confirms access and approves shared-service calls.</p>
-<h2>What you will learn</h2>
-<p>By the end you can explain what an agent does, open the workshop starter, run its
-first check and identify your team's approved cloud resources. You do not need to
-understand the agent code yet.</p>
-<p><strong>Timebox:</strong> concepts 5 min; local setup 15 min; access check 5 min; checkpoint 5 min.
-Read README.md first. All four missions use the same cloned working folder.</p>
-<h2>The story</h2>
-<p>Contoso Manufacturing receives informal requests such as:</p>
-<blockquote>
-<p>"I join Project Phoenix next week. Please give me Reader access."</p>
-</blockquote>
-<p>A chatbot might write a nice reply. Our system must instead understand the
-request, check existing facts, find policy evidence, choose a specialist and
-explain what happened. All users, projects, suppliers and actions are fictional.</p>
-<pre><code class="language-text">Employee request -&gt; Triage -&gt; Policy evidence + operational facts
-                 -&gt; Access / Procurement / Data Sharing specialist
-                 -&gt; Mock tool -&gt; Explained outcome
-</code></pre>
-<p><strong>Agent</strong> = model + instructions + selected tools. <strong>Tool</strong> = a function that
-actually runs. <strong>Grounding</strong> = retrieving evidence rather than trusting memory.
-You will meet MCP, policy retrieval and handoffs in later challenges.</p>
+All organizations, requests, policies and operational actions are fictional.
+Do not deploy resources, change roles or delete shared services.</p></section>
+<section id="mission-01" class="review-card" hidden><h1>Mission 01 - Build your first triage agent (30 minutes)</h1>
+<h2>Your mission in the story</h2>
+<p>It is Monday morning at fictional Contoso Manufacturing. Maya is joining Project
+Phoenix and writes, "Please give me Reader access." The service desk also receives
+software-purchase and data-sharing requests. Today someone reads every message
+and decides which team should investigate it. You will build that first reader:
+the <strong>triage agent</strong>.</p>
+<p><strong>By the end:</strong> your Python code sends one synthetic request to the assigned
+Foundry model and returns structured information about what it asks for.
+It does <strong>not</strong> grant access, approve spending or decide whether sharing is safe.
+Those decisions need facts and policy evidence in later missions.</p>
+<p><strong>You change:</strong> <code>triage(request)</code> in <code>starter/route_resolve/agents.py</code>.
+<strong>You use:</strong> the supplied runner, an existing Foundry project and its shared model.
+<strong>You do not create:</strong> Azure resources, model deployments or new accounts.</p>
+<p><strong>Timebox:</strong> orientation/setup 10 min; first agent 15 min; checkpoint 5 min.
+Tools and accounts should be prepared before the timed workshop. If installation
+or access blocks you, ask the coordinators rather than spending the whole mission
+troubleshooting. This guide is also <code>docs/mission-01.md</code> in your clone.</p>
+<h2>Before you start: collect your team handout</h2>
+<p>Ask the coordinators for all of these. Never guess another team's details.</p>
 <table>
 <thead>
 <tr>
-<th>Outcome</th>
-<th>Meaning</th>
-<th>What it must not claim</th>
+<th>Detail</th>
+<th>Where you use it</th>
+<th>What it means</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Resolve</td>
-<td>No new operation is needed</td>
-<td>That a new grant or order occurred</td>
+<td>Workshop repository URL or approved source folder</td>
+<td>Step 1</td>
+<td>Your editable exercise code, not the HackboxConsole platform repository</td>
 </tr>
 <tr>
-<td>Execute</td>
-<td>A permitted simulated operation completed</td>
-<td>That a real system changed</td>
+<td>Console team login</td>
+<td>This browser</td>
+<td>Mission navigation and team progress</td>
 </tr>
 <tr>
-<td>Route</td>
-<td>More information or approval is needed</td>
-<td>That queued means approved</td>
+<td>Team ID</td>
+<td>PowerShell</td>
+<td>For example, your assigned <code>team-XX</code></td>
 </tr>
 <tr>
-<td>Escalate</td>
-<td>Security, finance or another specialist must review</td>
-<td>That review was bypassed</td>
+<td>Azure operator identity and tenant ID</td>
+<td>Step 3</td>
+<td>One nominated team member signs into the Azure lab</td>
+</tr>
+<tr>
+<td>Direct Foundry project link and project name</td>
+<td>Step 3</td>
+<td>The team's already-created workspace</td>
+</tr>
+<tr>
+<td>Foundry project endpoint and chat deployment name</td>
+<td>Step 4</td>
+<td>The address and deployed model your code calls</td>
+</tr>
+<tr>
+<td>Search endpoint and knowledge-base name</td>
+<td>Mission 03</td>
+<td>Your team's policy evidence</td>
 </tr>
 </tbody>
 </table>
-<h2>Before you start</h2>
-<p>The coach supplies your team ID, operator sign-in and resource details. Nominate
-one operator to use the lab identity while the team works together. Never share
-passwords, change MFA or use another team's identity. VS Code/Python/Azure CLI
-must already be installed; tell the coach if they are not.</p>
-<h2>Core path</h2>
-<h3>Step 1 - Clone once, sign in and prepare Python</h3>
-<p>Follow README.md sections 2-4: clone the facilitator-approved repository, open
-it in VS Code, sign in to your approved GitHub/Copilot account and install the
-local environment. If setup is already complete, do not recreate it.
-Keep the console open for guidance and VS Code open for code.</p>
-<h3>Step 2 - Check the local contract</h3>
-<pre><code class="language-powershell">.\.venv\Scripts\python -m route_resolve.lab check
+<p>The console password, GitHub account and Azure identity are <strong>different sign-ins</strong>.
+Your teammates can pair on the code; do not share the operator's password or MFA.
+Copilot is optional and requires its own entitlement.</p>
+<h2>Step 1 - Get the code and open the right folder</h2>
+<p><strong>Where:</strong> a PowerShell terminal on the workshop workstation.
+<strong>Why:</strong> the browser explains the exercise; VS Code is where you build it.</p>
+<p>If the coordinators already opened the workshop folder for you, <strong>do not clone
+again</strong>. Confirm you can see <code>README.md</code>, <code>pyproject.toml</code>, <code>starter</code> and <code>data</code>.
+Otherwise clone the public <strong>workshop</strong> starter:</p>
+<pre><code class="language-powershell">git clone https://github.com/kirannn-kp/AI-Hackathon.git
+cd AI-Hackathon
+code .
 </code></pre>
-<p>Expected: <strong>Contracts ready</strong>. Select this folder's <code>.venv</code> interpreter.
-This checks local imports only, not Azure permissions or model access.</p>
-<h3>Step 3 - Explore without implementing</h3>
-<ol>
-<li>Open <code>starter/route_resolve/models.py</code>. Find <code>Result</code> and its fields.</li>
-<li>Find <code>Category</code> and <code>Outcome</code>. Compare them with the story above.</li>
-<li>Open <code>starter/route_resolve/agents.py</code>. Find <code>triage</code>, <code>retrieve_policy</code>
-   and <code>resolve</code>. Their <code>NotImplementedError</code> messages are deliberate exercises.</li>
-<li>Do not implement them yet. The MCP server is supplied; you will investigate it in Mission 02.</li>
-</ol>
-<p>Expected: you can point to where each of the next three challenges will fit.
-<code>simulation=True</code> means a fictional result, not permission to touch real systems.</p>
-<h3>Step 4 - Verify the operator and assigned project</h3>
-<p>Only do this after the coach confirms the cloud lab is ready.</p>
-<ol>
-<li>Follow <strong>Cloud configuration</strong> in README.md using the supplied tenant ID.</li>
-<li>Confirm the Azure CLI account is your nominated operator.</li>
-<li>Open <code>https://ai.azure.com</code> in a browser signed in as the same operator.</li>
-<li>Follow the coach's direct project link, or select the assigned Foundry
-   resource/project. Portal labels can change; compare identifiers, not icons.</li>
-<li>Identify the shared chat deployment and your team's Search knowledge-base
-   name from the coach's handout. Do not create or deploy anything.</li>
-</ol>
-<p>Expected: access to the assigned project. A successful Microsoft sign-in alone
-does not prove model or Search permissions. Tell the coach if the project is
-missing; do not grant yourself roles or reuse another project.</p>
-<p>If cloud resources are not ready, complete steps 1-3 and label step 4 <strong>blocked</strong>.
-Do not report this as cloud-ready or continue cloud exercises without approval.</p>
-<h2>Optional Copilot prompts</h2>
-<p>You may work without Copilot. These are helpers, not extra mandatory work.</p>
-<p><strong>Understand before editing</strong> - use explanation/read-only mode:</p>
-<pre><code class="language-text">I am new to AI agents and this is a synthetic beginner lab. Read only README.md,
-docs/mission-01.md and starter/route_resolve/models.py in this workshop workspace.
-Do not edit files or run commands. Explain an agent, a tool, grounding and
-handoff using our request-processing story. Compare Resolve, Execute, Route
-and Escalate. Then ask me two short questions to check understanding.
-Do not read coach solutions or other workspaces.
+<p>If a coordinator supplied an approved extracted folder instead, open that folder
+with <strong>File &gt; Open Folder</strong> in VS Code. Do not run <code>git clone</code> on a ZIP file.
+If GitHub is unavailable, ask the coordinators for an approved source folder.
+Do not substitute the console platform or a private preparation repository.</p>
+<p><strong>You should see:</strong> a VS Code Explorer with the files listed above. In VS Code,
+open <strong>Terminal &gt; New Terminal</strong>, select PowerShell, and check the working folder:</p>
+<pre><code class="language-powershell">Get-Location
+Get-ChildItem README.md, pyproject.toml
 </code></pre>
-<p><strong>Fix a setup error</strong> - attach only a redacted error:</p>
-<pre><code class="language-text">Help me diagnose the setup error below, one step at a time. First verify my
-working folder and selected Python environment. Do not change execution policy,
-install global packages, deploy Azure resources, or request passwords/tokens.
-Explain any proposed command before asking me to run it. Stay within this
-workshop workspace and the installed dependency versions.
-[Paste the non-secret error and the command that failed.]
+<p>Keep this one folder for all missions. You will not download replacement code
+between challenges. <a href="#setup">Repository setup reference</a>.</p>
+<h2>Step 2 - Prepare Python and understand the supplied files</h2>
+<p><strong>Where:</strong> the VS Code terminal, at the repository root.
+<strong>Why:</strong> the virtual environment installs this workshop's pinned SDK versions
+without changing the machine's other projects.</p>
+<p>Skip creation/install if the coordinators already prepared this same environment:</p>
+<pre><code class="language-powershell">python --version
+python -m venv .venv
+.\.venv\Scripts\python -m pip install -e &quot;.[mcp,cloud]&quot;
+.\.venv\Scripts\python -m route_resolve.lab check
 </code></pre>
-<h2>Checkpoint - show the coach</h2>
-<ul>
-<li>[ ] <code>Contracts ready</code> appears in your terminal.</li>
-<li>[ ] Your team can explain the four outcomes in its own words.</li>
-<li>[ ] You found the three deliberately unfinished functions.</li>
-<li>[ ] Project access is confirmed, or explicitly recorded as blocked.</li>
-<li>[ ] No real grants, purchases, sharing actions or new Azure resources occurred.</li>
-</ul>
-<p>Save a short note with your team ID and completed checks. No passwords, TAPs,
-tokens or credentials in screenshots. Ask the facilitator to approve this checkpoint, then open Mission 02 in the console.</p>
-<h2>Troubleshooting</h2>
+<p><strong>You should see:</strong> Python 3.12+ and <strong>Contracts ready</strong>. This is an offline import
+check, <strong>not</strong> a working agent or proof of Azure access. Use <strong>Ctrl+Shift+P &gt;
+Python: Select Interpreter</strong> and choose this folder's <code>.venv</code>.
+No activation or execution-policy change is needed with the explicit executable.</p>
+<p>Open these files in the Explorer:</p>
 <table>
 <thead>
 <tr>
-<th>Symptom</th>
-<th>What to do</th>
+<th>File</th>
+<th>Read it to understand</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>python</code> missing/older than 3.12</td>
-<td>Ask the coach to select the prepared interpreter</td>
+<td><code>starter/route_resolve/agents.py</code></td>
+<td>Three unfinished functions; implement only <code>triage</code> now</td>
 </tr>
 <tr>
-<td><code>No module named route_resolve</code></td>
-<td>Install from the folder containing <code>pyproject.toml</code>; use <code>.venv</code> Python</td>
+<td><code>starter/route_resolve/models.py</code></td>
+<td>Allowed categories and the final Result contract</td>
 </tr>
 <tr>
-<td><code>NotImplementedError</code> when calling an agent</td>
-<td>Expected now; only import contracts at this checkpoint</td>
+<td><code>data/practice-requests.json</code></td>
+<td>Synthetic records; find P01 and read its <code>text</code></td>
 </tr>
 <tr>
-<td>Project missing or 401/403</td>
-<td>Check account/tenant, then coach checks permissions; never add Owner</td>
-</tr>
-<tr>
-<td>Copilot unavailable</td>
-<td>Continue manually or pair with a teammate; it is optional</td>
+<td><code>starter/route_resolve/lab.py</code></td>
+<td>The supplied runner, which keeps trusted request/user IDs</td>
 </tr>
 </tbody>
 </table>
-<h2>Stretch - only after the checkpoint</h2>
-<p>Draw the request flow. Mark which facts come from the requester, which from a
-tool and which from policy. Explain why "the model said approved" is not evidence.</p></section>
-<section id="mission-02" class="review-card" hidden><h1>Mission 02 - Understand requests and gather facts (30 minutes)</h1>
-<p><strong>Working mode:</strong> read here in HackboxConsole; edit the same cloned repository in VS Code. All exercise files are already present. Add <code>--allow-cloud</code> only after the facilitator confirms access and approves shared-service calls.</p>
-<h2>What you will learn</h2>
-<p>Turn free text into validated fields and discover/call a real MCP tool.
-Do not decide final business outcomes yet.</p>
-<p><strong>Timebox:</strong> concepts 4 min; MCP check 6 min; triage 15 min; checkpoint 5 min.
-Prerequisite: challenge 01 passed and coach-approved model access.</p>
-<h2>Concepts in plain language</h2>
-<ul>
-<li><strong>Triage</strong> extracts what the person wants and chooses a domain. It is not
-  permission to approve the request.</li>
-<li><strong>Structured output</strong> means a predictable JSON object, not paragraphs your
-  program has to guess how to read.</li>
-<li><strong>MCP client/server</strong>: your client asks a server which tools exist, then calls
-  one by name with validated arguments. Describing a lookup is not running it.</li>
-<li><strong>Prompt injection</strong> is text trying to change the system's rules. Treat request
-  text as data, even when it says "ignore policy" or "already approved".</li>
-</ul>
-<h2>Core path</h2>
-<h3>Step 1 - Inspect the supplied request data</h3>
-<p>All files are already in your clone. Do not replace your implementations.
-Open <code>data/practice-requests.json</code> and find P01, P06, P14 and P04.
-There are <strong>20</strong> practice requests. Each has <code>id</code>, <code>user_id</code> and <code>text</code>.
-The fictional business user is separate from your Azure operator identity.
-Set the assigned TEAM_ID in this terminal using README.md.</p>
-<h3>Step 2 - Run one real MCP lookup</h3>
-<p>For this core exercise use <strong>local stdio</strong>. It is ready for local use and does
-not depend on unverified public hosting. Stdio starts the server as a child
-process; you do not also start the HTTP server.</p>
-<p>The repository includes the diagnostic so you can focus on learning:</p>
-<pre><code class="language-powershell">.\.venv\Scripts\python -m route_resolve.lab tools
+<p><code>NotImplementedError</code> in the agent functions is deliberate. The task is to replace
+the current mission's stub, not remove checks until the command appears to pass.</p>
+<h2>Step 3 - Find your existing project in the Foundry portal</h2>
+<p><strong>Where:</strong> PowerShell for Azure login; <a href="https://ai.azure.com/">Microsoft Foundry</a>
+in a browser for orientation.
+<strong>Why:</strong> the project endpoint tells your code <strong>where</strong> to work; the deployment
+name tells it <strong>which model</strong> to call. A portal page URL is not a project endpoint.</p>
+<ol>
+<li>First run <code>az account show --query user.name --output tsv</code>. If it shows the
+   assigned operator and the coordinators confirm its tenant, reuse that sign-in.</li>
+<li>If not signed in, use the supplied tenant ID. Do not repeatedly sign in when
+   the correct cached CLI account is already working:</li>
+</ol>
+<p><code>powershell
+   $tenantId = Read-Host "Paste the Azure tenant ID from the coordinators"
+   az login --tenant $tenantId --allow-no-subscriptions --use-device-code
+   az account show --query "{operator:user.name,tenant:tenantId}" --output json</code></p>
+<ol>
+<li>In the browser, sign into Foundry as that <strong>same operator</strong>. Open the
+   coordinator's direct project link or choose the assigned project by name.
+   Check the directory/tenant if the project is missing; do not create a project.</li>
+<li>On the project's overview/details page, find <strong>Project endpoint</strong>. Compare it
+   with the handout. Its shape is an HTTPS address ending in
+   <code>/api/projects/&lt;assigned-project&gt;</code>, not the <code>ai.azure.com</code> browser address.</li>
+<li>Locate the existing model/deployment listing and compare the chat deployment
+   name with the handout. Labels differ between Foundry experiences; if the
+   operator cannot see a listing, ask the coordinators to confirm the value.
+   A missing management screen does not authorize you to deploy another model.</li>
+</ol>
+<p><strong>You should be able to explain:</strong> "This is my team's project; this endpoint
+belongs to it; this deployment is the shared model." Sign-in alone does not prove
+model permission. A later real call will check that.</p>
+<p><strong>Read if needed:</strong> <a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/sdk-overview">Foundry SDKs and project endpoints</a>
+and <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/overview">What is Foundry Agent Service?</a>.
+Documentation can describe creating resources: skip those setup sections because
+the coordinators already supplied them. Do not add API keys or change roles.</p>
+<h2>Step 4 - Connect this terminal to the assigned resources</h2>
+<p><strong>Where:</strong> the same VS Code PowerShell terminal.
+<strong>Why:</strong> these environment variables are configuration, not an agent implementation.</p>
+<pre><code class="language-powershell">$env:TEAM_ID = Read-Host &quot;Assigned team ID&quot;
+$env:FOUNDRY_PROJECT_ENDPOINT = Read-Host &quot;Assigned Foundry project endpoint&quot;
+$env:FOUNDRY_MODEL = Read-Host &quot;Shared chat deployment name&quot;
 </code></pre>
-<p>Expected: JSON containing <strong>"tool_count": 9</strong>, tool names and an actual result
-for Phoenix's owner. Save the output as evidence. The child server stops when
-this diagnostic exits. Open <code>starter/route_resolve/lab.py</code> to inspect how
-discovery, initialization and the tool call work.</p>
-<p>The read-only tools are <code>check_user_access</code>, <code>get_project_owner</code>,
-<code>lookup_supplier</code>, <code>check_partner</code>, and <code>lookup_status</code>. <code>request_info</code> reports
-a need for clarification. Three <code>create_*_request</code> tools perform simulated
-actions; use them in challenge 04, not as a shortcut to triage.</p>
-<h3>Step 3 - Implement structured triage</h3>
-<p>Open <code>starter/route_resolve/agents.py</code> and implement <strong>only <code>triage(request)</code></strong>.
-Use the coach-provided Foundry deployment, not keyword routing or a fabricated
-model response. Follow README.md to set the cloud variables and identity.</p>
-<p>Your model should extract this shape:</p>
-<pre><code class="language-json">{
-  &quot;category&quot;: &quot;Access&quot;,
-  &quot;urgency&quot;: &quot;normal&quot;,
-  &quot;missing_fields&quot;: [],
-  &quot;arguments&quot;: {
-    &quot;project&quot;: &quot;Phoenix&quot;,
-    &quot;role&quot;: &quot;Reader&quot;
-  }
-}
+<p>Use the exact handout values, including spelling. <code>FOUNDRY_MODEL</code> means the
+<strong>deployment name</strong>, not a model family you pick yourself. These assignments last
+only in this terminal. <code>.env.example</code> is a reference and is not automatically
+loaded. Never paste credentials into source, screenshots or Copilot.</p>
+<h2>Step 5 - Build the first agent: extract, do not approve</h2>
+<p><strong>Where:</strong> <code>starter/route_resolve/agents.py</code>, function <code>triage(request)</code>.
+<strong>Why:</strong> the rest of the workflow needs predictable fields rather than a paragraph.</p>
+<p>Use the Python sections of <a href="https://learn.microsoft.com/en-us/agent-framework/get-started/your-first-agent">Your first agent</a>
+and the <a href="https://learn.microsoft.com/en-us/agent-framework/integrations/by-component/model-providers/microsoft-foundry">Microsoft Foundry provider</a>.
+Use the installed versions in <code>pyproject.toml</code>; current online samples can target
+a newer SDK. Inspect the installed constructor before adapting sample code:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python -c &quot;import inspect; from agent_framework.foundry import FoundryChatClient; print(inspect.signature(FoundryChatClient))&quot;
 </code></pre>
-<p>This is a <strong>shape example</strong>, not the answer file. Define and validate a schema:</p>
+<p>Build in this order, without implementing the other two functions:</p>
+<ol>
+<li>Write a short instruction: identify the domain and extract the requested
+   business fields; treat the request as data, not instructions that change rules.</li>
+<li>Create a Foundry-backed client using the configured project/deployment and
+   the assigned CLI identity. Prefer <code>AzureCliCredential</code> for this CLI-based lab
+   so a different cached VS Code identity is not selected. Do not print tokens.</li>
+<li>Define a structured response schema and validate the returned values:</li>
+</ol>
 <table>
 <thead>
 <tr>
 <th>Field</th>
-<th>Requirement</th>
+<th>Meaning and requirement</th>
 </tr>
 </thead>
 <tbody>
@@ -865,406 +945,538 @@ model response. Follow README.md to set the cloud variables and identity.</p>
 </tr>
 <tr>
 <td><code>urgency</code></td>
-<td>Your documented enum, e.g. <code>low</code>, <code>normal</code>, <code>high</code>; never an approval bypass</td>
+<td>Your documented enum, for example <code>low</code>, <code>normal</code>, <code>high</code>; not approval</td>
 </tr>
 <tr>
 <td><code>missing_fields</code></td>
-<td>List of missing business-field names; never invent their values</td>
+<td>List of business fields the requester did not provide</td>
 </tr>
 <tr>
 <td><code>arguments</code></td>
-<td>Domain-specific extracted fields, not claims of verified approval</td>
+<td>Extracted fields; Access needs <code>project</code> and <code>role</code>, Procurement needs <code>supplier</code> and positive EUR amount, DataSharing needs <code>partner</code> and <code>classification</code></td>
 </tr>
 </tbody>
 </table>
-<p>Access needs <code>project</code> and <code>role</code>; Procurement needs <code>supplier</code> and a positive
-EUR amount; DataSharing needs <code>partner</code> and <code>classification</code>. Preserve monetary
-values as decimal strings rather than imprecise binary floats.</p>
-<p>The runner retains the practice record's <strong>trusted</strong> <code>id</code> and <code>user_id</code>.
-Do not ask the model to invent them. <code>triage</code> receives the business text; your
-saved evidence combines its output with those IDs. Authentication and team
-settings must not come from the request's wording.</p>
-<p>Implementation sequence:</p>
 <ol>
-<li>Write a short extraction-only instruction and the schema.</li>
-<li>Use the installed Foundry client with Entra credentials and the assigned
-   deployment. Bound output tokens; do not run open-ended retries.</li>
-<li>Parse and validate the output. A refusal, malformed JSON or network error
-   must be visible, not converted into plausible successful triage.</li>
-<li>Keep the starter's function signature. If your SDK uses async calls, put them
-   in an async helper; use a synchronous wrapper only from a normal CLI runner,
-   not from inside an already-running event loop.</li>
+<li>Call the assigned model with a finite output/timeout budget. Parse its response
+   and return a dictionary matching your schema. Missing facts stay missing;
+   do not make up a project, approval or price. Keep monetary values as decimal
+   strings rather than binary floats.</li>
+<li>Make invalid JSON, a refusal, timeout or authentication failure visible.
+   Do not fall back to hard-coded categories and call that a successful model run.</li>
+<li>Keep the synchronous <code>triage(request)</code> signature used by the CLI runner.
+   Async SDK work can live in an async helper called from this normal CLI process.
+   Close underlying clients reliably; not every client is an async context manager.</li>
 </ol>
-<h3>Step 4 - Try three domains and one missing-field case</h3>
-<p>Choose P01, P06, P14 and P04 from <code>data/practice-requests.json</code>. The core requires
-the three domains plus one missing-field example, not all 20 requests.</p>
-<p>After implementing triage, this command runs one record:</p>
+<p>This is a <strong>code-built agent using the existing Foundry service</strong>. You do not
+need to press "Create agent" in the portal or deploy a hosted agent. You can
+reopen the portal to check your project/model details whenever needed.
+<a href="https://learn.microsoft.com/en-us/agent-framework/agents/structured-outputs">Structured output reference</a>.</p>
+<h2>Step 6 - Run one real request and explain what happened</h2>
+<p>After the coordinators approve shared-service calls:</p>
 <pre><code class="language-powershell">.\.venv\Scripts\python -m route_resolve.lab triage --id P01 --allow-cloud
 </code></pre>
-<p>Change only the selected ID for the other cases. Expected: valid fields for each
-domain; P04 must retain missing information rather than guess a project.</p>
-<p>Use an MCP lookup to verify a fact, separately from extraction. For Access,
-inspect the discovered tool schemas and look up the project owner and existing
-access. A missing-field request should use <code>request_info</code> with the stable
-request ID and the missing field; retain its clarification result.</p>
-<p>Try the supplied diagnostic options, which run only local synthetic lookups:</p>
-<pre><code class="language-powershell">.\.venv\Scripts\python -m route_resolve.lab tools --tool check_user_access --user-id user-02 --project Phoenix --role Reader
-.\.venv\Scripts\python -m route_resolve.lab tools --tool lookup_supplier --supplier &quot;Contoso Software&quot;
-.\.venv\Scripts\python -m route_resolve.lab tools --tool check_partner --partner Fabrikam
-.\.venv\Scripts\python -m route_resolve.lab tools --tool request_info --request-id P04 --field project
-</code></pre>
-<p>These are diagnostic tool inputs, not final decisions. Inspect the server's
-tool schemas before connecting them to a model.</p>
-<p>Keep the fixture's user/request ID in your runner; do not let a model override
-them. Do not edit <code>MockOperations</code> to change a tool's response.</p>
-<h2>Optional Copilot prompts</h2>
-<p><strong>Implementation support</strong> - review the plan and edits before accepting:</p>
-<pre><code class="language-text">Work only in this workshop workspace and on challenge 02. Read docs/mission-02.md,
-README.md, pyproject.toml, starter/route_resolve/agents.py and models.py.
-First propose a short plan, then help implement triage(request: str) only.
-Use the pinned, installed Foundry/Agent Framework APIs, Entra credentials and
-coach-supplied environment variables. Verify SDK signatures; do not invent them.
-Return validated category, urgency, missing_fields and arguments. Preserve
-request/user IDs in the caller, not model guesses. Missing facts stay missing.
-Show errors explicitly and bound model calls. Explain the changes so I can
-describe them. Do not implement policy retrieval, final decisions or handoff.
-Do not read facilitator solutions, expose tokens, or deploy resources.
-</code></pre>
-<p><strong>Review rather than solve</strong>:</p>
-<pre><code class="language-text">Review my triage output and code for this challenge. Do not change code yet.
-Find invented facts, schema errors, unbounded retries or request text being
-treated as instructions. Ask me to explain the evidence for each extracted
-field. Then suggest the smallest fix. Do not give final-request answer labels.
-</code></pre>
-<h2>Checkpoint - show the coach</h2>
+<p><strong>You should see:</strong> JSON with the original request/user IDs retained by the runner,
+and your structured triage output identifying an Access request. Inspect the
+extracted project/role against P01's text. This is <strong>not</strong> proof that access was
+granted. If the stub is still present, "Exercise not implemented yet" is the
+expected stop; return to Step 5.</p>
+<h2>Checkpoint - show the coordinators</h2>
 <ul>
-<li>[ ] A real MCP discovery/lookup trace, not text claiming a tool was called.</li>
-<li>[ ] Valid triage for Access, Procurement and DataSharing.</li>
-<li>[ ] A missing-field case with clarification preserved.</li>
-<li>[ ] Request claims remain separate from verified tool facts.</li>
-<li>[ ] Model/API errors are visible; no real actions were performed.</li>
+<li>[ ] Explain the business problem and the difference between classification and approval.</li>
+<li>[ ] Point to your clone, Python environment, assigned project and deployment.</li>
+<li>[ ] Show a real model-backed P01 triage result and explain each field.</li>
+<li>[ ] Explain where trusted IDs come from and what your agent must not invent.</li>
 </ul>
-<p>Save two structured examples and a redacted MCP trace in your own <code>evidence</code>
-folder. Keep your code for the next mission. If behind schedule, show the failing
-step to the coach rather than adding retries or changing permissions.</p>
+<p>After coordinator approval, continue to <a href="#mission-02">Mission 02</a>: let the
+workflow check operational facts through MCP tools.</p>
+<h2>Optional Copilot prompts</h2>
+<pre><code class="language-text">Read docs/mission-01.md and my starter files. Explain what triage does and propose
+a short plan for triage(request) only. Use the installed Foundry/Agent Framework
+APIs, Azure CLI identity and assigned project/deployment. Help me validate the
+schema and make errors visible. Explain each change before editing. Do not
+implement the other missions, find private answers, deploy resources or expose
+credentials. Ask me to explain why a category is not an approval.
+</code></pre>
 <h2>Troubleshooting</h2>
 <table>
 <thead>
 <tr>
-<th>Symptom</th>
-<th>What to do</th>
+<th>What you see</th>
+<th>What to do next</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>KeyError: TEAM_ID</code></td>
-<td>Set the assigned ID in the terminal running the diagnostic</td>
+<td>No repository URL</td>
+<td>Ask the coordinators for the approved source; do not clone a guessed repository</td>
 </tr>
 <tr>
-<td>No server or tool output</td>
-<td>Use <code>.venv</code> Python; check stderr and <code>await session.initialize()</code></td>
+<td>Cannot find <code>pyproject.toml</code></td>
+<td>Use <code>Get-Location</code>; open the cloned workshop root, not <code>starter</code></td>
 </tr>
 <tr>
-<td>Status lookup says request not found</td>
-<td>No action was recorded in this server process; restarts lose memory</td>
+<td>Wrong Python/import failure</td>
+<td>Select this folder's <code>.venv</code>; use its explicit Python executable</td>
 </tr>
 <tr>
-<td>Model 401/403</td>
-<td>Coach verifies identity/project role; never paste an API key as a workaround</td>
+<td>Project missing or 401/403</td>
+<td>Compare operator, tenant, endpoint and deployment; ask the coordinators, not for broader roles</td>
 </tr>
 <tr>
-<td>Model 429</td>
-<td>Pause and ask the coach; no parallel retry storm or quota changes</td>
+<td>Unexpected SDK argument</td>
+<td>Inspect the installed signature; do not upgrade all packages to match a web sample</td>
 </tr>
 <tr>
-<td>JSON surrounded by prose</td>
-<td>Fix structured-output/schema handling; never silently accept an invalid shape</td>
+<td>JSON looks like prose</td>
+<td>Recheck schema/instructions and reject invalid output; do not silently guess</td>
+</tr>
+</tbody>
+</table></section>
+<section id="mission-02" class="review-card" hidden><h1>Mission 02 - Give the agent tools to check facts (30 minutes)</h1>
+<h2>Your mission in the story</h2>
+<p>Your first triage agent can read Maya's message and identify an Access request.
+But who owns Project Phoenix? Does the fictional user already have access?
+For a software order, is the supplier known? For data sharing, is the partner
+recognized? A model's confident guess cannot answer these operational questions.</p>
+<p><strong>By the end:</strong> you will discover nine MCP tools, run real synthetic lookups,
+and distinguish <strong>what a requester says</strong> from <strong>what a tool verifies</strong>.
+You will also test and improve the triage agent you built in Mission 01.
+You are not yet deciding final outcomes or implementing the full workflow.</p>
+<p><strong>You change:</strong> refine <code>triage</code> as needed; keep the supplied tool rules unchanged.
+<strong>You use:</strong> the same clone, local MCP diagnostic and practice requests.
+<strong>Timebox:</strong> concepts 4 min; tools 10 min; triage checks 11 min; checkpoint 5 min.
+Prerequisite: Mission 01 approved by the coordinators. This guide is
+<code>docs/mission-02.md</code> in your clone.</p>
+<h2>Step 1 - Understand the conversation between an agent and a tool</h2>
+<p><strong>Where:</strong> read here, then open <code>starter/route_resolve/mcp_server.py</code> in VS Code.
+<strong>Why:</strong> MCP gives the agent a standard way to discover tools and call them.</p>
+<pre><code class="language-text">Request -&gt; triage fields -&gt; MCP client -&gt; named tool -&gt; observed JSON result
+</code></pre>
+<p>The <strong>client</strong> asks what tools exist and sends arguments. The <strong>server</strong> runs the
+selected tool. A model saying "I checked access" is not a tool call.
+Our supplied server uses fictional data and cannot change real Azure access.
+<a href="https://learn.microsoft.com/en-us/agent-framework/agents/tools/local-mcp-tools">Microsoft Learn: using MCP tools with agents</a>.
+Read the local/stdio examples; you do not need an extra public server.</p>
+<h2>Step 2 - Discover the tools and run the first lookup</h2>
+<p><strong>Where:</strong> VS Code PowerShell terminal, same workshop root.
+<strong>Why:</strong> run a diagnostic before attaching tools to a model, so you know they work.</p>
+<p>Reuse your assigned <code>TEAM_ID</code> from Mission 01. If this is a new terminal:</p>
+<pre><code class="language-powershell">$env:TEAM_ID = Read-Host &quot;Assigned team ID from the coordinators&quot;
+.\.venv\Scripts\python -m route_resolve.lab tools
+</code></pre>
+<p><strong>You should see:</strong> JSON with <code>"tool_count": 9</code>, the tool names, and a result from
+<code>get_project_owner</code> for Phoenix. Find the returned owner in the actual output.
+The diagnostic starts one local child server, calls it, and stops it on exit.
+You do not start another HTTP server for this step. No <code>--allow-cloud</code> is needed:
+this diagnostic does not call Foundry.</p>
+<p>Open <code>starter/route_resolve/lab.py</code>, find <code>inspect_tools</code>, and identify:
+server startup, session initialization, tool discovery and the actual tool call.
+You are reading supplied plumbing, not expected to implement MCP from scratch.</p>
+<h2>Step 3 - Check the facts needed by each specialist</h2>
+<p><strong>Where:</strong> same terminal; look at the corresponding request records in
+<code>data/practice-requests.json</code>.
+<strong>Why:</strong> triage extracts proposed values; tools check those values against
+fictional operational records.</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python -m route_resolve.lab tools --tool check_user_access --user-id user-02 --project Phoenix --role Reader
+.\.venv\Scripts\python -m route_resolve.lab tools --tool lookup_supplier --supplier &quot;Contoso Software&quot;
+.\.venv\Scripts\python -m route_resolve.lab tools --tool check_partner --partner Fabrikam
+</code></pre>
+<p>These are diagnostic inputs, not an answer key for final requests. Inspect each
+returned result, including <code>isError</code>; do not infer success from a tool name.</p>
+<table>
+<thead>
+<tr>
+<th>Tool type</th>
+<th>Available tools</th>
+<th>What you learn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read-only facts</td>
+<td><code>check_user_access</code>, <code>get_project_owner</code>, <code>lookup_supplier</code>, <code>check_partner</code>, <code>lookup_status</code></td>
+<td>What the synthetic system currently knows</td>
+</tr>
+<tr>
+<td>Clarification</td>
+<td><code>request_info</code></td>
+<td>Which missing field must be requested</td>
+</tr>
+<tr>
+<td>Simulated writes, for Mission 04</td>
+<td><code>create_access_request</code>, <code>create_purchase_request</code>, <code>create_data_share_request</code></td>
+<td>What the mock operation actually did</td>
 </tr>
 </tbody>
 </table>
-<h2>Stretch - after the checkpoint</h2>
-<p>Try P19. Explain why a requester cannot grant Owner access by instructing the
-agent to skip checks. Add one malformed-output test with a fake model response;
-label it a local test, not evidence of a live model call.</p></section>
-<section id="mission-03" class="review-card" hidden><h1>Mission 03 - Ground decisions in policy (45 minutes)</h1>
-<p><strong>Working mode:</strong> read here in HackboxConsole; edit the same cloned repository in VS Code. All exercise files are already present. Add <code>--allow-cloud</code> only after the facilitator confirms access and approves shared-service calls.</p>
-<h2>What you will learn</h2>
-<p>Retrieve actual policy evidence, preserve citations and distinguish a
-requester's claims from verified policy. You will implement <code>retrieve_policy</code>.</p>
-<p><strong>Timebox:</strong> concepts 5 min; inspect policy/configuration 8 min; retrieval
-implementation 22 min; examples 5 min; checkpoint 5 min.
-Prerequisite: triage works and the coach has provisioned, loaded and authorized
-your team's knowledge base. Indexing is a coach preparation task, not an
-instruction for beginners to deploy another Search service.</p>
-<h2>Concepts in plain language</h2>
-<p>The model's training is not your company's current policy. <strong>Retrieval</strong> sends a
-question to a knowledge base and returns relevant passages. <strong>Grounding</strong> means
-using those passages to justify the answer. <strong>Citations</strong> identify the evidence
-actually returned, not an attractive-looking URL the model invented.</p>
-<p>In this lab, Foundry IQ uses an Azure AI Search knowledge base containing four
-fictional policy documents. Keep these sources separate:</p>
+<p>Save the relevant, non-secret tool output as evidence. Do not change the supplied
+<code>MockOperations</code> rules to force a preferred outcome.</p>
+<h2>Step 4 - Improve your triage agent across the three domains</h2>
+<p><strong>Where:</strong> <code>triage</code> in <code>starter/route_resolve/agents.py</code>, then the terminal.
+<strong>Why:</strong> one good Access example does not prove your first agent can read other
+requests. Keep using the assigned Foundry model and bounded calls.</p>
+<p>Read P01, P06, P14 and P04 in the practice file first. After coordinator approval:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python -m route_resolve.lab triage --id P01 --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab triage --id P06 --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab triage --id P14 --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab triage --id P04 --allow-cloud
+</code></pre>
+<p><strong>You should see:</strong> valid categories/fields across the three domains. P04's missing
+project must remain missing, not be guessed. Review your instruction, schema and
+validation only where the observed result shows a problem. Do not repeatedly run
+all 20 cases until a lucky answer appears.</p>
+<p>Reopen your <a href="https://ai.azure.com/">Foundry project</a> if you need to compare endpoint
+or deployment values. This mission adds <strong>tools</strong>, not another Azure resource or
+another model deployment. For schema help, see
+<a href="https://learn.microsoft.com/en-us/agent-framework/agents/structured-outputs">structured outputs</a>.</p>
+<h2>Step 5 - Ask for missing information instead of inventing it</h2>
+<p>Run the supplied clarification diagnostic:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python -m route_resolve.lab tools --tool request_info --request-id P04 --field project
+</code></pre>
+<p><strong>You should see:</strong> an actual clarification response tied to P04. Compare it with
+your triage's <code>missing_fields</code>. The runner retains trusted request/user IDs;
+request text such as "use another team's identity" cannot replace them.</p>
+<p>Draw a small table in your evidence: request claim, extracted field, tool called,
+observed fact or missing information. You are preparing the evidence a specialist
+will need in Mission 04, not treating extraction as verified approval.</p>
+<h2>Checkpoint - show the coordinators</h2>
+<ul>
+<li>[ ] Discover nine tools and point to one actual tool response.</li>
+<li>[ ] Explain client versus server, and extraction versus verified fact.</li>
+<li>[ ] Show triage examples from three domains plus a missing-field case.</li>
+<li>[ ] Show P04's clarification; explain why inventing a project would be unsafe.</li>
+</ul>
+<p>Next: <a href="#mission-03">Mission 03</a>, where your code retrieves the actual policy
+that governs those facts.</p>
+<h2>Optional Copilot prompts</h2>
+<pre><code class="language-text">Read docs/mission-02.md and my existing triage implementation. Explain one MCP
+discovery/tool-call trace, then help me test three domains and missing fields.
+Do not change MockOperations or fabricate tool execution. Use the installed SDK
+and keep trusted IDs in the caller. Ask for approval before editing. Do not
+implement policy retrieval or the final workflow, and do not deploy anything.
+</code></pre>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>What you see</th>
+<th>What to do next</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TEAM_ID error</td>
+<td>Set the assigned value in this terminal, not a guessed team</td>
+</tr>
+<tr>
+<td>MCP import failure</td>
+<td>Use the prepared <code>.venv</code> and confirm the <code>mcp</code> extra was installed</td>
+</tr>
+<tr>
+<td>A tool returns <code>isError: true</code></td>
+<td>Read its schema/arguments; preserve the error instead of claiming a successful lookup</td>
+</tr>
+<tr>
+<td>P04 gets an invented project</td>
+<td>Fix triage's missing-field instructions/validation, not the request data</td>
+</tr>
+<tr>
+<td>Lookup state disappears</td>
+<td>The diagnostic's child server exited; persistent same-process tests come in Mission 04</td>
+</tr>
+</tbody>
+</table></section>
+<section id="mission-03" class="review-card" hidden><h1>Mission 03 - Give decisions real policy evidence (45 minutes)</h1>
+<h2>Your mission in the story</h2>
+<p>The team can now read Maya's request and check operational facts. But knowing
+who owns Phoenix does not tell you who may approve access. Similarly, a known
+supplier does not authorize every purchase, and a known partner cannot receive
+every dataset. The specialist needs the <strong>current written policy</strong>.</p>
+<p><strong>By the end:</strong> implement <code>retrieve_policy(category, request)</code> so it queries
+your assigned knowledge base and returns actual passages and their references.
+Do not implement final business decisions yet.</p>
+<p><strong>You change:</strong> the <code>retrieve_policy</code> stub in <code>starter/route_resolve/agents.py</code>.
+<strong>You use:</strong> your team's existing Foundry IQ / Azure AI Search knowledge base.
+<strong>Timebox:</strong> policy/configuration 10 min; adapter 25 min; checks/checkpoint 10 min.
+Prerequisite: Missions 01-02 passed; the coordinators confirm the four policy
+documents are loaded and your identity is authorized. This guide is
+<code>docs/mission-03.md</code> in your clone.</p>
+<h2>Step 1 - Understand what retrieval adds</h2>
+<p><strong>Where:</strong> VS Code Explorer, <code>data/policies</code>.
+<strong>Why:</strong> reading the local files teaches you the rules; it is not proof that
+your running agent retrieved them from the assigned cloud knowledge base.</p>
+<pre><code class="language-powershell">Get-ChildItem .\data\policies
+Get-Content .\data\policies\access.md
+</code></pre>
+<p>Open all four files. Find their source IDs: <code>ACCESS-001</code>, <code>BUY-001</code>, <code>SHARE-001</code>
+and <code>FAQ-001</code>. Choose one rule and identify its condition and approval owner.
+Do not turn the entire policy matrix into hard-coded replacement answers.</p>
 <table>
 <thead>
 <tr>
 <th>Source</th>
-<th>What it tells you</th>
-<th>What it cannot prove</th>
+<th>Tells you</th>
+<th>Does not prove</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Request text</td>
-<td>What the requester wants or claims</td>
+<td>What someone asks or claims</td>
 <td>That approval exists</td>
 </tr>
 <tr>
-<td>MCP lookup</td>
-<td>Current synthetic operational facts</td>
+<td>MCP fact lookup</td>
+<td>Current fictional operational facts</td>
 <td>The complete policy</td>
 </tr>
 <tr>
-<td>Retrieved policy</td>
-<td>Applicable rules and approval owner</td>
-<td>That an action already completed</td>
+<td>Retrieved passage and reference</td>
+<td>The applicable policy and its source</td>
+<td>That an operation completed</td>
 </tr>
 <tr>
-<td>Mock action result</td>
+<td>Observed mock action response</td>
 <td>What the simulated operation did</td>
-<td>That a real system changed</td>
+<td>That real business systems changed</td>
 </tr>
 </tbody>
 </table>
-<p>Agentic retrieval can use a model to plan searches. It is not just opening a
-local Markdown file, and it can incur both retrieval and model usage.</p>
-<h2>Core path</h2>
-<h3>Step 1 - Add and read the policies</h3>
-<p>The four policies are already in <code>data/policies</code>. Keep your code and environment.</p>
-<pre><code class="language-powershell">Get-ChildItem .\data\policies
-Get-Content .\data\policies\access.md
-Get-Content .\data\policies\faq-and-approvals.md
-</code></pre>
-<p>Expected: four documents: <code>access.md</code>, <code>procurement.md</code>, <code>data-sharing.md</code>,
-<code>faq-and-approvals.md</code>. Open all four in VS Code and find policy IDs
-<strong>ACCESS-001</strong>, <strong>BUY-001</strong>, <strong>SHARE-001</strong>, <strong>FAQ-001</strong>.</p>
-<p>For one rule, identify its condition, approval owner and source policy ID.
-Do not copy the complete decision matrix into an if/else replacement for retrieval.</p>
-<h3>Step 2 - Check your team's retrieval target</h3>
+<p><strong>Retrieval</strong> finds passages. <strong>Grounding</strong> uses those passages to justify an
+answer. <strong>Citations</strong> identify the actual returned sources.
+<a href="https://learn.microsoft.com/en-us/azure/search/agentic-retrieval-how-to-retrieve">Microsoft Learn: query a knowledge base</a>.
+Select Python/REST as appropriate; you are querying an existing knowledge base,
+not following resource-creation or indexing tutorials.</p>
+<h2>Step 2 - Locate the assigned knowledge base and copy its configuration</h2>
+<p><strong>Where:</strong> the coordinator handout, <a href="https://ai.azure.com/">Foundry portal</a>, and
+the VS Code terminal.
+<strong>Why:</strong> the Foundry project endpoint is <strong>not</strong> the Search endpoint; neither is
+the browser page address.</p>
 <ol>
-<li>Ask the coach for the assigned Search endpoint and <strong>knowledge-base name</strong>.</li>
-<li>Set <code>SEARCH_ENDPOINT</code> and <code>TEAM_KNOWLEDGE_BASE</code> using README.md.</li>
-<li>Confirm the knowledge-base name has your team's prefix, for example
-   <code>team-01-...</code>. A matching name is a safety check, not authorization by itself.</li>
-<li>Coach confirms the four policies are indexed and your identity can retrieve.
-   An empty/missing knowledge base is not something to hide with local answers.</li>
+<li>Reopen your assigned Foundry project from Mission 01. If a knowledge listing
+   is available, match its knowledge-base name to your team's handout.</li>
+<li>Some participant identities cannot browse the Search management screens.
+   Use the verified handout values; ask the coordinators if a screen is absent.
+   Do not try a different team's knowledge base or grant yourself more roles.</li>
+<li>Set the values in the terminal that will run your code:</li>
 </ol>
-<p>Do not create a service, alter permissions or try another team's index. If the
-coach authorizes a particular document-upload UI, follow that supplied procedure;
-otherwise participants have retrieval access only.</p>
-<h3>Step 3 - Implement <code>retrieve_policy(category, request)</code></h3>
-<p>Keep the function signature in <code>starter/route_resolve/agents.py</code>. Its result is
-a dictionary containing the actual retrieval response, including <code>references</code>
-and <code>activity</code> if supplied. Do not replace references with local filenames.</p>
-<p>Build it in this order:</p>
+<p><code>powershell
+   $env:SEARCH_ENDPOINT = Read-Host "Assigned HTTPS Search endpoint"
+   $env:TEAM_KNOWLEDGE_BASE = Read-Host "Assigned team knowledge-base name"</code></p>
 <ol>
-<li>Validate the category against the three domains and require nonempty text.</li>
-<li>Read only the assigned HTTPS Search endpoint and knowledge-base name.
-   Reject an unexpected service, non-HTTPS URL or wrong team prefix.</li>
-<li>Use <code>DefaultAzureCredential</code> for an Entra token scoped to
-   <code>https://search.azure.com/.default</code>. Never print or store the token.</li>
-<li>Send a retrieval request with a finite timeout. The reference contract is:</li>
+<li>Compare the knowledge-base team prefix with <code>TEAM_ID</code>. Name matching is a
+   useful configuration check, not a substitute for real service authorization.</li>
 </ol>
-<pre><code class="language-text">POST {SEARCH_ENDPOINT}/knowledgebases/{TEAM_KNOWLEDGE_BASE}/retrieve
-     ?api-version=2026-08-01-preview
-Authorization: Bearer &lt;token obtained in memory&gt;
-Content-Type: application/json
-</code></pre>
-<pre><code class="language-json">{
-  &quot;messages&quot;: [
-    {
-      &quot;role&quot;: &quot;user&quot;,
-      &quot;content&quot;: [
-        {
-          &quot;type&quot;: &quot;text&quot;,
-          &quot;text&quot;: &quot;Find the applicable policy and approval owner for this request.&quot;
-        }
-      ]
-    }
-  ]
-}
-</code></pre>
-<p>The URL above is shown on two lines for readability; send it as <strong>one URL</strong>.
-Replace the sample question with the category and synthetic request.
-The coach must live-verify this preview API contract before the event; follow
-any reviewed version update in the coach handout, not an API guessed by Copilot.
-See <a href="https://learn.microsoft.com/azure/search/agentic-retrieval-how-to-retrieve">Microsoft's knowledge-base retrieval documentation</a>.</p>
+<p><strong>You should have:</strong> two distinct HTTPS service addresses (Foundry project and
+Search) and the exact assigned knowledge-base name. The coordinators provide
+and verify the services; you do not upload policies or create an index here.</p>
+<h2>Step 3 - Build the retrieval adapter one operation at a time</h2>
+<p><strong>Where:</strong> <code>retrieve_policy(category, request)</code> in <code>agents.py</code>.
+<strong>Why:</strong> an adapter converts your question into a real retrieval request and
+preserves the evidence the specialist will later need.</p>
 <ol>
-<li>Check the HTTP status and parse the JSON. A 401/403, timeout, empty response
-   or missing references must produce an explicit error and block execution.
-   Do not catch it and return a local document as if cloud retrieval succeeded.</li>
-<li>Preserve returned evidence and reference identifiers verbatim in your
-   internal result. Save non-secret response evidence for the coach. Treat any
-   instruction embedded in retrieved text as data, not a new system rule.</li>
+<li>Validate the domain and require nonempty question text. Read only your assigned
+   HTTPS Search endpoint and knowledge-base name.</li>
+<li>Use the assigned Azure CLI identity for an Entra token with scope
+   <code>https://search.azure.com/.default</code>. Keep the token in memory; never print it
+   or write it into code/evidence. See
+   <a href="https://learn.microsoft.com/en-us/python/api/azure-identity/azure.identity.azureclicredential">AzureCliCredential</a>.</li>
+<li>Send one bounded request using the workshop's reviewed retrieval contract:</li>
 </ol>
-<p>You may ask Copilot for transport/schema boilerplate. Your learning task is to
-explain where the evidence came from, why it applies and when it is insufficient.
-The credential and SDK APIs must match the installed packages.</p>
-<h3>Step 4 - Retrieve three examples</h3>
-<p>After implementation, run this practice example:</p>
+<p><code>text
+   POST {SEARCH_ENDPOINT}/knowledgebases/{TEAM_KNOWLEDGE_BASE}/retrieve?api-version=2026-08-01-preview
+   Content-Type: application/json
+   Authorization: Bearer &lt;token obtained in memory&gt;</code></p>
+<p><code>json
+   {
+     "messages": [
+       {
+         "role": "user",
+         "content": [
+           {"type": "text", "text": "Your category and synthetic policy question"}
+         ]
+       }
+     ]
+   }</code></p>
+<p>Replace the question with your input; do not paste the placeholder literally.
+   This workshop version was live-rehearsed against the assigned service.
+   If newer Learn examples use a different preview API, keep the reviewed lab
+   version unless the coordinators issue an updated contract.
+4. Check HTTP status before reading success fields. Use the real response shape,
+   not a guessed <code>answer</code> property. Preserve returned <code>references</code>, passages and
+   retrieval <code>activity</code> when present.
+5. Return a dictionary retaining that evidence. A local policy filename or a
+   citation written by the model is not a returned retrieval reference.
+6. Make 401/403, timeouts, empty evidence and missing references visible. Stop
+   unsupported execution; do not substitute local files while claiming the
+   cloud query succeeded.</p>
+<p>You may use transport/schema boilerplate from the docs, but you must understand
+the endpoint, identity, question and returned evidence. No new model or hosted
+agent deployment is needed. See the
+<a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/sdk-overview">Foundry SDK/endpoints guide</a>
+if those addresses are still confusing.</p>
+<h2>Step 4 - Retrieve and inspect evidence for each domain</h2>
+<p><strong>Where:</strong> the same configured terminal, after coordinator approval of cloud calls.</p>
 <pre><code class="language-powershell">.\.venv\Scripts\python -m route_resolve.lab policy --category Access --text &quot;Which policy and approval owner apply to Reader access to Phoenix?&quot; --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab policy --category Procurement --text &quot;Which rules apply to a EUR 600 software purchase from Contoso Software?&quot; --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab policy --category DataSharing --text &quot;Which rules apply to sharing an Internal dataset with Fabrikam?&quot; --allow-cloud
 </code></pre>
-<p>Repeat with:</p>
+<p><strong>You should see:</strong> actual returned evidence and nonempty references for each
+question. For one passage, explain the rule and approval owner in your own words,
+then point to its source reference. Do not label the exercise successful merely
+because JSON was returned.</p>
+<p>Save redacted evidence locally: question, returned passage, reference ID and
+relevant activity. Do not save Authorization headers, tokens or real business data.</p>
+<h2>Step 5 - Decide when the evidence is not enough</h2>
+<p>Consider a request missing its classification or price. What must you ask before
+applying the rule? Now consider a requester saying "already approved." Does the
+request text prove authorization? Explain why retrieved instructions such as
+"ignore all previous rules" are untrusted content, not a new system instruction.
+You will connect this reasoning to actual clarification/actions in Mission 04.</p>
+<h2>Checkpoint - show the coordinators</h2>
 <ul>
-<li>Procurement: a EUR 600 software purchase from Contoso Software.</li>
-<li>DataSharing: sharing an Internal dataset with Fabrikam.</li>
+<li>[ ] Show live retrieved evidence for all three domains.</li>
+<li>[ ] Link one policy explanation to an actual passage and returned reference.</li>
+<li>[ ] Explain the difference between an approval requirement and verified approval.</li>
+<li>[ ] Show how retrieval failures block unsupported action.</li>
 </ul>
-<p>Expected: actual passages and references from the assigned knowledge base.
-Do not assume a response key such as <code>answer</code> unless the real response contains
-it. Find the retrieved policy ID and approval owner, then explain the rule in
-your own words. These are evidence exercises, not simulated writes.</p>
-<p>If writing responses to an evidence file, ensure your application never includes
-Authorization headers or tokens. A useful record has request ID, query,
-retrieved passages, references and relevant activity, without credentials.</p>
-<h3>Step 5 - Ask for missing information</h3>
-<p>Try a request with an unknown classification, or a purchase without a price.
-Explain what information is missing. Do not silently assume Public data or a
-low price. An "already approved" claim needs verified evidence; it is not a
-reason to skip policy retrieval.</p>
+<p>Next: <a href="#mission-04">Mission 04</a>, where a specialist uses this adapter and
+the MCP tools to produce an evidence-backed simulated result.</p>
 <h2>Optional Copilot prompts</h2>
-<p><strong>Build the retrieval adapter, not the business answer</strong>:</p>
-<pre><code class="language-text">Help me implement retrieve_policy(category: str, request: str) in this workshop
-workspace for challenge 03. Read docs/mission-03.md and the installed dependencies.
-First explain the HTTP request and the response fields we must preserve.
-Use my coach-provided HTTPS Search endpoint/knowledge base, Entra credentials,
-a finite timeout and the reviewed retrieval API version. Validate the assigned
-team prefix, but do not mistake it for access control. Preserve actual
-references and activity; raise a clear error on failed/no-evidence retrieval.
-Do not log tokens, invent URLs/citations, deploy resources, change permissions
-or fall back to local policy files while claiming cloud success.
-Do not implement final decisions or read facilitator answers.
-Explain the code and suggest one successful and one failure-path check.
+<pre><code class="language-text">Read docs/mission-03.md. Help me plan retrieve_policy only using the assigned
+Search endpoint, knowledge base, CLI identity and reviewed API version. Explain
+the request/response and preserve real references/activity. Fail visibly on
+missing evidence. Do not log tokens, invent citations, use another team's index,
+deploy resources or replace cloud retrieval with a local answer. Review my
+redacted evidence and ask which passage supports my explanation.
 </code></pre>
-<p><strong>Evidence review</strong>:</p>
-<pre><code class="language-text">Here are redacted synthetic retrieval passages and their references.
-Do not rewrite the code or invent evidence. Help me identify the applicable
-policy ID, condition and approval owner. Quote which retrieved passage supports
-each statement. Say explicitly when evidence is missing or contradictory.
-Ask me whether this proves approval, or only tells us approval is required.
-</code></pre>
-<h2>Checkpoint - show the coach</h2>
-<ul>
-<li>[ ] Three domains have actual retrieval evidence.</li>
-<li>[ ] You can connect each explanation to a returned passage and reference.</li>
-<li>[ ] You preserved reference IDs and activity rather than fabricating sources.</li>
-<li>[ ] Missing information triggers clarification.</li>
-<li>[ ] Retrieval failure prevents unsupported execution.</li>
-</ul>
-<p>Local policy files help you understand the rules, but <strong>do not prove Foundry IQ
-integration</strong>. If cloud access is blocked, label the exercise incomplete and ask
-the coach. After facilitator approval, open Mission 04 in the console.</p>
 <h2>Troubleshooting</h2>
 <table>
 <thead>
 <tr>
-<th>Symptom</th>
-<th>What to do</th>
+<th>What you see</th>
+<th>What to do next</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>401 / credential unavailable</td>
-<td>Verify participant CLI sign-in and intended credential; coach helps</td>
-</tr>
-<tr>
-<td>403</td>
-<td>Coach checks Search/knowledge-base authorization; do not widen roles</td>
+<td>401/403</td>
+<td>Recheck assigned CLI identity, tenant and target; ask the coordinators</td>
 </tr>
 <tr>
 <td>404</td>
-<td>Check service URL, knowledge-base name and reviewed API version</td>
+<td>Compare service URL, knowledge-base spelling and reviewed API version</td>
 </tr>
 <tr>
 <td>No references</td>
-<td>Coach checks ingestion/query relevance; do not manufacture citations</td>
+<td>Stop; ask the coordinators to check indexing/access rather than inventing evidence</td>
 </tr>
 <tr>
-<td>Throttling / timeout</td>
-<td>Pause; reduce repeated queries and ask the coach</td>
+<td>Unknown response field</td>
+<td>Inspect the actual JSON and the retrieval docs; do not assume an <code>answer</code> key</td>
 </tr>
 <tr>
-<td>Only local Markdown paths appear</td>
-<td>You may be using fixtures, not cloud retrieval; inspect the actual HTTP response</td>
+<td>Portal listing unavailable</td>
+<td>Use verified handout configuration; management browsing and retrieval rights differ</td>
+</tr>
+</tbody>
+</table></section>
+<section id="mission-04" class="review-card" hidden><h1>Mission 04 - Hand off, act and explain (45 minutes)</h1>
+<h2>Your mission in the story</h2>
+<p>Maya's Access request, a software-purchase request and a data-sharing request
+must not all go to one all-powerful agent. Your triage agent should hand each
+request to the relevant specialist. That specialist checks facts, retrieves
+policy and either performs a permitted <strong>mock</strong> action, asks for missing
+information, routes for approval or escalates for review.</p>
+<p><strong>By the end:</strong> <code>resolve</code> runs that bounded workflow and returns a validated
+<code>Result</code> with actual evidence. You then run the ten final requests and demonstrate
+what happened. No real access, purchase or transfer is performed.</p>
+<p><strong>You change:</strong> <code>resolve(request)</code> in <code>starter/route_resolve/agents.py</code>.
+<strong>You reuse:</strong> triage, retrieval, supplied MCP tools and the same Foundry project.
+<strong>Timebox:</strong> server/setup 5 min; workflow 20 min; practice/final 12 min; demo 8 min.
+Prerequisite: the first three checkpoints passed. This guide is
+<code>docs/mission-04.md</code> in your clone.</p>
+<h2>Step 1 - See the whole flow before writing orchestration</h2>
+<p><strong>Where:</strong> read here; keep <code>models.py</code> open in VS Code.
+<strong>Why:</strong> orchestration decides what runs next; it is not asking every agent to
+answer every request.</p>
+<pre><code class="language-text">Trusted fixture IDs + request text
+       -&gt; Triage -&gt; one specialist: Access OR Procurement OR DataSharing
+       -&gt; retrieved policy + observed MCP facts
+       -&gt; clarification / permitted mock action / approval route / escalation
+       -&gt; Result + citations + redacted trace
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th>What your evidence must mean</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resolve</td>
+<td>An answer is sufficient; no action was needed</td>
+</tr>
+<tr>
+<td>Execute</td>
+<td>The permitted simulated operation actually completed</td>
+</tr>
+<tr>
+<td>Route</td>
+<td>More information or approval is needed; do not claim completion</td>
+</tr>
+<tr>
+<td>Escalate</td>
+<td>A relevant specialist/reviewer must assess the request</td>
 </tr>
 </tbody>
 </table>
-<h2>Stretch - after the checkpoint</h2>
-<p>Compare a vague query with a precise one. Explain which retrieved passage
-changed and why. Then test request text that demands a policy override and
-confirm it does not become an authorization instruction.</p></section>
-<section id="mission-04" class="review-card" hidden><h1>Mission 04 - Hand off, act and explain (45 minutes)</h1>
-<p><strong>Working mode:</strong> read here in HackboxConsole; edit the same cloned repository in VS Code. All exercise files are already present. Add <code>--allow-cloud</code> only after the facilitator confirms access and approves shared-service calls.</p>
-<h2>What you will learn</h2>
-<p>Combine triage, policy evidence and tools into a bounded multi-agent workflow.
-Run the ten final requests and explain actual outcomes, not just fluent text.</p>
-<p><strong>Timebox:</strong> concepts 5 min; handoff implementation 20 min; final run 10 min;
-demo/checkpoint 7 min; stop local processes 3 min.
-Prerequisite: triage, MCP and actual policy retrieval pass their checkpoints.</p>
-<h2>Concepts in plain language</h2>
-<p><strong>Orchestration</strong> coordinates which component runs next. A <strong>handoff</strong> transfers
-control from Triage to one relevant specialist. It is not a loop that asks every
-agent to answer every question.</p>
-<p><strong>Least privilege</strong> means each specialist gets only its required tools.
-<strong>Idempotency</strong> means retrying the same unchanged request does not create a
-second action. <strong>Bounded turns</strong> prevent endless model/tool calls and cost.</p>
-<pre><code class="language-text">Triage --handoff--&gt; Access OR Procurement OR DataSharing
-                  --retrieve policy--&gt; inspect facts
-                  --mock action / clarification--&gt; Result
-</code></pre>
-<p>The orchestration runs on your laptop against approved shared Azure services.
-The coach may host authenticated tools for the full event, but the timed core
-below uses a local loopback tool server. Do not deploy a hosted agent, APIM,
-Grafana or extra infrastructure during the exercise.</p>
-<h2>Core path</h2>
-<h3>Step 1 - Add final requests and keep your implementations</h3>
-<p>The final request file is already in your clone. Do not overwrite your agent implementations.</p>
-<pre><code class="language-powershell">.\.venv\Scripts\python -c &quot;import json; from pathlib import Path; rows=json.loads(Path('data/final-requests.json').read_text()); print('Final requests:',len(rows))&quot;
-</code></pre>
-<p>Expected: <strong>Final requests: 10</strong>. There is no answer file in this workshop repository.
-Do not ask Copilot to search the private coach repository for one.</p>
-<h3>Step 2 - Keep one MCP server alive</h3>
-<p>A short-lived stdio diagnostic loses its records when it exits. To test retries
-across calls, keep a <strong>single team-local HTTP server</strong> running.</p>
-<p>In terminal A, from your working folder:</p>
-<pre><code class="language-powershell">$env:TEAM_ID = &quot;team-01&quot;
+<p>The final runner passes <code>resolve</code> a JSON string containing trusted <code>id</code>, <code>user_id</code>
+and <code>text</code>. Parse that envelope first. The business text cannot replace those
+IDs, your team identity or the assigned service configuration.</p>
+<p>Read <a href="https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/handoff">handoff orchestration</a>
+and <a href="https://learn.microsoft.com/en-us/agent-framework/agents/tools/local-mcp-tools">MCP tools</a>.
+Use the pinned Python SDK, not an unrelated portal-hosted-agent deployment guide.</p>
+<h2>Step 2 - Start one team-local MCP server and keep it running</h2>
+<p><strong>Where:</strong> VS Code <strong>Terminal A</strong>, repository root.
+<strong>Why:</strong> one retained mock store lets all specialists see the same action records.
+The short-lived diagnostic from Mission 02 does not retain records after exit.</p>
+<pre><code class="language-powershell">$env:TEAM_ID = Read-Host &quot;Assigned team ID&quot;
 .\.venv\Scripts\python -m route_resolve.mcp_server --transport streamable-http
 </code></pre>
-<p>Expected: a server on loopback port 8000. Use
-<code>http://127.0.0.1:8000/mcp</code>, not a public address. Leave terminal A running.
-Do not run a separate server per specialist; they must see the same mock store.</p>
-<p>In terminal B set the cloud/team variables from README.md again. This terminal
-runs your agent workflow. Restarting terminal A intentionally erases mock state.</p>
-<h3>Step 3 - Build a bounded handoff workflow</h3>
-<p>Implement <code>resolve(request: str) -&gt; Result</code> in <code>starter/route_resolve/agents.py</code>.
-For the supplied runner, <code>request</code> is a JSON string with the fixture's <code>id</code>,
-<code>user_id</code> and <code>text</code>. Parse this envelope first. The runner supplies IDs; the
-business text must not override identity, team settings or request IDs.</p>
-<p>Build these pieces incrementally:</p>
+<p><strong>You should see:</strong> a server listening on loopback port 8000.
+Use <code>http://127.0.0.1:8000/mcp</code>; leave Terminal A running.
+Do not open a public tunnel or start a different server for every specialist.
+Restarting it erases its in-memory action records.</p>
+<p>Open <strong>Terminal B</strong> for the workflow commands. Set the same team/model/project
+and Search variables from Missions 01/03 there; environment variables do not
+transfer between terminals. Reuse the correct cached CLI login.</p>
+<p>Authenticated hosted team tools also exist for coordinator-led rehearsals, but
+this customer starter's core runner uses local MCP. Do not paste a bearer-protected
+hosted URL into an unauthenticated local example or silently switch transports.</p>
+<h2>Step 3 - Build the smallest bounded multi-agent workflow</h2>
+<p><strong>Where:</strong> <code>resolve</code> and your helpers in <code>agents.py</code>.
+<strong>Why:</strong> specialists need only their own tools, and every model/tool loop must end.</p>
 <ol>
-<li>Reuse your triage and retrieval work. Create Triage and three specialist
-   <code>Agent</code> instances using <code>FoundryChatClient</code> and the assigned deployment.</li>
-<li>Register the specialists with <code>HandoffBuilder</code>. Set Triage as the start agent
-   and add handoff edges only from Triage to the three specialists.</li>
-<li>Add explicit turn limits and a termination condition for a valid specialist
-   result. Use a conservative cap such as two Triage turns and three specialist
-   turns; report an unfinished workflow instead of silently increasing the cap.</li>
-<li>Connect each specialist to the <strong>same loopback server</strong> with
-   <code>MCPStreamableHTTPTool(name=..., url="http://127.0.0.1:8000/mcp", ...)</code>.
-   Set <code>load_prompts=False</code> and an explicit <code>allowed_tools</code> list:</li>
+<li>Reuse your triage and retrieval work. Create a Triage agent and three specialist
+   agents using the configured <code>FoundryChatClient</code> and existing deployment.
+   Triage chooses a specialist; specialists gather evidence and decide next steps.</li>
+<li>Register the agents in <code>HandoffBuilder</code>. Set Triage as the start and allow
+   handoff edges only to Access, Procurement and DataSharing. Require a real
+   handoff event, not a model-written sentence saying it handed off.</li>
+<li>Set explicit turn/output/time limits and a termination condition for a valid
+   specialist result. Start with a conservative cap, such as two Triage turns
+   and three specialist turns; report unfinished work rather than silently
+   raising limits or retrying forever.</li>
+<li>Attach the policy adapter and only the relevant MCP tools to each specialist:</li>
 </ol>
 <table>
 <thead>
 <tr>
 <th>Specialist</th>
-<th>Allowed MCP tools, plus your policy-retrieval adapter</th>
+<th>Allowed MCP tools</th>
 </tr>
 </thead>
 <tbody>
@@ -1282,152 +1494,125 @@ business text must not override identity, team settings or request IDs.</p>
 </tr>
 </tbody>
 </table>
-<ol>
-<li>The specialist retrieves evidence and checks facts <strong>before</strong> its mock action.
-   With missing fields, call <code>request_info</code> and preserve clarification instead
-   of calling a write with guessed arguments.</li>
-<li>Treat tool results as authoritative for simulated completion/approval state.
-   Handle MCP <code>isError</code> explicitly. Do not turn exceptions into Execute.</li>
-<li>Return the starter's <code>Result</code> dataclass, not a prose-only response. Preserve
-   retrieved references separately from the mock tool's local policy references.
-   A tool's local filename alone is not evidence of a cloud retrieval.
-   Construct <code>citations</code> as a tuple of nonempty reference strings, as declared
-   in <code>models.py</code>; JSON serialization will represent it as an array.</li>
-</ol>
-<p>SDK names used here match the installed lab versions. If unsure, inspect them:</p>
+<p>Use <code>MCPStreamableHTTPTool</code> against the <strong>same</strong> loopback server with explicit
+   <code>allowed_tools</code> and <code>load_prompts=False</code>. Triage does not need mock write tools.
+5. Retrieve evidence and inspect facts before a write. If fields are missing,
+   use <code>request_info</code> and keep the clarification result. If a tool reports
+   <code>isError</code>, preserve the failure; do not convert it into Execute.
+6. Construct the supplied <code>Result</code> dataclass. Preserve trusted ID, a valid category
+   and outcome, a meaningful explanation, a nonempty tuple of actual retrieved
+   citation strings, the observed action ID when applicable, and <code>simulation=True</code>.
+   A queued approval can have an action ID while still being <strong>Route</strong>.</p>
+<p>SDK orientation, not a solution:</p>
 <pre><code class="language-powershell">.\.venv\Scripts\python -c &quot;import inspect; from agent_framework import MCPStreamableHTTPTool; from agent_framework.orchestrations import HandoffBuilder; print(inspect.signature(MCPStreamableHTTPTool)); print(inspect.signature(HandoffBuilder.with_autonomous_mode))&quot;
 </code></pre>
-<p>Use async context managers for clients/tools and close them reliably. If
-<code>resolve</code> wraps async code with <code>asyncio.run</code>, call it from a normal CLI runner,
-not from a notebook's running event loop. Keep the HTTP server separate.</p>
-<h3>Step 4 - Observe one practice request before the final batch</h3>
-<p>Run P01 or another practice request through <code>resolve</code> with the trusted envelope:</p>
+<p>The pinned handoff framework requires <code>require_per_service_call_history_persistence=True</code>
+on its agents. Consume actual workflow events/<code>AgentResponse</code> objects instead of
+assuming every event contains a list of messages. Close MCP and SDK clients
+reliably; <code>FoundryChatClient</code> itself is not an async context manager in the pinned
+version. If uncertain, inspect installed APIs with your team or coordinators.</p>
+<p>You can revisit <a href="https://ai.azure.com/">Foundry</a> to compare the project/deployment
+details, but all orchestration runs from VS Code. You do not need a new project,
+model, APIM instance or hosted-agent deployment.</p>
+<h2>Step 4 - Observe one practice request end to end</h2>
+<p><strong>Where:</strong> Terminal B, after the coordinators approve cloud calls.</p>
 <pre><code class="language-powershell">.\.venv\Scripts\python -m route_resolve.lab resolve --id P01 --allow-cloud
 </code></pre>
-<p>Expected: one <code>Result</code> with the original request ID, valid category/outcome,
-meaningful explanation, citations and <code>simulation: true</code>. An action ID is
-present when the mock operation supplies one. A queued approval may have an
-action ID and still be <strong>Route</strong>, not Execute.</p>
-<p>Record a trace showing:</p>
+<p><strong>You should see:</strong> one Result with the original request ID and real evidence.
+Before running a batch, inspect a redacted trace showing:</p>
 <ol>
-<li>Triage's handoff destination.</li>
-<li>The actual policy retrieval references.</li>
-<li>Actual MCP tool name, arguments and result, or clarification result.</li>
-<li>How the final outcome follows from that evidence.</li>
+<li>Which specialist actually received the handoff.</li>
+<li>Which policy passages/references were retrieved.</li>
+<li>Which MCP tool names, arguments and results were observed.</li>
+<li>Why the Result follows from those observations.</li>
 </ol>
-<p>Do not log credentials or Authorization headers. Keep mock fixtures local.
-An error must remain visible; it is not a successful result.</p>
-<h3>Step 5 - Run ten final requests</h3>
-<p>Use the supplied runner after your practice flow works:</p>
+<p>Do not accept a plausible paragraph instead of that trace. Check a missing-field
+case too. Test a same-ID/same-argument retry against the same server: no duplicate
+action should appear. That is a same-process property, not durable storage.</p>
+<h2>Step 5 - Run the final ten and keep your evidence</h2>
+<p><strong>Where:</strong> Terminal B, once a practice flow and its trace work.
+<strong>Why:</strong> the final runner checks record shape, not whether your business answer
+is correct.</p>
 <pre><code class="language-powershell">.\.venv\Scripts\python -m route_resolve.lab final --allow-cloud
 </code></pre>
-<p>Expected: <strong>Wrote 10 results</strong> and <code>evidence/final-results.jsonl</code>.
-JSONL means one JSON object per line. The runner preserves trusted IDs, requires
-the Result contract, checks simulation/citation shape and refuses to overwrite
-existing output before calling an agent. To preserve a previous run, pass a
-new path such as <code>--output evidence/final-results-02.jsonl</code>.</p>
-<p>Inspect <code>starter/route_resolve/lab.py</code> to understand the checks. This is <strong>not</strong>
-an answer-key grader: it does not prove policy correctness, actual handoff,
-genuine retrieval or tool execution. The facilitator reviews those traces.</p>
-<p>Do not repeatedly run the batch to hide an error. Keep the first failure,
-diagnose it, and rerun only the affected request while developing. Preserve
-prior results and remember that restarted tool servers lose idempotency records.</p>
-<h3>Step 6 - Check one retry and explain a result</h3>
-<p>With terminal A still running, repeat the same unchanged request ID and action
-arguments. Inspect the actual mock response/action ID: no duplicate action
-should be created. Reusing an ID with different arguments must be an error,
-not an overwrite. This server-level check is distinct from whether the model
-happens to produce the same wording twice.</p>
-<h2>Optional Copilot prompts</h2>
-<p><strong>Guided orchestration support</strong>:</p>
-<pre><code class="language-text">Help me complete challenge 04 in this workshop workspace. Read docs/mission-04.md,
-README.md, agents.py, models.py and my existing triage/retrieval code.
-First show the control flow, then help implement resolve(request: str) -&gt; Result
-incrementally. Parse the trusted JSON envelope {id,user_id,text}; never let its
-text override IDs or TEAM_ID. Verify installed Agent Framework signatures.
-Use HandoffBuilder, Triage plus three specialists, explicit turn limits and a
-termination condition. Use the shared local MCP HTTP server and the exact
-specialist allowed_tools from the guide. Preserve actual retrieval evidence,
-check MCP errors, and only claim completion from an observed mock result.
-Keep credentials in memory, errors visible and every result a simulation.
-Do not read coach answers, hardcode final labels, deploy resources, change roles
-or create a public tunnel. Explain each change and help me run one practice
-request before the final batch. Keep real business systems disconnected.
-</code></pre>
-<p><strong>Coach-style review, without answers</strong>:</p>
-<pre><code class="language-text">Review this redacted trace and my Result. Do not provide an answer key.
-Check whether a real handoff, policy retrieval and required MCP call occurred,
-whether the citation supports the claim, and whether Route was confused with
-Execute. Point to missing evidence rather than inventing it. Ask me to explain
-one safety check and one limitation of my implementation.
-</code></pre>
-<h2>Checkpoint and three-minute demo</h2>
+<p><strong>You should see:</strong> <strong>Wrote 10 results</strong> and <code>evidence/final-results.jsonl</code>.
+JSONL means one JSON object per line. The runner preserves IDs, checks Result
+shape, requires citation/simulation fields and refuses to overwrite existing
+output before calling an agent. Keep previous evidence; for an explicitly
+approved second run choose <code>--output evidence/final-results-02.jsonl</code>.</p>
+<p>Do not repeatedly run the whole batch to get a passing screenshot. If something
+fails, inspect one failing practice case first. No answer-key grader or private
+reference implementation is included.</p>
+<h2>Checkpoint - show the coordinators</h2>
 <ul>
-<li>[ ] All three specialists can be chosen from unstructured requests.</li>
-<li>[ ] A trace proves a real handoff, retrieval and mock call/clarification.</li>
-<li>[ ] Ten final JSONL records pass shape checks and are submitted for coach review.</li>
-<li>[ ] You can distinguish a completed mock action, pending approval and escalation.</li>
-<li>[ ] An unchanged retry does not duplicate the simulated operation.</li>
-<li>[ ] No real grant, order or data transfer occurred.</li>
+<li>[ ] Demonstrate one permitted mock action, one approval/clarification route and one escalation.</li>
+<li>[ ] Point to actual handoff, retrieval and tool traces, not just model claims.</li>
+<li>[ ] Show the ten saved Results with <code>simulation: true</code>; keep credentials out.</li>
+<li>[ ] Explain one limitation and the fact that no real business system changed.</li>
 </ul>
-<p>Show a permitted simulated action, an approval route and a sensitive escalation
-from your run. Explain the evidence and one limitation. These are demo categories,
-not the expected labels for particular final request IDs.</p>
-<p>Then stop terminal A with <code>Ctrl+C</code> and stop any running workflow. Do not delete
-shared Azure resources. The coach exports console timings and handles cleanup.</p>
+<h2>Step 6 - Optional bonus missions are still inside Challenges</h2>
+<p>After the core demonstration, click <strong>Optional bonus missions</strong> in the Challenges
+toolbar or open the <a href="#bonus">bonus mission guide</a>. Choose failure-path testing,
+evidence challenges or an offline evaluation report. Each is optional, takes
+about 20-30 extra minutes and does not add a fifth required milestone.
+The toolbar's Current/Last mission button returns to the core reader.</p>
+<p>When finished, stop your local server in Terminal A with <strong>Ctrl+C</strong>. Do not delete
+shared Azure resources; the coordinators manage event cleanup.</p>
+<h2>Optional Copilot prompts</h2>
+<pre><code class="language-text">Read docs/mission-04.md and my existing triage/retrieval functions. Propose a
+bounded Triage-to-one-specialist workflow with least-privilege MCP tools. Use
+the pinned SDK and verify signatures/events. Require actual retrieval and tool
+evidence before constructing Result; keep trusted IDs and visible failures.
+Explain each change before editing. Do not invent traces, provide final-fixture
+answer labels, search private solutions or deploy more Azure resources.
+</code></pre>
 <h2>Troubleshooting</h2>
 <table>
 <thead>
 <tr>
-<th>Symptom</th>
-<th>What to do</th>
+<th>What you see</th>
+<th>What to do next</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Connection refused on port 8000</td>
-<td>Start terminal A with the same <code>.venv</code> and assigned team ID</td>
+<td>Loopback connection refused</td>
+<td>Check Terminal A, port 8000 and the exact <code>/mcp</code> URL</td>
 </tr>
 <tr>
-<td>Address already in use</td>
-<td>Check your own terminal for the existing server; ask coach before stopping anything</td>
+<td>Wrong identity/config in Terminal B</td>
+<td>Reapply non-secret variables there; compare the cached CLI operator</td>
 </tr>
 <tr>
-<td>Workflow repeats handoffs</td>
-<td>Check permitted edges, termination and turn bounds; do not increase limits blindly</td>
+<td>Handoff never happens</td>
+<td>Inspect actual events, allowed edges and Triage instructions; do not fake a specialist response</td>
 </tr>
 <tr>
-<td>Result is prose or wrong type</td>
-<td>Validate the structured output and construct <code>Result</code> explicitly</td>
+<td>Client/context/history error</td>
+<td>Check the pinned SDK signatures and lifecycle notes in Step 3</td>
 </tr>
 <tr>
-<td>Status disappeared after restart</td>
-<td>Expected for the in-memory store; keep one process for the retry check</td>
+<td>Action ID but request still queued</td>
+<td>Distinguish Route from Execute using the observed tool outcome</td>
 </tr>
 <tr>
-<td>Result says Execute without a tool trace</td>
-<td>It is not acceptable evidence; fix observation/validation</td>
-</tr>
-<tr>
-<td>Final run exceeds the timebox</td>
-<td>Show the failing step to coach; do not skip safety checks or claim completion</td>
+<td>Final output already exists</td>
+<td>Preserve it; request approval for another run and use a new output path</td>
 </tr>
 </tbody>
-</table>
-<h2>Stretch - after the checkpoint</h2>
-<p>Compare the same request with and without its policy-override sentence. Add an
-automated check that a fabricated citation or unobserved action is rejected.
-Do not optimize for answer labels at the expense of actual evidence.</p>
-<h2>Finished early?</h2>
-<p>After your core demonstration, choose an <a href="#bonus">optional bonus mission</a>. This does not add a required console milestone or authorize extra cloud calls.</p></section>
+</table></section>
 <section id="bonus" class="review-card" hidden><h1>Bonus missions - engineering beyond the happy path</h1>
 <p><strong>Optional, after the four core missions.</strong> Choose one task that interests your
 team; these are not extra mandatory milestones and do not change the 150-minute
-core. Ask the facilitator before continuing if your core demonstration is not
+core. Ask the coordinators before continuing if your core demonstration is not
 complete. There are no bonus answer keys in this repository.</p>
 <p>Work in the same clone. Start with offline tests and test doubles. No additional
 Azure deployment, broader permissions, public MCP tunnel or real business data.
-Any extra live model/retrieval calls require separate facilitator approval.</p>
+Any extra live model/retrieval calls require separate coordinator approval.</p>
+<p><strong>Where to open this:</strong> use <strong>Optional bonus missions</strong> in the Challenges toolbar.
+The same guide is <code>docs/bonus.md</code> in VS Code. Keep your existing clone and completed
+core implementation; do not start another project. To return to core reading,
+use the Current/Last mission button. No fifth required milestone is added.</p>
 <h2>Bonus 1 - Make failure safe (20-30 minutes)</h2>
 <h3>The situation</h3>
 <p>Your prototype works when every dependency behaves. What happens when retrieval
@@ -1505,21 +1690,21 @@ business evidence separate from instructions?</p>
 <h3>Your task</h3>
 <ol>
 <li>Write <strong>six new synthetic cases</strong>, two per specialist. Do not reuse final
-   request IDs or search for facilitator answer labels.</li>
+   request IDs or search for private answer labels.</li>
 <li>Include a missing field, a claimed approval and an instruction-like sentence
    in either request text or a fake retrieved passage. Keep them fictional.</li>
 <li>Run your own cases against controlled local model/retrieval doubles first.
    Mark those traces <strong>offline test evidence</strong>, not real model or Search output.</li>
 <li>For each case, preserve the trusted input ID and compare the request claim,
    retrieved evidence, observed tool result and final explanation.</li>
-<li>If the facilitator approves a live check, agree a small limit first: no more
+<li>If the coordinators approve a live check, agree a small limit first: no more
    than <strong>three end-to-end requests</strong>, bounded turns and no automatic retries.
    Use only assigned shared resources.</li>
 </ol>
 <p><strong>Success:</strong> all six offline cases retain trusted IDs; none claims a completed
 action without an observed permitted mock result; missing evidence remains
 visible. Explain one case where a fluent response would have been misleading.
-The facilitator reviews business correctness; your tests are not a new answer key.</p>
+The coordinators review business correctness; your tests are not a new answer key.</p>
 <h3>Optional Copilot prompt</h3>
 <pre><code class="language-text">Act as a test designer for my fictional workflow. Suggest six new synthetic
 cases across Access, Procurement and DataSharing, including missing information
@@ -1559,7 +1744,7 @@ telemetry or count a model's claim as proof of tool execution. Preserve previous
 reports and explain every metric's limitation.
 </code></pre>
 <h2>Bonus demonstration</h2>
-<p>Show the facilitator the problem, your change, reproducible evidence and one
+<p>Show the coordinators the problem, your change, reproducible evidence and one
 remaining limitation. A bonus is successful when the team understands and can
 defend the improvement, not when it adds the most services.</p>
 <p>Stop your local servers when finished. Do not delete shared cloud resources.</p></section>
@@ -1568,7 +1753,7 @@ defend the improvement, not when it adds the most services.</p>
         <button type="button" id="previous-section">Previous</button>
         <button type="button" id="next-section">Next</button>
       </div>
-      <p class="muted">Reading navigation only. Coach approvals and team progress remain in HackboxConsole.
+      <p class="muted">Reading navigation only. Coordinator approvals and team progress remain in HackboxConsole.
         Bonus missions are optional.</p>
     </footer>
   </main>

@@ -1,207 +1,182 @@
-# Mission 03 - Ground decisions in policy (45 minutes)
+# Mission 03 - Give decisions real policy evidence (45 minutes)
 
-**Working mode:** read here in HackboxConsole; edit the same cloned repository in VS Code. All exercise files are already present. Add `--allow-cloud` only after the facilitator confirms access and approves shared-service calls.
+## Your mission in the story
 
-## What you will learn
+The team can now read Maya's request and check operational facts. But knowing
+who owns Phoenix does not tell you who may approve access. Similarly, a known
+supplier does not authorize every purchase, and a known partner cannot receive
+every dataset. The specialist needs the **current written policy**.
 
-Retrieve actual policy evidence, preserve citations and distinguish a
-requester's claims from verified policy. You will implement `retrieve_policy`.
+**By the end:** implement `retrieve_policy(category, request)` so it queries
+your assigned knowledge base and returns actual passages and their references.
+Do not implement final business decisions yet.
 
-**Timebox:** concepts 5 min; inspect policy/configuration 8 min; retrieval
-implementation 22 min; examples 5 min; checkpoint 5 min.
-Prerequisite: triage works and the coach has provisioned, loaded and authorized
-your team's knowledge base. Indexing is a coach preparation task, not an
-instruction for beginners to deploy another Search service.
+**You change:** the `retrieve_policy` stub in `starter/route_resolve/agents.py`.
+**You use:** your team's existing Foundry IQ / Azure AI Search knowledge base.
+**Timebox:** policy/configuration 10 min; adapter 25 min; checks/checkpoint 10 min.
+Prerequisite: Missions 01-02 passed; the coordinators confirm the four policy
+documents are loaded and your identity is authorized. This guide is
+`docs/mission-03.md` in your clone.
 
-## Concepts in plain language
+## Step 1 - Understand what retrieval adds
 
-The model's training is not your company's current policy. **Retrieval** sends a
-question to a knowledge base and returns relevant passages. **Grounding** means
-using those passages to justify the answer. **Citations** identify the evidence
-actually returned, not an attractive-looking URL the model invented.
-
-In this lab, Foundry IQ uses an Azure AI Search knowledge base containing four
-fictional policy documents. Keep these sources separate:
-
-| Source | What it tells you | What it cannot prove |
-|---|---|---|
-| Request text | What the requester wants or claims | That approval exists |
-| MCP lookup | Current synthetic operational facts | The complete policy |
-| Retrieved policy | Applicable rules and approval owner | That an action already completed |
-| Mock action result | What the simulated operation did | That a real system changed |
-
-Agentic retrieval can use a model to plan searches. It is not just opening a
-local Markdown file, and it can incur both retrieval and model usage.
-
-## Core path
-
-### Step 1 - Add and read the policies
-
-The four policies are already in `data/policies`. Keep your code and environment.
+**Where:** VS Code Explorer, `data/policies`.
+**Why:** reading the local files teaches you the rules; it is not proof that
+your running agent retrieved them from the assigned cloud knowledge base.
 
 ```powershell
 Get-ChildItem .\data\policies
 Get-Content .\data\policies\access.md
-Get-Content .\data\policies\faq-and-approvals.md
 ```
 
-Expected: four documents: `access.md`, `procurement.md`, `data-sharing.md`,
-`faq-and-approvals.md`. Open all four in VS Code and find policy IDs
-**ACCESS-001**, **BUY-001**, **SHARE-001**, **FAQ-001**.
+Open all four files. Find their source IDs: `ACCESS-001`, `BUY-001`, `SHARE-001`
+and `FAQ-001`. Choose one rule and identify its condition and approval owner.
+Do not turn the entire policy matrix into hard-coded replacement answers.
 
-For one rule, identify its condition, approval owner and source policy ID.
-Do not copy the complete decision matrix into an if/else replacement for retrieval.
+| Source | Tells you | Does not prove |
+|---|---|---|
+| Request text | What someone asks or claims | That approval exists |
+| MCP fact lookup | Current fictional operational facts | The complete policy |
+| Retrieved passage and reference | The applicable policy and its source | That an operation completed |
+| Observed mock action response | What the simulated operation did | That real business systems changed |
 
-### Step 2 - Check your team's retrieval target
+**Retrieval** finds passages. **Grounding** uses those passages to justify an
+answer. **Citations** identify the actual returned sources.
+[Microsoft Learn: query a knowledge base](https://learn.microsoft.com/en-us/azure/search/agentic-retrieval-how-to-retrieve).
+Select Python/REST as appropriate; you are querying an existing knowledge base,
+not following resource-creation or indexing tutorials.
 
-1. Ask the coach for the assigned Search endpoint and **knowledge-base name**.
-2. Set `SEARCH_ENDPOINT` and `TEAM_KNOWLEDGE_BASE` using README.md.
-3. Confirm the knowledge-base name has your team's prefix, for example
-   `team-01-...`. A matching name is a safety check, not authorization by itself.
-4. Coach confirms the four policies are indexed and your identity can retrieve.
-   An empty/missing knowledge base is not something to hide with local answers.
+## Step 2 - Locate the assigned knowledge base and copy its configuration
 
-Do not create a service, alter permissions or try another team's index. If the
-coach authorizes a particular document-upload UI, follow that supplied procedure;
-otherwise participants have retrieval access only.
+**Where:** the coordinator handout, [Foundry portal](https://ai.azure.com/), and
+the VS Code terminal.
+**Why:** the Foundry project endpoint is **not** the Search endpoint; neither is
+the browser page address.
 
-### Step 3 - Implement `retrieve_policy(category, request)`
+1. Reopen your assigned Foundry project from Mission 01. If a knowledge listing
+   is available, match its knowledge-base name to your team's handout.
+2. Some participant identities cannot browse the Search management screens.
+   Use the verified handout values; ask the coordinators if a screen is absent.
+   Do not try a different team's knowledge base or grant yourself more roles.
+3. Set the values in the terminal that will run your code:
 
-Keep the function signature in `starter/route_resolve/agents.py`. Its result is
-a dictionary containing the actual retrieval response, including `references`
-and `activity` if supplied. Do not replace references with local filenames.
+   ```powershell
+   $env:SEARCH_ENDPOINT = Read-Host "Assigned HTTPS Search endpoint"
+   $env:TEAM_KNOWLEDGE_BASE = Read-Host "Assigned team knowledge-base name"
+   ```
 
-Build it in this order:
+4. Compare the knowledge-base team prefix with `TEAM_ID`. Name matching is a
+   useful configuration check, not a substitute for real service authorization.
 
-1. Validate the category against the three domains and require nonempty text.
-2. Read only the assigned HTTPS Search endpoint and knowledge-base name.
-   Reject an unexpected service, non-HTTPS URL or wrong team prefix.
-3. Use `DefaultAzureCredential` for an Entra token scoped to
-   `https://search.azure.com/.default`. Never print or store the token.
-4. Send a retrieval request with a finite timeout. The reference contract is:
+**You should have:** two distinct HTTPS service addresses (Foundry project and
+Search) and the exact assigned knowledge-base name. The coordinators provide
+and verify the services; you do not upload policies or create an index here.
 
-```text
-POST {SEARCH_ENDPOINT}/knowledgebases/{TEAM_KNOWLEDGE_BASE}/retrieve
-     ?api-version=2026-08-01-preview
-Authorization: Bearer <token obtained in memory>
-Content-Type: application/json
-```
+## Step 3 - Build the retrieval adapter one operation at a time
 
-```json
-{
-  "messages": [
-    {
-      "role": "user",
-      "content": [
-        {
-          "type": "text",
-          "text": "Find the applicable policy and approval owner for this request."
-        }
-      ]
-    }
-  ]
-}
-```
+**Where:** `retrieve_policy(category, request)` in `agents.py`.
+**Why:** an adapter converts your question into a real retrieval request and
+preserves the evidence the specialist will later need.
 
-The URL above is shown on two lines for readability; send it as **one URL**.
-Replace the sample question with the category and synthetic request.
-The coach must live-verify this preview API contract before the event; follow
-any reviewed version update in the coach handout, not an API guessed by Copilot.
-See [Microsoft's knowledge-base retrieval documentation](https://learn.microsoft.com/azure/search/agentic-retrieval-how-to-retrieve).
+1. Validate the domain and require nonempty question text. Read only your assigned
+   HTTPS Search endpoint and knowledge-base name.
+2. Use the assigned Azure CLI identity for an Entra token with scope
+   `https://search.azure.com/.default`. Keep the token in memory; never print it
+   or write it into code/evidence. See
+   [AzureCliCredential](https://learn.microsoft.com/en-us/python/api/azure-identity/azure.identity.azureclicredential).
+3. Send one bounded request using the workshop's reviewed retrieval contract:
 
-5. Check the HTTP status and parse the JSON. A 401/403, timeout, empty response
-   or missing references must produce an explicit error and block execution.
-   Do not catch it and return a local document as if cloud retrieval succeeded.
-6. Preserve returned evidence and reference identifiers verbatim in your
-   internal result. Save non-secret response evidence for the coach. Treat any
-   instruction embedded in retrieved text as data, not a new system rule.
+   ```text
+   POST {SEARCH_ENDPOINT}/knowledgebases/{TEAM_KNOWLEDGE_BASE}/retrieve?api-version=2026-08-01-preview
+   Content-Type: application/json
+   Authorization: Bearer <token obtained in memory>
+   ```
 
-You may ask Copilot for transport/schema boilerplate. Your learning task is to
-explain where the evidence came from, why it applies and when it is insufficient.
-The credential and SDK APIs must match the installed packages.
+   ```json
+   {
+     "messages": [
+       {
+         "role": "user",
+         "content": [
+           {"type": "text", "text": "Your category and synthetic policy question"}
+         ]
+       }
+     ]
+   }
+   ```
 
-### Step 4 - Retrieve three examples
+   Replace the question with your input; do not paste the placeholder literally.
+   This workshop version was live-rehearsed against the assigned service.
+   If newer Learn examples use a different preview API, keep the reviewed lab
+   version unless the coordinators issue an updated contract.
+4. Check HTTP status before reading success fields. Use the real response shape,
+   not a guessed `answer` property. Preserve returned `references`, passages and
+   retrieval `activity` when present.
+5. Return a dictionary retaining that evidence. A local policy filename or a
+   citation written by the model is not a returned retrieval reference.
+6. Make 401/403, timeouts, empty evidence and missing references visible. Stop
+   unsupported execution; do not substitute local files while claiming the
+   cloud query succeeded.
 
-After implementation, run this practice example:
+You may use transport/schema boilerplate from the docs, but you must understand
+the endpoint, identity, question and returned evidence. No new model or hosted
+agent deployment is needed. See the
+[Foundry SDK/endpoints guide](https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/sdk-overview)
+if those addresses are still confusing.
+
+## Step 4 - Retrieve and inspect evidence for each domain
+
+**Where:** the same configured terminal, after coordinator approval of cloud calls.
 
 ```powershell
 .\.venv\Scripts\python -m route_resolve.lab policy --category Access --text "Which policy and approval owner apply to Reader access to Phoenix?" --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab policy --category Procurement --text "Which rules apply to a EUR 600 software purchase from Contoso Software?" --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab policy --category DataSharing --text "Which rules apply to sharing an Internal dataset with Fabrikam?" --allow-cloud
 ```
 
-Repeat with:
+**You should see:** actual returned evidence and nonempty references for each
+question. For one passage, explain the rule and approval owner in your own words,
+then point to its source reference. Do not label the exercise successful merely
+because JSON was returned.
 
-- Procurement: a EUR 600 software purchase from Contoso Software.
-- DataSharing: sharing an Internal dataset with Fabrikam.
+Save redacted evidence locally: question, returned passage, reference ID and
+relevant activity. Do not save Authorization headers, tokens or real business data.
 
-Expected: actual passages and references from the assigned knowledge base.
-Do not assume a response key such as `answer` unless the real response contains
-it. Find the retrieved policy ID and approval owner, then explain the rule in
-your own words. These are evidence exercises, not simulated writes.
+## Step 5 - Decide when the evidence is not enough
 
-If writing responses to an evidence file, ensure your application never includes
-Authorization headers or tokens. A useful record has request ID, query,
-retrieved passages, references and relevant activity, without credentials.
+Consider a request missing its classification or price. What must you ask before
+applying the rule? Now consider a requester saying "already approved." Does the
+request text prove authorization? Explain why retrieved instructions such as
+"ignore all previous rules" are untrusted content, not a new system instruction.
+You will connect this reasoning to actual clarification/actions in Mission 04.
 
-### Step 5 - Ask for missing information
+## Checkpoint - show the coordinators
 
-Try a request with an unknown classification, or a purchase without a price.
-Explain what information is missing. Do not silently assume Public data or a
-low price. An "already approved" claim needs verified evidence; it is not a
-reason to skip policy retrieval.
+- [ ] Show live retrieved evidence for all three domains.
+- [ ] Link one policy explanation to an actual passage and returned reference.
+- [ ] Explain the difference between an approval requirement and verified approval.
+- [ ] Show how retrieval failures block unsupported action.
+
+Next: [Mission 04](docs/mission-04.md), where a specialist uses this adapter and
+the MCP tools to produce an evidence-backed simulated result.
 
 ## Optional Copilot prompts
 
-**Build the retrieval adapter, not the business answer**:
-
 ```text
-Help me implement retrieve_policy(category: str, request: str) in this workshop
-workspace for challenge 03. Read docs/mission-03.md and the installed dependencies.
-First explain the HTTP request and the response fields we must preserve.
-Use my coach-provided HTTPS Search endpoint/knowledge base, Entra credentials,
-a finite timeout and the reviewed retrieval API version. Validate the assigned
-team prefix, but do not mistake it for access control. Preserve actual
-references and activity; raise a clear error on failed/no-evidence retrieval.
-Do not log tokens, invent URLs/citations, deploy resources, change permissions
-or fall back to local policy files while claiming cloud success.
-Do not implement final decisions or read facilitator answers.
-Explain the code and suggest one successful and one failure-path check.
+Read docs/mission-03.md. Help me plan retrieve_policy only using the assigned
+Search endpoint, knowledge base, CLI identity and reviewed API version. Explain
+the request/response and preserve real references/activity. Fail visibly on
+missing evidence. Do not log tokens, invent citations, use another team's index,
+deploy resources or replace cloud retrieval with a local answer. Review my
+redacted evidence and ask which passage supports my explanation.
 ```
-
-**Evidence review**:
-
-```text
-Here are redacted synthetic retrieval passages and their references.
-Do not rewrite the code or invent evidence. Help me identify the applicable
-policy ID, condition and approval owner. Quote which retrieved passage supports
-each statement. Say explicitly when evidence is missing or contradictory.
-Ask me whether this proves approval, or only tells us approval is required.
-```
-
-## Checkpoint - show the coach
-
-- [ ] Three domains have actual retrieval evidence.
-- [ ] You can connect each explanation to a returned passage and reference.
-- [ ] You preserved reference IDs and activity rather than fabricating sources.
-- [ ] Missing information triggers clarification.
-- [ ] Retrieval failure prevents unsupported execution.
-
-Local policy files help you understand the rules, but **do not prove Foundry IQ
-integration**. If cloud access is blocked, label the exercise incomplete and ask
-the coach. After facilitator approval, open Mission 04 in the console.
 
 ## Troubleshooting
 
-| Symptom | What to do |
+| What you see | What to do next |
 |---|---|
-| 401 / credential unavailable | Verify participant CLI sign-in and intended credential; coach helps |
-| 403 | Coach checks Search/knowledge-base authorization; do not widen roles |
-| 404 | Check service URL, knowledge-base name and reviewed API version |
-| No references | Coach checks ingestion/query relevance; do not manufacture citations |
-| Throttling / timeout | Pause; reduce repeated queries and ask the coach |
-| Only local Markdown paths appear | You may be using fixtures, not cloud retrieval; inspect the actual HTTP response |
-
-## Stretch - after the checkpoint
-
-Compare a vague query with a precise one. Explain which retrieved passage
-changed and why. Then test request text that demands a policy override and
-confirm it does not become an authorization instruction.
+| 401/403 | Recheck assigned CLI identity, tenant and target; ask the coordinators |
+| 404 | Compare service URL, knowledge-base spelling and reviewed API version |
+| No references | Stop; ask the coordinators to check indexing/access rather than inventing evidence |
+| Unknown response field | Inspect the actual JSON and the retrieval docs; do not assume an `answer` key |
+| Portal listing unavailable | Use verified handout configuration; management browsing and retrieval rights differ |

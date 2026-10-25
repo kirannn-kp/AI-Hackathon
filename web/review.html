@@ -3,12 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mission: Route &amp; Resolve - Customer Review</title>
+<title>AI Hackathon - Mission: Route &amp; Resolve</title>
 <script>
   (() => {
     const param = new URLSearchParams(window.location.search).get("scoutTheme");
-    const theme =
-      param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const theme = param || "light";
     document.documentElement.setAttribute("data-theme", theme);
   })();
 </script>
@@ -21,7 +20,7 @@
   <div class="eyebrow">Customer engineering workshop</div>
   <h1>Mission: Route &amp; Resolve</h1>
   <p class="muted">An evidence-driven AI workflow. 150-minute core + optional bonus missions.</p>
-  <p class="muted">Local review only - not published. This preview has no sign-in or approval backend.</p>
+  <p class="muted">AI Hackathon learning guide. This reader has no sign-in or approval backend.</p>
 </header>
 <div class="review-layout">
   <nav aria-label="Workshop sections">
@@ -29,15 +28,15 @@
     <a href="#brief" data-time="Orientation">Start here: the story</a>
     <a href="#architecture" data-time="Orientation">Architecture</a>
     <a href="#setup" data-time="Preparation">Clone and sign in</a>
-    <a href="#mission-01" data-time="30 minutes">01 / Establish the base</a>
-    <a href="#mission-02" data-time="30 minutes">02 / Investigate</a>
+    <a href="#mission-01" data-time="30 minutes">01 / Your first triage agent</a>
+    <a href="#mission-02" data-time="30 minutes">02 / Check facts with tools</a>
     <a href="#mission-03" data-time="45 minutes">03 / Find evidence</a>
     <a href="#mission-04" data-time="45 minutes">04 / Route and resolve</a>
     <a href="#bonus" data-time="Optional / 20-30 min each">Bonus / Go further</a>
   </nav>
   <main class="review-main">
     <p class="notice">Production guidance belongs in HackboxConsole. This is a review of the same content,
-      not a second platform. Shared Azure resources and participant authorization are not yet live-verified.</p>
+      not a second platform. Use only the project and configuration assigned by your coordinators.</p>
     <div class="reading-status">
       <span id="section-position" role="status" aria-live="polite"></span>
       <span id="section-time"></span>
@@ -53,7 +52,7 @@
         <button type="button" id="previous-section">Previous</button>
         <button type="button" id="next-section">Next</button>
       </div>
-      <p class="muted">Reading navigation only. Coach approvals and team progress remain in HackboxConsole.
+      <p class="muted">Reading navigation only. Coordinator approvals and team progress remain in HackboxConsole.
         Bonus missions are optional.</p>
     </footer>
   </main>

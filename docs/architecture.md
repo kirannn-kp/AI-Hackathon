@@ -3,7 +3,7 @@
 ## The complete picture
 
 ```text
-Participant                             Facilitator-provided Azure lab
+Participant                             Coordinator-provided Azure lab
 -----------                             ------------------------------
 HackboxConsole: read the guided mission
 GitHub/Copilot: optional coding help
@@ -42,9 +42,9 @@ component of the request-processing system.
 | `starter/route_resolve/mcp_server.py` | Exposes nine tools through MCP | Supplied |
 | `starter/route_resolve/lab.py` | Diagnostics and exercise runners | Supplied; no agent solution |
 | `data/practice-requests.json` | Practice cases for incremental development | Supplied |
-| `data/policies` | Fictional policy documents | Supplied and preloaded by facilitator |
+| `data/policies` | Fictional policy documents | Supplied and preloaded by coordinators |
 | `data/final-requests.json` | Ten cases for the final demonstration | Supplied, no expected labels |
-| Shared Foundry/Search services | Approved model and policy retrieval | Facilitator provides |
+| Shared Foundry/Search services | Approved model and policy retrieval | Coordinators provide |
 
 ## Specialist boundaries
 
@@ -62,7 +62,7 @@ operations only while that same process retains its state.
   system rules.
 - A model saying "approved" is not verified authorization.
 - A queued request is not a completed operation.
-- Naming a knowledge base after a team is not access control. The facilitator
+- Naming a knowledge base after a team is not access control. The coordinators
   must verify actual team authorization.
 - The local MCP endpoint binds to loopback and is unauthenticated. Never expose
   it through a public tunnel. Any hosted tool endpoint needs separately verified

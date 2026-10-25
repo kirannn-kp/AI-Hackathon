@@ -2,12 +2,17 @@
 
 **Optional, after the four core missions.** Choose one task that interests your
 team; these are not extra mandatory milestones and do not change the 150-minute
-core. Ask the facilitator before continuing if your core demonstration is not
+core. Ask the coordinators before continuing if your core demonstration is not
 complete. There are no bonus answer keys in this repository.
 
 Work in the same clone. Start with offline tests and test doubles. No additional
 Azure deployment, broader permissions, public MCP tunnel or real business data.
-Any extra live model/retrieval calls require separate facilitator approval.
+Any extra live model/retrieval calls require separate coordinator approval.
+
+**Where to open this:** use **Optional bonus missions** in the Challenges toolbar.
+The same guide is `docs/bonus.md` in VS Code. Keep your existing clone and completed
+core implementation; do not start another project. To return to core reading,
+use the Current/Last mission button. No fifth required milestone is added.
 
 ## Bonus 1 - Make failure safe (20-30 minutes)
 
@@ -69,21 +74,21 @@ business evidence separate from instructions?
 ### Your task
 
 1. Write **six new synthetic cases**, two per specialist. Do not reuse final
-   request IDs or search for facilitator answer labels.
+   request IDs or search for private answer labels.
 2. Include a missing field, a claimed approval and an instruction-like sentence
    in either request text or a fake retrieved passage. Keep them fictional.
 3. Run your own cases against controlled local model/retrieval doubles first.
    Mark those traces **offline test evidence**, not real model or Search output.
 4. For each case, preserve the trusted input ID and compare the request claim,
    retrieved evidence, observed tool result and final explanation.
-5. If the facilitator approves a live check, agree a small limit first: no more
+5. If the coordinators approve a live check, agree a small limit first: no more
    than **three end-to-end requests**, bounded turns and no automatic retries.
    Use only assigned shared resources.
 
 **Success:** all six offline cases retain trusted IDs; none claims a completed
 action without an observed permitted mock result; missing evidence remains
 visible. Explain one case where a fluent response would have been misleading.
-The facilitator reviews business correctness; your tests are not a new answer key.
+The coordinators review business correctness; your tests are not a new answer key.
 
 ### Optional Copilot prompt
 
@@ -135,7 +140,7 @@ reports and explain every metric's limitation.
 
 ## Bonus demonstration
 
-Show the facilitator the problem, your change, reproducible evidence and one
+Show the coordinators the problem, your change, reproducible evidence and one
 remaining limitation. A bonus is successful when the team understands and can
 defend the improvement, not when it adds the most services.
 

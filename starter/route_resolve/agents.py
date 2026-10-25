@@ -3,7 +3,7 @@ from .models import Result
 
 def triage(request: str) -> dict[str, object]:
     """Return category, urgency and missing_fields using the configured Foundry model."""
-    raise NotImplementedError("Challenge 02: implement structured triage, not a keyword router.")
+    raise NotImplementedError("Challenge 01: build your first structured triage agent, not a keyword router.")
 
 
 def retrieve_policy(category: str, request: str) -> dict[str, object]:

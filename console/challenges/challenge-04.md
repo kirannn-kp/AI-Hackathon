@@ -1,234 +1,201 @@
 # Mission 04 - Hand off, act and explain (45 minutes)
 
-**Working mode:** read here in HackboxConsole; edit the same cloned repository in VS Code. All exercise files are already present. Add `--allow-cloud` only after the facilitator confirms access and approves shared-service calls.
+## Your mission in the story
 
-## What you will learn
+Maya's Access request, a software-purchase request and a data-sharing request
+must not all go to one all-powerful agent. Your triage agent should hand each
+request to the relevant specialist. That specialist checks facts, retrieves
+policy and either performs a permitted **mock** action, asks for missing
+information, routes for approval or escalates for review.
 
-Combine triage, policy evidence and tools into a bounded multi-agent workflow.
-Run the ten final requests and explain actual outcomes, not just fluent text.
+**By the end:** `resolve` runs that bounded workflow and returns a validated
+`Result` with actual evidence. You then run the ten final requests and demonstrate
+what happened. No real access, purchase or transfer is performed.
 
-**Timebox:** concepts 5 min; handoff implementation 20 min; final run 10 min;
-demo/checkpoint 7 min; stop local processes 3 min.
-Prerequisite: triage, MCP and actual policy retrieval pass their checkpoints.
+**You change:** `resolve(request)` in `starter/route_resolve/agents.py`.
+**You reuse:** triage, retrieval, supplied MCP tools and the same Foundry project.
+**Timebox:** server/setup 5 min; workflow 20 min; practice/final 12 min; demo 8 min.
+Prerequisite: the first three checkpoints passed. This guide is
+`docs/mission-04.md` in your clone.
 
-## Concepts in plain language
+## Step 1 - See the whole flow before writing orchestration
 
-**Orchestration** coordinates which component runs next. A **handoff** transfers
-control from Triage to one relevant specialist. It is not a loop that asks every
-agent to answer every question.
-
-**Least privilege** means each specialist gets only its required tools.
-**Idempotency** means retrying the same unchanged request does not create a
-second action. **Bounded turns** prevent endless model/tool calls and cost.
+**Where:** read here; keep `models.py` open in VS Code.
+**Why:** orchestration decides what runs next; it is not asking every agent to
+answer every request.
 
 ```text
-Triage --handoff--> Access OR Procurement OR DataSharing
-                  --retrieve policy--> inspect facts
-                  --mock action / clarification--> Result
+Trusted fixture IDs + request text
+       -> Triage -> one specialist: Access OR Procurement OR DataSharing
+       -> retrieved policy + observed MCP facts
+       -> clarification / permitted mock action / approval route / escalation
+       -> Result + citations + redacted trace
 ```
 
-The orchestration runs on your laptop against approved shared Azure services.
-The coach may host authenticated tools for the full event, but the timed core
-below uses a local loopback tool server. Do not deploy a hosted agent, APIM,
-Grafana or extra infrastructure during the exercise.
+| Outcome | What your evidence must mean |
+|---|---|
+| Resolve | An answer is sufficient; no action was needed |
+| Execute | The permitted simulated operation actually completed |
+| Route | More information or approval is needed; do not claim completion |
+| Escalate | A relevant specialist/reviewer must assess the request |
 
-## Core path
+The final runner passes `resolve` a JSON string containing trusted `id`, `user_id`
+and `text`. Parse that envelope first. The business text cannot replace those
+IDs, your team identity or the assigned service configuration.
 
-### Step 1 - Add final requests and keep your implementations
+Read [handoff orchestration](https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/handoff)
+and [MCP tools](https://learn.microsoft.com/en-us/agent-framework/agents/tools/local-mcp-tools).
+Use the pinned Python SDK, not an unrelated portal-hosted-agent deployment guide.
 
-The final request file is already in your clone. Do not overwrite your agent implementations.
+## Step 2 - Start one team-local MCP server and keep it running
 
-```powershell
-.\.venv\Scripts\python -c "import json; from pathlib import Path; rows=json.loads(Path('data/final-requests.json').read_text()); print('Final requests:',len(rows))"
-```
-
-Expected: **Final requests: 10**. There is no answer file in this workshop repository.
-Do not ask Copilot to search the private coach repository for one.
-
-### Step 2 - Keep one MCP server alive
-
-A short-lived stdio diagnostic loses its records when it exits. To test retries
-across calls, keep a **single team-local HTTP server** running.
-
-In terminal A, from your working folder:
+**Where:** VS Code **Terminal A**, repository root.
+**Why:** one retained mock store lets all specialists see the same action records.
+The short-lived diagnostic from Mission 02 does not retain records after exit.
 
 ```powershell
-$env:TEAM_ID = "team-01"
+$env:TEAM_ID = Read-Host "Assigned team ID"
 .\.venv\Scripts\python -m route_resolve.mcp_server --transport streamable-http
 ```
 
-Expected: a server on loopback port 8000. Use
-`http://127.0.0.1:8000/mcp`, not a public address. Leave terminal A running.
-Do not run a separate server per specialist; they must see the same mock store.
+**You should see:** a server listening on loopback port 8000.
+Use `http://127.0.0.1:8000/mcp`; leave Terminal A running.
+Do not open a public tunnel or start a different server for every specialist.
+Restarting it erases its in-memory action records.
 
-In terminal B set the cloud/team variables from README.md again. This terminal
-runs your agent workflow. Restarting terminal A intentionally erases mock state.
+Open **Terminal B** for the workflow commands. Set the same team/model/project
+and Search variables from Missions 01/03 there; environment variables do not
+transfer between terminals. Reuse the correct cached CLI login.
 
-### Step 3 - Build a bounded handoff workflow
+Authenticated hosted team tools also exist for coordinator-led rehearsals, but
+this customer starter's core runner uses local MCP. Do not paste a bearer-protected
+hosted URL into an unauthenticated local example or silently switch transports.
 
-Implement `resolve(request: str) -> Result` in `starter/route_resolve/agents.py`.
-For the supplied runner, `request` is a JSON string with the fixture's `id`,
-`user_id` and `text`. Parse this envelope first. The runner supplies IDs; the
-business text must not override identity, team settings or request IDs.
+## Step 3 - Build the smallest bounded multi-agent workflow
 
-Build these pieces incrementally:
+**Where:** `resolve` and your helpers in `agents.py`.
+**Why:** specialists need only their own tools, and every model/tool loop must end.
 
-1. Reuse your triage and retrieval work. Create Triage and three specialist
-   `Agent` instances using `FoundryChatClient` and the assigned deployment.
-2. Register the specialists with `HandoffBuilder`. Set Triage as the start agent
-   and add handoff edges only from Triage to the three specialists.
-3. Add explicit turn limits and a termination condition for a valid specialist
-   result. Use a conservative cap such as two Triage turns and three specialist
-   turns; report an unfinished workflow instead of silently increasing the cap.
-4. Connect each specialist to the **same loopback server** with
-   `MCPStreamableHTTPTool(name=..., url="http://127.0.0.1:8000/mcp", ...)`.
-   Set `load_prompts=False` and an explicit `allowed_tools` list:
+1. Reuse your triage and retrieval work. Create a Triage agent and three specialist
+   agents using the configured `FoundryChatClient` and existing deployment.
+   Triage chooses a specialist; specialists gather evidence and decide next steps.
+2. Register the agents in `HandoffBuilder`. Set Triage as the start and allow
+   handoff edges only to Access, Procurement and DataSharing. Require a real
+   handoff event, not a model-written sentence saying it handed off.
+3. Set explicit turn/output/time limits and a termination condition for a valid
+   specialist result. Start with a conservative cap, such as two Triage turns
+   and three specialist turns; report unfinished work rather than silently
+   raising limits or retrying forever.
+4. Attach the policy adapter and only the relevant MCP tools to each specialist:
 
-| Specialist | Allowed MCP tools, plus your policy-retrieval adapter |
-|---|---|
-| Access | `check_user_access`, `get_project_owner`, `create_access_request`, `request_info` |
-| Procurement | `lookup_supplier`, `create_purchase_request`, `request_info` |
-| DataSharing | `check_partner`, `create_data_share_request`, `request_info` |
+   | Specialist | Allowed MCP tools |
+   |---|---|
+   | Access | `check_user_access`, `get_project_owner`, `create_access_request`, `request_info` |
+   | Procurement | `lookup_supplier`, `create_purchase_request`, `request_info` |
+   | DataSharing | `check_partner`, `create_data_share_request`, `request_info` |
 
-5. The specialist retrieves evidence and checks facts **before** its mock action.
-   With missing fields, call `request_info` and preserve clarification instead
-   of calling a write with guessed arguments.
-6. Treat tool results as authoritative for simulated completion/approval state.
-   Handle MCP `isError` explicitly. Do not turn exceptions into Execute.
-7. Return the starter's `Result` dataclass, not a prose-only response. Preserve
-   retrieved references separately from the mock tool's local policy references.
-   A tool's local filename alone is not evidence of a cloud retrieval.
-   Construct `citations` as a tuple of nonempty reference strings, as declared
-   in `models.py`; JSON serialization will represent it as an array.
+   Use `MCPStreamableHTTPTool` against the **same** loopback server with explicit
+   `allowed_tools` and `load_prompts=False`. Triage does not need mock write tools.
+5. Retrieve evidence and inspect facts before a write. If fields are missing,
+   use `request_info` and keep the clarification result. If a tool reports
+   `isError`, preserve the failure; do not convert it into Execute.
+6. Construct the supplied `Result` dataclass. Preserve trusted ID, a valid category
+   and outcome, a meaningful explanation, a nonempty tuple of actual retrieved
+   citation strings, the observed action ID when applicable, and `simulation=True`.
+   A queued approval can have an action ID while still being **Route**.
 
-SDK names used here match the installed lab versions. If unsure, inspect them:
+SDK orientation, not a solution:
 
 ```powershell
 .\.venv\Scripts\python -c "import inspect; from agent_framework import MCPStreamableHTTPTool; from agent_framework.orchestrations import HandoffBuilder; print(inspect.signature(MCPStreamableHTTPTool)); print(inspect.signature(HandoffBuilder.with_autonomous_mode))"
 ```
 
-Use async context managers for clients/tools and close them reliably. If
-`resolve` wraps async code with `asyncio.run`, call it from a normal CLI runner,
-not from a notebook's running event loop. Keep the HTTP server separate.
+The pinned handoff framework requires `require_per_service_call_history_persistence=True`
+on its agents. Consume actual workflow events/`AgentResponse` objects instead of
+assuming every event contains a list of messages. Close MCP and SDK clients
+reliably; `FoundryChatClient` itself is not an async context manager in the pinned
+version. If uncertain, inspect installed APIs with your team or coordinators.
 
-### Step 4 - Observe one practice request before the final batch
+You can revisit [Foundry](https://ai.azure.com/) to compare the project/deployment
+details, but all orchestration runs from VS Code. You do not need a new project,
+model, APIM instance or hosted-agent deployment.
 
-Run P01 or another practice request through `resolve` with the trusted envelope:
+## Step 4 - Observe one practice request end to end
+
+**Where:** Terminal B, after the coordinators approve cloud calls.
 
 ```powershell
 .\.venv\Scripts\python -m route_resolve.lab resolve --id P01 --allow-cloud
 ```
 
-Expected: one `Result` with the original request ID, valid category/outcome,
-meaningful explanation, citations and `simulation: true`. An action ID is
-present when the mock operation supplies one. A queued approval may have an
-action ID and still be **Route**, not Execute.
+**You should see:** one Result with the original request ID and real evidence.
+Before running a batch, inspect a redacted trace showing:
 
-Record a trace showing:
+1. Which specialist actually received the handoff.
+2. Which policy passages/references were retrieved.
+3. Which MCP tool names, arguments and results were observed.
+4. Why the Result follows from those observations.
 
-1. Triage's handoff destination.
-2. The actual policy retrieval references.
-3. Actual MCP tool name, arguments and result, or clarification result.
-4. How the final outcome follows from that evidence.
+Do not accept a plausible paragraph instead of that trace. Check a missing-field
+case too. Test a same-ID/same-argument retry against the same server: no duplicate
+action should appear. That is a same-process property, not durable storage.
 
-Do not log credentials or Authorization headers. Keep mock fixtures local.
-An error must remain visible; it is not a successful result.
+## Step 5 - Run the final ten and keep your evidence
 
-### Step 5 - Run ten final requests
-
-
-Use the supplied runner after your practice flow works:
+**Where:** Terminal B, once a practice flow and its trace work.
+**Why:** the final runner checks record shape, not whether your business answer
+is correct.
 
 ```powershell
 .\.venv\Scripts\python -m route_resolve.lab final --allow-cloud
 ```
 
-Expected: **Wrote 10 results** and `evidence/final-results.jsonl`.
-JSONL means one JSON object per line. The runner preserves trusted IDs, requires
-the Result contract, checks simulation/citation shape and refuses to overwrite
-existing output before calling an agent. To preserve a previous run, pass a
-new path such as `--output evidence/final-results-02.jsonl`.
+**You should see:** **Wrote 10 results** and `evidence/final-results.jsonl`.
+JSONL means one JSON object per line. The runner preserves IDs, checks Result
+shape, requires citation/simulation fields and refuses to overwrite existing
+output before calling an agent. Keep previous evidence; for an explicitly
+approved second run choose `--output evidence/final-results-02.jsonl`.
 
-Inspect `starter/route_resolve/lab.py` to understand the checks. This is **not**
-an answer-key grader: it does not prove policy correctness, actual handoff,
-genuine retrieval or tool execution. The facilitator reviews those traces.
+Do not repeatedly run the whole batch to get a passing screenshot. If something
+fails, inspect one failing practice case first. No answer-key grader or private
+reference implementation is included.
 
-Do not repeatedly run the batch to hide an error. Keep the first failure,
-diagnose it, and rerun only the affected request while developing. Preserve
-prior results and remember that restarted tool servers lose idempotency records.
+## Checkpoint - show the coordinators
 
-### Step 6 - Check one retry and explain a result
+- [ ] Demonstrate one permitted mock action, one approval/clarification route and one escalation.
+- [ ] Point to actual handoff, retrieval and tool traces, not just model claims.
+- [ ] Show the ten saved Results with `simulation: true`; keep credentials out.
+- [ ] Explain one limitation and the fact that no real business system changed.
 
-With terminal A still running, repeat the same unchanged request ID and action
-arguments. Inspect the actual mock response/action ID: no duplicate action
-should be created. Reusing an ID with different arguments must be an error,
-not an overwrite. This server-level check is distinct from whether the model
-happens to produce the same wording twice.
+## Step 6 - Optional bonus missions are still inside Challenges
+
+After the core demonstration, click **Optional bonus missions** in the Challenges
+toolbar or open the [bonus mission guide](docs/bonus.md). Choose failure-path testing,
+evidence challenges or an offline evaluation report. Each is optional, takes
+about 20-30 extra minutes and does not add a fifth required milestone.
+The toolbar's Current/Last mission button returns to the core reader.
+
+When finished, stop your local server in Terminal A with **Ctrl+C**. Do not delete
+shared Azure resources; the coordinators manage event cleanup.
 
 ## Optional Copilot prompts
 
-**Guided orchestration support**:
-
 ```text
-Help me complete challenge 04 in this workshop workspace. Read docs/mission-04.md,
-README.md, agents.py, models.py and my existing triage/retrieval code.
-First show the control flow, then help implement resolve(request: str) -> Result
-incrementally. Parse the trusted JSON envelope {id,user_id,text}; never let its
-text override IDs or TEAM_ID. Verify installed Agent Framework signatures.
-Use HandoffBuilder, Triage plus three specialists, explicit turn limits and a
-termination condition. Use the shared local MCP HTTP server and the exact
-specialist allowed_tools from the guide. Preserve actual retrieval evidence,
-check MCP errors, and only claim completion from an observed mock result.
-Keep credentials in memory, errors visible and every result a simulation.
-Do not read coach answers, hardcode final labels, deploy resources, change roles
-or create a public tunnel. Explain each change and help me run one practice
-request before the final batch. Keep real business systems disconnected.
+Read docs/mission-04.md and my existing triage/retrieval functions. Propose a
+bounded Triage-to-one-specialist workflow with least-privilege MCP tools. Use
+the pinned SDK and verify signatures/events. Require actual retrieval and tool
+evidence before constructing Result; keep trusted IDs and visible failures.
+Explain each change before editing. Do not invent traces, provide final-fixture
+answer labels, search private solutions or deploy more Azure resources.
 ```
-
-**Coach-style review, without answers**:
-
-```text
-Review this redacted trace and my Result. Do not provide an answer key.
-Check whether a real handoff, policy retrieval and required MCP call occurred,
-whether the citation supports the claim, and whether Route was confused with
-Execute. Point to missing evidence rather than inventing it. Ask me to explain
-one safety check and one limitation of my implementation.
-```
-
-## Checkpoint and three-minute demo
-
-- [ ] All three specialists can be chosen from unstructured requests.
-- [ ] A trace proves a real handoff, retrieval and mock call/clarification.
-- [ ] Ten final JSONL records pass shape checks and are submitted for coach review.
-- [ ] You can distinguish a completed mock action, pending approval and escalation.
-- [ ] An unchanged retry does not duplicate the simulated operation.
-- [ ] No real grant, order or data transfer occurred.
-
-Show a permitted simulated action, an approval route and a sensitive escalation
-from your run. Explain the evidence and one limitation. These are demo categories,
-not the expected labels for particular final request IDs.
-
-Then stop terminal A with `Ctrl+C` and stop any running workflow. Do not delete
-shared Azure resources. The coach exports console timings and handles cleanup.
 
 ## Troubleshooting
 
-| Symptom | What to do |
+| What you see | What to do next |
 |---|---|
-| Connection refused on port 8000 | Start terminal A with the same `.venv` and assigned team ID |
-| Address already in use | Check your own terminal for the existing server; ask coach before stopping anything |
-| Workflow repeats handoffs | Check permitted edges, termination and turn bounds; do not increase limits blindly |
-| Result is prose or wrong type | Validate the structured output and construct `Result` explicitly |
-| Status disappeared after restart | Expected for the in-memory store; keep one process for the retry check |
-| Result says Execute without a tool trace | It is not acceptable evidence; fix observation/validation |
-| Final run exceeds the timebox | Show the failing step to coach; do not skip safety checks or claim completion |
-
-## Stretch - after the checkpoint
-
-Compare the same request with and without its policy-override sentence. Add an
-automated check that a fabricated citation or unobserved action is rejected.
-Do not optimize for answer labels at the expense of actual evidence.
-
-## Finished early?
-
-After your core demonstration, choose an [optional bonus mission](docs/bonus.md). This does not add a required console milestone or authorize extra cloud calls.
+| Loopback connection refused | Check Terminal A, port 8000 and the exact `/mcp` URL |
+| Wrong identity/config in Terminal B | Reapply non-secret variables there; compare the cached CLI operator |
+| Handoff never happens | Inspect actual events, allowed edges and Triage instructions; do not fake a specialist response |
+| Client/context/history error | Check the pinned SDK signatures and lifecycle notes in Step 3 |
+| Action ID but request still queued | Distinguish Route from Execute using the observed tool outcome |
+| Final output already exists | Preserve it; request approval for another run and use a new output path |
