@@ -18,6 +18,20 @@ Prerequisite: Missions 01-02 passed; the coordinators confirm the four policy
 documents are loaded and your identity is authorized. This guide is
 `docs/mission-03.md` in your clone.
 
+## Learning map - know why you are doing each step
+
+| Step | What you learn | Explain it to a teammate |
+|---|---|---|
+| 1 - Read a policy | Request claims, verified facts and policy rules are distinct evidence | What rule applies, and what fact is still unknown? |
+| 2 - Configure Search | Retrieval has its own endpoint and authorization | Why is the Foundry project URL not a Search endpoint? |
+| 3 - Implement the adapter | A real request must preserve returned passages and references | Which response fields prove this is retrieved evidence? |
+| 4 - Inspect three queries | Grounding connects an explanation to an observed source | Can I point from one claim back to a returned reference? |
+| 5 - Test sufficiency | Missing evidence must block unsupported decisions | When should the workflow ask, route or stop? |
+
+Before coding, write a policy question and predict the kind of evidence needed,
+not the final business outcome. After retrieval, compare to the actual passage.
+Explain one reference yourself before using Copilot to summarize anything.
+
 ## Step 1 - Understand what retrieval adds
 
 **Where:** VS Code Explorer, `data/policies`.
@@ -109,6 +123,8 @@ preserves the evidence the specialist will later need.
    This workshop version was live-rehearsed against the assigned service.
    If newer Learn examples use a different preview API, keep the reviewed lab
    version unless the coordinators issue an updated contract.
+   The Authorization header uses the Bearer scheme with the token from your
+   credential. The notation above is explanatory only; never log a real header.
 4. Check HTTP status before reading success fields. Use the real response shape,
    not a guessed `answer` property. Preserve returned `references`, passages and
    retrieval `activity` when present.
@@ -123,6 +139,13 @@ the endpoint, identity, question and returned evidence. No new model or hosted
 agent deployment is needed. See the
 [Foundry SDK/endpoints guide](https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/sdk-overview)
 if those addresses are still confusing.
+
+**Small-build checkpoints:** validate the configuration/question first; then
+send one bounded query; inspect its status and response keys; only then map
+passages/references into your return dictionary. Do not ask Copilot to guess a
+response schema or implement the final workflow while this adapter is untested.
+Use an offline fake response to test empty/missing references without generating
+repeated billable requests. Label fake output as offline evidence.
 
 ## Step 4 - Retrieve and inspect evidence for each domain
 

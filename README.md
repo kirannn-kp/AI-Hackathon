@@ -9,13 +9,13 @@ your exercise code, not the console platform. Keep the same clone for all four
 missions. [Read the full story](docs/START_HERE.md).
 
 **Before the challenges:** follow [Environment Setup](docs/environment-setup.md)
-for the team access form, GitHub joining image, repository access, Python and
+for individual access confirmation, GitHub joining image, repository access, Python and
 Azure sign-in. Keep that page open while following the presentation.
 
 ## 1. Before you type commands
 
 The coordinators supply your console login, approved workshop source, team ID,
-Azure operator/tenant, direct Foundry project link, project endpoint, shared
+your approved Azure identity/tenant, direct Foundry project link, project endpoint, shared
 chat deployment, Search endpoint and team knowledge-base name.
 Do not use another team's values or a personal Azure project.
 
@@ -23,10 +23,12 @@ Do not use another team's values or a personal Azure project.
 |---|---|---|
 | HackboxConsole with your team login | Read missions and see team progress | Browser |
 | Your approved GitHub account | Clone the approved repository; optional Copilot | Git / VS Code |
-| The assigned Azure operator identity | Call the lab's Foundry/Search services | Azure CLI and Foundry browser |
+| Your own approved Azure identity | Call your team's Foundry/Search services | Azure CLI and Foundry browser |
 
-One nominated operator uses the Azure lab identity while the team collaborates.
-Do not share passwords, TAPs or MFA. GitHub/Copilot access is not automatically
+Everyone prepares their own laptop and signs in individually after workshop
+access is confirmed. Team members share assigned resources, not credentials.
+The Foundry buddy helps teammates; roles rotate. Do not share passwords, TAPs or MFA.
+GitHub/Copilot access is not automatically
 included with an Azure training identity. Copilot is optional.
 
 Use a prepared workstation or install Git, VS Code, Python 3.12+ and Azure CLI
@@ -100,19 +102,19 @@ On a coordinator-supported macOS/Linux workstation use `python3` and replace
 First check the cached account:
 
 ```powershell
-az account show --query "{operator:user.name,tenant:tenantId}" --output json
+az account show --query "{account:user.name,tenant:tenantId}" --output json
 ```
 
-If it is already the assigned operator/tenant, reuse it. Otherwise:
+If it is already your approved account/workshop tenant, reuse it. Otherwise:
 
 ```powershell
 $tenantId = Read-Host "Azure tenant ID from the coordinators"
 az login --tenant $tenantId --allow-no-subscriptions --use-device-code
-az account show --query "{operator:user.name,tenant:tenantId}" --output json
+az account show --query "{account:user.name,tenant:tenantId}" --output json
 ```
 
 Open the coordinator's direct project link or [Microsoft Foundry](https://ai.azure.com/)
-as that same operator. Match the assigned project name, then locate its
+as that same approved identity. Match the assigned project name, then locate its
 **Project endpoint** and the existing chat deployment. A browser page URL is
 not an SDK endpoint; a model family name is not necessarily a deployment name.
 

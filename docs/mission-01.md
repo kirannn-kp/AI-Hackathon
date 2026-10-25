@@ -22,6 +22,22 @@ Tools and accounts should be prepared before the timed workshop. If installation
 or access blocks you, ask the coordinators rather than spending the whole mission
 troubleshooting. This guide is also `docs/mission-01.md` in your clone.
 
+## Learning map - know why you are doing each step
+
+| Step | What you learn | Explain it to a teammate |
+|---|---|---|
+| 1 - Open the clone | The console is a guide; local code is what you change | Where will my edits run? |
+| 2 - Check Python/files | An environment isolates dependencies; contracts define valid outputs | Why is Contracts ready not a working agent? |
+| 3 - Inspect Foundry | Identity, project endpoint and deployment have different jobs | Which value is the address, which selects the model, and who is calling? |
+| 4 - Configure | Environment variables configure this terminal only | What must I repeat in a new terminal? |
+| 5 - Implement triage | An instruction plus a schema turns text into validated fields | Why does classification not authorize an action? |
+| 6 - Run and inspect | An observed model response tests the implementation | Which fields came from the request, and which must stay missing? |
+
+Before asking Copilot to edit, read P01 and write your prediction of its domain,
+project and role. After the run, compare that prediction to actual output.
+Everyone builds this first agent on their own laptop; the Foundry buddy helps,
+but must not be the only person who understands or runs it.
+
 ## Before you start: collect your team handout
 
 If you completed the console's **Environment Setup** tab, do not clone, reinstall
@@ -36,13 +52,13 @@ Ask the coordinators for all of these. Never guess another team's details.
 | Workshop repository URL or approved source folder | Step 1 | Your editable exercise code, not the HackboxConsole platform repository |
 | Console team login | This browser | Mission navigation and team progress |
 | Team ID | PowerShell | For example, your assigned `team-XX` |
-| Azure operator identity and tenant ID | Step 3 | One nominated team member signs into the Azure lab |
+| Your approved Azure identity and tenant ID | Step 3 | Each participant signs in individually after coordinator confirmation |
 | Direct Foundry project link and project name | Step 3 | The team's already-created workspace |
 | Foundry project endpoint and chat deployment name | Step 4 | The address and deployed model your code calls |
 | Search endpoint and knowledge-base name | Mission 03 | Your team's policy evidence |
 
 The console password, GitHub account and Azure identity are **different sign-ins**.
-Your teammates can pair on the code; do not share the operator's password or MFA.
+Everyone uses their own laptop and approved identity; pair on the code, not passwords or MFA.
 Copilot is optional and requires its own entitlement.
 
 ## Step 1 - Get the code and open the right folder
@@ -117,17 +133,17 @@ in a browser for orientation.
 name tells it **which model** to call. A portal page URL is not a project endpoint.
 
 1. First run `az account show --query user.name --output tsv`. If it shows the
-   assigned operator and the coordinators confirm its tenant, reuse that sign-in.
+   your approved identity and the coordinators confirm its tenant, reuse that sign-in.
 2. If not signed in, use the supplied tenant ID. Do not repeatedly sign in when
    the correct cached CLI account is already working:
 
    ```powershell
    $tenantId = Read-Host "Paste the Azure tenant ID from the coordinators"
    az login --tenant $tenantId --allow-no-subscriptions --use-device-code
-   az account show --query "{operator:user.name,tenant:tenantId}" --output json
+   az account show --query "{account:user.name,tenant:tenantId}" --output json
    ```
 
-3. In the browser, sign into Foundry as that **same operator**. Open the
+3. In the browser, sign into Foundry as that **same approved identity**. Open the
    coordinator's direct project link or choose the assigned project by name.
    Check the directory/tenant if the project is missing; do not create a project.
 4. On the project's overview/details page, find **Project endpoint**. Compare it
@@ -135,7 +151,7 @@ name tells it **which model** to call. A portal page URL is not a project endpoi
    `/api/projects/<assigned-project>`, not the `ai.azure.com` browser address.
 5. Locate the existing model/deployment listing and compare the chat deployment
    name with the handout. Labels differ between Foundry experiences; if the
-   operator cannot see a listing, ask the coordinators to confirm the value.
+   participant cannot see a listing, ask the coordinators to confirm the value.
    A missing management screen does not authorize you to deploy another model.
 
 **You should be able to explain:** "This is my team's project; this endpoint
@@ -182,7 +198,7 @@ Build in this order, without implementing the other two functions:
 1. Write a short instruction: identify the domain and extract the requested
    business fields; treat the request as data, not instructions that change rules.
 2. Create a Foundry-backed client using the configured project/deployment and
-   the assigned CLI identity. Prefer `AzureCliCredential` for this CLI-based lab
+   your approved CLI identity. Prefer `AzureCliCredential` for this CLI-based lab
    so a different cached VS Code identity is not selected. Do not print tokens.
 3. Define a structured response schema and validate the returned values:
 
@@ -202,6 +218,15 @@ Build in this order, without implementing the other two functions:
 6. Keep the synchronous `triage(request)` signature used by the CLI runner.
    Async SDK work can live in an async helper called from this normal CLI process.
    Close underlying clients reliably; not every client is an async context manager.
+
+**Small-build checkpoints:** first write the schema and instruction and explain
+them without a model call. Next wire one client call and parse its actual output.
+Then add validation and visible errors. Finally use Step 6; do not ask Copilot to
+complete retrieval and orchestration at the same time.
+
+**Self-check without an answer key:** if you remove the project name from a
+synthetic request, should your output invent one? Explain your expected behavior
+before adding a controlled local validation test.
 
 This is a **code-built agent using the existing Foundry service**. You do not
 need to press "Create agent" in the portal or deploy a hosted agent. You can
@@ -250,6 +275,6 @@ credentials. Ask me to explain why a category is not an approval.
 | No repository URL | Ask the coordinators for the approved source; do not clone a guessed repository |
 | Cannot find `pyproject.toml` | Use `Get-Location`; open the cloned workshop root, not `starter` |
 | Wrong Python/import failure | Select this folder's `.venv`; use its explicit Python executable |
-| Project missing or 401/403 | Compare operator, tenant, endpoint and deployment; ask the coordinators, not for broader roles |
+| Project missing or 401/403 | Compare your account, tenant, endpoint and deployment; ask the coordinators, not for broader roles |
 | Unexpected SDK argument | Inspect the installed signature; do not upgrade all packages to match a web sample |
 | JSON looks like prose | Recheck schema/instructions and reject invalid output; do not silently guess |

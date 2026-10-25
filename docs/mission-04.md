@@ -18,6 +18,22 @@ what happened. No real access, purchase or transfer is performed.
 Prerequisite: the first three checkpoints passed. This guide is
 `docs/mission-04.md` in your clone.
 
+## Learning map - know why you are doing each step
+
+| Step | What you learn | Explain it to a teammate |
+|---|---|---|
+| 1 - Trace the flow | Orchestration selects a specialist and preserves trusted IDs | Who is allowed to choose the next step? |
+| 2 - Retain local state | One running server retains mock actions for retry checks | Why would restarting it invalidate an idempotency demonstration? |
+| 3 - Build bounded handoff | Tool scope, evidence and termination constrain agent behavior | What stops a specialist doing unrelated work or looping forever? |
+| 4 - Inspect one trace | Actual events, not a fluent answer, establish what happened | Can I point to handoff, retrieval and a tool response? |
+| 5 - Review the final batch | Shape validation and business correctness are different | Why do ten valid JSON objects still need human review? |
+| 6 - Optional extension and cleanup | Failure tests strengthen evidence; local and cloud cleanup have different owners | What should I stop locally, and what must I leave for coordinators? |
+
+Pair and rotate the driver. Predict the route and required evidence before each
+practice call. Choose one team demo driver for the final batch; other members
+review its trace and explain a case rather than launch duplicate cloud batches.
+Everyone can run approved small checks with their own identity; stagger calls.
+
 ## Step 1 - See the whole flow before writing orchestration
 
 **Where:** read here; keep `models.py` open in VS Code.
@@ -47,7 +63,7 @@ Read [handoff orchestration](https://learn.microsoft.com/en-us/agent-framework/w
 and [MCP tools](https://learn.microsoft.com/en-us/agent-framework/agents/tools/local-mcp-tools).
 Use the pinned Python SDK, not an unrelated portal-hosted-agent deployment guide.
 
-## Step 2 - Start one team-local MCP server and keep it running
+## Step 2 - Start one laptop-local MCP server and keep it running
 
 **Where:** VS Code **Terminal A**, repository root.
 **Why:** one retained mock store lets all specialists see the same action records.
@@ -62,6 +78,9 @@ $env:TEAM_ID = Read-Host "Assigned team ID"
 Use `http://127.0.0.1:8000/mcp`; leave Terminal A running.
 Do not open a public tunnel or start a different server for every specialist.
 Restarting it erases its in-memory action records.
+This address means **this laptop**, not your team's cloud project. Each teammate
+running code locally has a separate server/store. Start only one on this port per
+laptop; use the same laptop/process for the retry and final-demo evidence.
 
 Open **Terminal B** for the workflow commands. Set the same team/model/project
 and Search variables from Missions 01/03 there; environment variables do not
@@ -115,6 +134,12 @@ on its agents. Consume actual workflow events/`AgentResponse` objects instead of
 assuming every event contains a list of messages. Close MCP and SDK clients
 reliably; `FoundryChatClient` itself is not an async context manager in the pinned
 version. If uncertain, inspect installed APIs with your team or coordinators.
+
+**Small-build checkpoints:** first construct the agents and allowed handoff
+graph; then attach retrieval and read-only lookups; then add permitted mock action
+tools and Result validation. Inspect one real practice trace before a batch.
+After each small change ask, "What observed evidence would prove this worked?"
+Do not let Copilot replace an unimplemented dependency with a success-shaped fake.
 
 You can revisit [Foundry](https://ai.azure.com/) to compare the project/deployment
 details, but all orchestration runs from VS Code. You do not need a new project,
@@ -194,7 +219,7 @@ answer labels, search private solutions or deploy more Azure resources.
 | What you see | What to do next |
 |---|---|
 | Loopback connection refused | Check Terminal A, port 8000 and the exact `/mcp` URL |
-| Wrong identity/config in Terminal B | Reapply non-secret variables there; compare the cached CLI operator |
+| Wrong identity/config in Terminal B | Reapply non-secret variables there; compare your own cached CLI account/tenant |
 | Handoff never happens | Inspect actual events, allowed edges and Triage instructions; do not fake a specialist response |
 | Client/context/history error | Check the pinned SDK signatures and lifecycle notes in Step 3 |
 | Action ID but request still queued | Distinguish Route from Execute using the observed tool outcome |

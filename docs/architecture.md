@@ -52,7 +52,10 @@ Access checks project ownership/current access. Procurement checks the supplier
 and amount. Data Sharing checks the partner and classification. Each specialist
 gets only its relevant tools and the policy-retrieval adapter.
 
-The local server is one team process. It keeps mock records in memory.
+Each participant uses their own approved Azure identity and local working copy.
+Team members use assigned shared cloud resources, but not shared credentials.
+The local server is one process per laptop, not a shared team cloud store.
+It keeps mock records in memory; identical team IDs do not synchronize laptops.
 Restarting it erases those records. A stable request ID prevents duplicate
 operations only while that same process retains its state.
 

@@ -102,7 +102,7 @@ responsibilities are unclear.
 6. **At each checkpoint:** show the coordinators your result and explain it.
    Only then proceed to the next core mission.
 
-**One clone, one working folder:** all exercise materials are already supplied.
+**One clone per participant, one working folder per laptop:** all exercise materials are already supplied.
 Do not replace your code between missions. The console paces learning; it is
 not a secrecy mechanism for files already present in the repository.
 
@@ -135,7 +135,22 @@ answers or change permissions. The workshop can be completed with your team
 and the written steps if Copilot is unavailable.
 
 **Access note:** private GitHub repository access does not grant Azure lab permissions.
-Coordinators must separately authorize the nominated operator for the team's
-assigned resources. Never commit credentials or real business data.
+Coordinators must separately confirm each participant's access to their team's
+assigned resources. Everyone uses their own approved identity, never a teammate's
+credentials. Foundry buddies provide support, not shared sign-ins.
+Never commit credentials or real business data.
+
+## Learning rhythm and teamwork
+
+Use **read -> predict -> implement -> run -> explain** at each step. Before accepting
+Copilot edits, identify the changed function and describe why the observed output
+is correct. Passing a command without understanding its evidence is not the goal.
+Each mission's learning map links actions to concepts and an explanation to give
+your teammate.
+
+Everyone builds the first agent on their own laptop; pair and rotate later.
+Choose one team demo driver for the final cloud batch and stagger smaller checks
+to respect shared capacity. Each laptop's local MCP state is independent.
+An access problem is a reason to ask for help, not borrow credentials.
 
 [Open Challenges and begin Mission 01](/challenges)

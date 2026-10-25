@@ -18,6 +18,21 @@ You are not yet deciding final outcomes or implementing the full workflow.
 Prerequisite: Mission 01 approved by the coordinators. This guide is
 `docs/mission-02.md` in your clone.
 
+## Learning map - know why you are doing each step
+
+| Step | What you learn | Explain it to a teammate |
+|---|---|---|
+| 1 - Read the MCP flow | A client invokes a server tool; model prose is not execution | What proves the tool ran? |
+| 2 - Discover tools | Schemas and a diagnostic reveal the available operations | Where do the nine names and owner result come from? |
+| 3 - Check facts | Operational records verify claims, not policy approval | Which fact did the lookup establish? |
+| 4 - Improve triage | Multiple domains and missing fields expose weak extraction | What observation justified your code change? |
+| 5 - Clarify | Missing information should trigger a question, not fabrication | Why must P04's missing project remain missing? |
+
+Run a diagnostic yourself before asking Copilot to explain the trace. Rotate the
+keyboard and ask a teammate to identify the tool's actual arguments and result.
+This mission teaches tool mechanics with supplied diagnostics; the model's
+specialist tool integration is built in Mission 04, not silently assumed here.
+
 ## Step 1 - Understand the conversation between an agent and a tool
 
 **Where:** read here, then open `starter/route_resolve/mcp_server.py` in VS Code.
@@ -38,7 +53,8 @@ Read the local/stdio examples; you do not need an extra public server.
 **Where:** VS Code PowerShell terminal, same workshop root.
 **Why:** run a diagnostic before attaching tools to a model, so you know they work.
 
-Reuse your assigned `TEAM_ID` from Mission 01. If this is a new terminal:
+Reuse your assigned `TEAM_ID` from Mission 01. If this is a new terminal, set it
+first. Then run the diagnostic in either case:
 
 ```powershell
 $env:TEAM_ID = Read-Host "Assigned team ID from the coordinators"
@@ -54,6 +70,8 @@ this diagnostic does not call Foundry.
 Open `starter/route_resolve/lab.py`, find `inspect_tools`, and identify:
 server startup, session initialization, tool discovery and the actual tool call.
 You are reading supplied plumbing, not expected to implement MCP from scratch.
+Each laptop starts its own child server. The diagnostic does not connect to
+another teammate's mock state or to real operational systems.
 
 ## Step 3 - Check the facts needed by each specialist
 
