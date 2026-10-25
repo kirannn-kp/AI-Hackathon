@@ -24,6 +24,11 @@ troubleshooting. This guide is also `docs/mission-01.md` in your clone.
 
 ## Before you start: collect your team handout
 
+If you completed the console's **Environment Setup** tab, do not clone, reinstall
+or sign in again. Confirm the same terminal has your configuration, then continue
+at **Step 5 - Build the first agent**. The [setup guide](environment-setup.md)
+remains available if you need to revisit a prerequisite.
+
 Ask the coordinators for all of these. Never guess another team's details.
 
 | Detail | Where you use it | What it means |

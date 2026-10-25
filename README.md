@@ -8,6 +8,10 @@ connect specialists into a bounded workflow. All data and actions are synthetic.
 your exercise code, not the console platform. Keep the same clone for all four
 missions. [Read the full story](docs/START_HERE.md).
 
+**Before the challenges:** follow [Environment Setup](docs/environment-setup.md)
+for the team access form, GitHub joining image, repository access, Python and
+Azure sign-in. Keep that page open while following the presentation.
+
 ## 1. Before you type commands
 
 The coordinators supply your console login, approved workshop source, team ID,

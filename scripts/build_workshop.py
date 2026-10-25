@@ -23,7 +23,7 @@ def rebase_links(text: str, source: str, destination: str) -> str:
 def build(root: Path) -> None:
     pages = [
         ("brief", "docs/START_HERE.md"), ("architecture", "docs/architecture.md"),
-        ("setup", "README.md"),
+        ("setup", "docs/environment-setup.md"), ("repository", "README.md"),
         *((f"mission-{number:02}", f"docs/mission-{number:02}.md") for number in range(1, 5)),
         ("bonus", "docs/bonus.md"),
     ]
@@ -53,6 +53,9 @@ def build(root: Path) -> None:
     for _, relative in pages:
         if relative.startswith("docs/"):
             shutil.copyfile(root / relative, destination / relative)
+    assets = destination / "docs" / "assets"
+    assets.mkdir(exist_ok=True)
+    shutil.copyfile(root / "docs" / "assets" / "github-join.png", assets / "github-join.png")
     for number in range(1, 5):
         (destination / f"challenge-{number:02}.md").write_text(
             rebase_links(sources[f"mission-{number:02}"], f"docs/mission-{number:02}.md", f"challenge-{number:02}.md"),

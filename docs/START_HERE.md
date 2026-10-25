@@ -86,6 +86,8 @@ responsibilities are unclear.
 
 1. **Stay in this console** to read the current challenge and use Prev/Next.
    Coordinators approve team milestones here.
+   Before Challenges, complete **Environment Setup** using its tab, or read
+   the [setup guide](environment-setup.md) alongside the presentation.
 2. **Clone the [AI Hackathon participant repository](https://github.com/kirannn-kp/AI-Hackathon)**
    once, or open an approved source folder supplied by the coordinators.
    The console platform repository is not the participant starter.
