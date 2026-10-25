@@ -25,11 +25,11 @@ def build(root: Path) -> None:
     theme = (root / "web" / "theme.css").read_text(encoding="utf-8")
     template = (root / "web" / "review.html").read_text(encoding="utf-8")
     preview = template.replace("{{THEME}}", theme).replace("{{CONTENT}}", "\n".join(sections))
-    (root / "index.html").write_text(preview, encoding="utf-8")
+    (root / "index.html").write_text(preview, encoding="utf-8", newline="\n")
     destination = root / "console" / "challenges"
     destination.mkdir(parents=True, exist_ok=True)
-    (destination / "workshop-home.md").write_text(sources["brief"], encoding="utf-8")
-    (destination / "workshop-theme.css").write_text(theme, encoding="utf-8")
+    (destination / "workshop-home.md").write_text(sources["brief"], encoding="utf-8", newline="\n")
+    (destination / "workshop-theme.css").write_text(theme, encoding="utf-8", newline="\n")
     shutil.copyfile(root / "README.md", destination / "README.md")
     (destination / "docs").mkdir(exist_ok=True)
     for _, relative in pages:
@@ -37,7 +37,7 @@ def build(root: Path) -> None:
             shutil.copyfile(root / relative, destination / relative)
     for number in range(1, 5):
         (destination / f"challenge-{number:02}.md").write_text(
-            sources[f"mission-{number:02}"], encoding="utf-8",
+            sources[f"mission-{number:02}"], encoding="utf-8", newline="\n",
         )
 
 
