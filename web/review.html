@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mission: Route &amp; Resolve - Customer Review</title>
+<script>
+  (() => {
+    const param = new URLSearchParams(window.location.search).get("scoutTheme");
+    const theme =
+      param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+<style>
+{{THEME}}
+</style>
+</head>
+<body class="workshop">
+<header class="review-header">
+  <div class="eyebrow">Customer engineering workshop</div>
+  <h1>Mission: Route &amp; Resolve</h1>
+  <p class="muted">An evidence-driven AI workflow. 150-minute core + optional bonus missions.</p>
+  <p class="muted">Local review only - not published. This preview has no sign-in or approval backend.</p>
+</header>
+<div class="review-layout">
+  <nav aria-label="Workshop sections">
+    <p class="eyebrow">Your learning path</p>
+    <a href="#brief" data-time="Orientation">Start here: the story</a>
+    <a href="#architecture" data-time="Orientation">Architecture</a>
+    <a href="#setup" data-time="Preparation">Clone and sign in</a>
+    <a href="#mission-01" data-time="30 minutes">01 / Establish the base</a>
+    <a href="#mission-02" data-time="30 minutes">02 / Investigate</a>
+    <a href="#mission-03" data-time="45 minutes">03 / Find evidence</a>
+    <a href="#mission-04" data-time="45 minutes">04 / Route and resolve</a>
+    <a href="#bonus" data-time="Optional / 20-30 min each">Bonus / Go further</a>
+  </nav>
+  <main class="review-main">
+    <p class="notice">Production guidance belongs in HackboxConsole. This is a review of the same content,
+      not a second platform. Shared Azure resources and participant authorization are not yet live-verified.</p>
+    <div class="reading-status">
+      <span id="section-position" role="status" aria-live="polite"></span>
+      <span id="section-time"></span>
+    </div>
+    <details class="topic-outline">
+      <summary>On this page</summary>
+      <ul id="topic-links"></ul>
+    </details>
+    <p id="copy-status" role="status" aria-live="polite"></p>
+    {{CONTENT}}
+    <footer class="reading-footer">
+      <div class="reading-controls">
+        <button type="button" id="previous-section">Previous</button>
+        <button type="button" id="next-section">Next</button>
+      </div>
+      <p class="muted">Reading navigation only. Coach approvals and team progress remain in HackboxConsole.
+        Bonus missions are optional.</p>
+    </footer>
+  </main>
+</div>
+<script>
+  const sections = [...document.querySelectorAll("main > section")];
+  const links = [...document.querySelectorAll("nav a")];
+  const previous = document.getElementById("previous-section");
+  const next = document.getElementById("next-section");
+  const outline = document.getElementById("topic-links");
+  let selectedIndex = 0;
+  sections.forEach(section => {
+    section.querySelectorAll("h2, h3").forEach((heading, index) => {
+      heading.id = section.id + "-topic-" + (index + 1);
+    });
+    section.querySelector("h1").setAttribute("tabindex", "-1");
+  });
+  function navigate() {
+    const requested = location.hash.slice(1);
+    const target = document.getElementById(requested);
+    const selected = target?.closest("main > section") || sections[0];
+    selectedIndex = sections.indexOf(selected);
+    sections.forEach(section => { section.hidden = section !== selected; });
+    links.forEach(link => {
+      if (link.hash === "#" + selected.id) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    });
+    document.getElementById("section-position").textContent =
+      "Reading section " + (selectedIndex + 1) + " of " + sections.length;
+    document.getElementById("section-time").textContent = links[selectedIndex].dataset.time;
+    previous.disabled = selectedIndex === 0;
+    next.disabled = selectedIndex === sections.length - 1;
+    previous.textContent = previous.disabled ? "Previous" : "Previous: " + links[selectedIndex - 1].textContent;
+    next.textContent = next.disabled ? "End of guide" : "Next: " + links[selectedIndex + 1].textContent;
+    outline.replaceChildren();
+    selected.querySelectorAll("h2, h3").forEach(heading => {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = "#" + heading.id;
+      link.textContent = heading.textContent;
+      item.append(link);
+      outline.append(item);
+    });
+    if (target && target !== selected) target.scrollIntoView();
+    else {
+      selected.querySelector("h1").focus({preventScroll: true});
+      window.scrollTo({top: 0, behavior: "auto"});
+    }
+  }
+  previous.addEventListener("click", () => { location.hash = sections[selectedIndex - 1].id; });
+  next.addEventListener("click", () => { location.hash = sections[selectedIndex + 1].id; });
+  document.querySelectorAll("table").forEach(table => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "table-scroll";
+    table.before(wrapper);
+    wrapper.append(table);
+  });
+  document.querySelectorAll("pre > code").forEach(code => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "copy-button";
+    button.textContent = "Copy";
+    button.setAttribute("aria-label", "Copy this command, prompt or diagram");
+    button.addEventListener("click", async () => {
+      const status = document.getElementById("copy-status");
+      try {
+        if (!navigator.clipboard) throw new Error("clipboard unavailable in this browser context");
+        await navigator.clipboard.writeText(code.textContent);
+        status.textContent = "Copied. Review the text before running it.";
+      } catch (error) {
+        status.textContent = "Could not copy automatically. Select the code text and copy it manually.";
+      }
+    });
+    code.parentElement.append(button);
+  });
+  window.addEventListener("hashchange", navigate);
+  navigate();
+</script>
+</body>
+</html>

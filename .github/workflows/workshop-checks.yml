@@ -1,0 +1,26 @@
+name: Workshop checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install workshop test and authoring dependencies
+        run: python -m pip install -e ".[mcp,authoring]"
+      - name: Run offline tests
+        run: python -m unittest discover -s tests -v
+      - name: Rebuild workshop content
+        run: python scripts\build_workshop.py
+      - name: Check generated content is current
+        run: git diff --exit-code
