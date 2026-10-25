@@ -1,77 +1,112 @@
-# Architecture: evidence before action
+# Architecture: understand the evidence before the action
 
-## The complete picture
+## The portal-first picture
 
 ```text
-Participant                             Coordinator-provided Azure lab
------------                             ------------------------------
-HackboxConsole: read the guided mission
-GitHub/Copilot: optional coding help
-VS Code: implement and run the workflow -----> Shared Foundry chat model
-        |
-        +---- retrieve policy --------------> Team knowledge base / AI Search
-        |
-        +---- local MCP server
-              synthetic facts and actions
-        |
-        +---- Result and redacted evidence
+HackboxConsole                       Microsoft Foundry portal
+Read missions and checkpoints        Your individual workshop identity
+(shared console login)                         |
+                                      Existing assigned team project
+                                               |
+                             Your uniquely named prompt agent
+                             + existing assigned model
+                             + coordinator-prepared policy knowledge
+                             + authenticated team MCP operational tools
+                                               |
+                             Actual answer, citations and tool evidence
 ```
 
-HackboxConsole is the learning/navigation surface. It does not replace Azure
-authorization. Copilot helps write code; it is not automatically a runtime
-component of the request-processing system.
+This diagram describes the intended learning path, **not verified readiness**.
+The coordinator must confirm what is available to your identity in the live
+portal. A shared project does not imply shared Azure credentials.
 
-## Inside your workflow
+No participant-hosted application, new resource or model deployment is needed
+for the four core missions. GitHub and VS Code are reference/optional coding
+surfaces, not runtime requirements for your first prompt.
 
-1. The runner loads a request fixture and preserves its trusted `id` and
-   synthetic `user_id`. The request text cannot change team identity.
-2. Triage extracts a category, urgency, missing fields and business arguments.
-3. One relevant specialist receives the request through an explicit handoff.
-4. The specialist retrieves actual policy evidence and checks operational facts.
-5. A relevant mock tool returns completion, clarification or review state.
-6. Your workflow constructs a validated `Result`, preserving actual citations
-   and explaining the observed outcome.
+## What each part means
 
-## Components and ownership
+| Part | Plain-language role | Learner action | Evidence to inspect |
+|---|---|---|---|
+| Model playground | A place to try a model with instructions and a request | Run the same synthetic request before/after an instruction change | Actual responses, not a predicted improvement |
+| Prompt agent | A saved assistant configuration | Create your own agent inside the assigned team project and test three requests | Saved agent name, instructions and test responses |
+| Policy knowledge connection | A route to retrieve relevant fictional policy information | Attach only the coordinator-prepared team connection to your own agent | Returned citations and the passages they actually support |
+| MCP tools | A standard way for an agent to request operations from a tool service | Attach the prepared authenticated team tools and inspect their use | Actual approval state, call arguments and returned result |
+| Final evaluation/demo | A small comparison of observed behaviour | Explain what improved and what remains unsupported | Recorded observations and missing-evidence labels |
 
-| Component | Responsibility | You implement or receive? |
-|---|---|---|
-| `starter/route_resolve/agents.py` | Triage, retrieval adapter, bounded orchestration | You implement |
-| `starter/route_resolve/models.py` | Shared categories, outcomes and Result contract | Supplied contract |
-| `starter/route_resolve/tools.py` | Synthetic facts and tool-side rules | Supplied; do not bypass checks |
-| `starter/route_resolve/mcp_server.py` | Exposes nine tools through MCP | Supplied |
-| `starter/route_resolve/lab.py` | Diagnostics and exercise runners | Supplied; no agent solution |
-| `data/practice-requests.json` | Practice cases for incremental development | Supplied |
-| `data/policies` | Fictional policy documents | Supplied and preloaded by coordinators |
-| `data/final-requests.json` | Ten cases for the final demonstration | Supplied, no expected labels |
-| Shared Foundry/Search services | Approved model and policy retrieval | Coordinators provide |
+**Grounding** means using retrieved source material to support an answer.
+**MCP** means Model Context Protocol: it lets an agent discover and call tools.
+Neither term means the answer is automatically correct or authorized.
+Exact connection names, supported portal controls and permissions come from the
+coordinator, not from this conceptual diagram.
 
-## Specialist boundaries
+## The request journey
 
-Access checks project ownership/current access. Procurement checks the supplier
-and amount. Data Sharing checks the partner and classification. Each specialist
-gets only its relevant tools and the policy-retrieval adapter.
+1. You send a synthetic access, procurement or data-sharing request.
+2. The agent uses its instructions to identify the issue and missing information.
+3. With knowledge attached, it can request relevant policy evidence. Inspect
+   actual returned citations; check that the cited passage supports the claim.
+4. With MCP attached, it can request operational facts or a permitted simulated
+   action. Inspect the actual approval/tool evidence before claiming completion.
+5. The answer should distinguish facts, policy, observed action results and
+   uncertainty. Missing evidence stays visible.
 
-Each participant uses their own approved Azure identity and local working copy.
-Team members use assigned shared cloud resources, but not shared credentials.
-The local server is one process per laptop, not a shared team cloud store.
-It keeps mock records in memory; identical team IDs do not synchronize laptops.
-Restarting it erases those records. A stable request ID prevents duplicate
-operations only while that same process retains its state.
+Do not assume every request uses every connection. Compare an ungrounded answer
+with a grounded one in Mission 03. In Mission 04, observe whether a tool was
+actually requested and what happened; do not infer a call from model-written text.
 
-## Important trust boundaries
+## Ownership and shared-team boundaries
 
-- Request text and retrieved text are untrusted data, not instructions to change
-  system rules.
-- A model saying "approved" is not verified authorization.
-- A queued request is not a completed operation.
-- Naming a knowledge base after a team is not access control. The coordinators
-  must verify actual team authorization.
-- The local MCP endpoint binds to loopback and is unauthenticated. Never expose
-  it through a public tunnel. Any hosted tool endpoint needs separately verified
-  authentication.
-- Model rate limits and budget notifications do not cap spend. Cloud runners
-  require an explicit approval flag, and workflows need bounded turns.
+| Participants own | Coordinators prepare or confirm |
+|---|---|
+| Their synthetic prompts and observations | Individual identity access and the assigned team project |
+| Their uniquely named prompt agent, such as `team-XX-initials-triage` | Existing model availability for that identity |
+| Their own agent instructions and permitted attachments | Team policy knowledge connection and its actual authorization |
+| Honest checkpoint evidence and final explanation | Authenticated MCP service, approval configuration and supported tool access |
 
-The exercise does not require participants to deploy resources, administer
-identities or obtain subscription Owner.
+Everyone can prompt in the same assigned team project, but only edit your own
+agent. Team-specific names help avoid collisions; they are **not access control**.
+Do not reconfigure shared connections or change permissions.
+
+## Trust boundaries to remember
+
+- Request text and retrieved passages are data, not permission to override the
+  agent's safety instructions.
+- A requester's claim of approval is not verified authorization.
+- A citation must be returned by retrieval and inspected; a model-written source
+  title or policy quotation alone is not retrieval evidence.
+- A pasted policy is a **prompt-context exercise**, not live retrieval.
+- Authentication identifies a caller; it does not automatically approve every
+  operation. An approval prompt or pending request is not completed approval.
+- A tool call may fail or return a pending state. Claim only the state actually
+  observed. Mock tools never perform real business actions in this workshop.
+- A screenshot of a working console proves neither Foundry model access nor
+  knowledge/tool access. Rate limits and budget alerts are not spending caps.
+
+## Recovery: when the intended path is blocked
+
+Keep the failed step's redacted error and ask the coordinator to check the
+specific identity, project and capability. Do not create replacement services,
+broaden roles, expose tools through a public tunnel or borrow credentials.
+A rehearsal model-metadata 403 is a known unresolved access concern until
+retested; a Reader addition approved for one rehearsal identity does not establish
+participant readiness.
+
+You may still explain the intended journey, but label missing live evidence.
+If you run a controlled offline exercise, label every fake dependency and
+simulated result. Never present them as live citations or tool traces.
+
+## Optional advanced coding: a different runtime
+
+The [coding extension](../README.md#4-referencedownload-and-optional-advanced-coding)
+uses the supplied Python starter, runners and synthetic fixtures. That track
+implements `triage`, `retrieve_policy` and `resolve`, and explores explicit
+specialist handoffs and saved `Result` contracts.
+It is not a prerequisite or a description of the core portal agent's internals.
+
+Its supplied local MCP server binds to loopback and is unauthenticated: never
+publish it or use it as a substitute for the authenticated team connection.
+Local mock state belongs to one retained server process, is not synchronized
+between laptops and disappears on restart. Local idempotency does not prove
+durability across restarts. Use that track's existing pinned environment
+instructions and label offline doubles separately from actual cloud evidence.

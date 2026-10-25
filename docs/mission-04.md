@@ -1,226 +1,188 @@
-# Mission 04 - Hand off, act and explain (45 minutes)
+# Mission 04 - Let the agent check facts, then prove what happened (45 minutes)
 
-## Your mission in the story
+## What you are going to do
 
-Maya's Access request, a software-purchase request and a data-sharing request
-must not all go to one all-powerful agent. Your triage agent should hand each
-request to the relevant specialist. That specialist checks facts, retrieves
-policy and either performs a permitted **mock** action, asks for missing
-information, routes for approval or escalates for review.
+Connect the prepared synthetic service-desk tools to your Foundry agent. Send a
+request that needs a lookup, inspect the proposed tool call, approve only the
+intended call, and read the observed result. Then demonstrate your agent with a
+small test table.
 
-**By the end:** `resolve` runs that bounded workflow and returns a validated
-`Result` with actual evidence. You then run the ten final requests and demonstrate
-what happened. No real access, purchase or transfer is performed.
+**You finish with:** an actual tool trace, an explanation supported by policy
+and facts, and an honest team demonstration.
+**You learn:** a tool gives an agent a specific capability. Approval, evidence and
+tool scope matter more than a sentence saying "I did it."
 
-**You change:** `resolve(request)` in `starter/route_resolve/agents.py`.
-**You reuse:** triage, retrieval, supplied MCP tools and the same Foundry project.
-**Timebox:** server/setup 5 min; workflow 20 min; practice/final 12 min; demo 8 min.
-Prerequisite: the first three checkpoints passed. This guide is
-`docs/mission-04.md` in your clone.
+**Where:** your agreed team demo agent in Foundry; teammates follow and rotate.
+**Why:** a model cannot verify current access or project ownership from a message
+alone. Our tools use fictional records and perform no real business operations.
 
-## Learning map - know why you are doing each step
+## Step 1 - Connect the team's prepared operational tools
 
-| Step | What you learn | Explain it to a teammate |
-|---|---|---|
-| 1 - Trace the flow | Orchestration selects a specialist and preserves trusted IDs | Who is allowed to choose the next step? |
-| 2 - Retain local state | One running server retains mock actions for retry checks | Why would restarting it invalidate an idempotency demonstration? |
-| 3 - Build bounded handoff | Tool scope, evidence and termination constrain agent behavior | What stops a specialist doing unrelated work or looping forever? |
-| 4 - Inspect one trace | Actual events, not a fluent answer, establish what happened | Can I point to handoff, retrieval and a tool response? |
-| 5 - Review the final batch | Shape validation and business correctness are different | Why do ten valid JSON objects still need human review? |
-| 6 - Optional extension and cleanup | Failure tests strengthen evidence; local and cloud cleanup have different owners | What should I stop locally, and what must I leave for coordinators? |
+Ask for the exact prepared **operational MCP connection** for your team.
+This is separate from the policy knowledge connection in Mission 03.
 
-Pair and rotate the driver. Predict the route and required evidence before each
-practice call. Choose one team demo driver for the final batch; other members
-review its trace and explain a case rather than launch duplicate cloud batches.
-Everyone can run approved small checks with their own identity; stagger calls.
+1. Open the demo agent's tool configuration.
+2. Add/select the existing operational connection supplied by coordinators.
+   If **Tools > Add > Add tools > Custom** is disabled or does not show the
+   prepared connection, ask the coordinator to attach it to your named demo
+   agent. Do not create a new server/connection or grant yourself a role.
+3. Begin with the read-only tools `get_project_owner`, `check_user_access`,
+   `lookup_supplier` and `check_partner`, plus clarification tool `request_info`.
+4. Keep tool approval enabled where supported. Save the configuration.
+5. Confirm which tools are actually listed and available to this agent.
 
-## Step 1 - See the whole flow before writing orchestration
+**You should see:** real tool names and their argument descriptions.
+**What you learn:** MCP describes tools so the agent can discover and call them.
+A connection URL alone is not proof that authentication or tool execution works.
 
-**Where:** read here; keep `models.py` open in VS Code.
-**Why:** orchestration decides what runs next; it is not asking every agent to
-answer every request.
+The coordinators configure the authenticated remote server and secret connection.
+Do not paste bearer tokens into chat, agent instructions or screenshots.
+The local URL `127.0.0.1` in the optional Python track is **not reachable by a
+cloud-hosted agent**. Do not use a public tunnel or silently remove authentication.
+
+If the prepared connection is missing, stop for coordinator help. You may inspect
+the supplied tools in the repository, but that is not a live tool-call result.
+
+## Step 2 - Ask a question that requires a real lookup
+
+Add this instruction to the demo agent:
 
 ```text
-Trusted fixture IDs + request text
-       -> Triage -> one specialist: Access OR Procurement OR DataSharing
-       -> retrieved policy + observed MCP facts
-       -> clarification / permitted mock action / approval route / escalation
-       -> Result + citations + redacted trace
+Use the connected operational tools to check facts before making claims.
+Do not invent a user ID, project owner, tool response or completed action.
+Use the policy knowledge tool for applicable rules.
+If a required fact, source or tool call is missing, say so and stop unsupported
+action. Keep this exercise explicitly synthetic.
 ```
 
-| Outcome | What your evidence must mean |
-|---|---|
-| Resolve | An answer is sufficient; no action was needed |
-| Execute | The permitted simulated operation actually completed |
-| Route | More information or approval is needed; do not claim completion |
-| Escalate | A relevant specialist/reviewer must assess the request |
+Start a new conversation and send:
 
-The final runner passes `resolve` a JSON string containing trusted `id`, `user_id`
-and `text`. Parse that envelope first. The business text cannot replace those
-IDs, your team identity or the assigned service configuration.
-
-Read [handoff orchestration](https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/handoff)
-and [MCP tools](https://learn.microsoft.com/en-us/agent-framework/agents/tools/local-mcp-tools).
-Use the pinned Python SDK, not an unrelated portal-hosted-agent deployment guide.
-
-## Step 2 - Start one laptop-local MCP server and keep it running
-
-**Where:** VS Code **Terminal A**, repository root.
-**Why:** one retained mock store lets all specialists see the same action records.
-The short-lived diagnostic from Mission 02 does not retain records after exit.
-
-```powershell
-$env:TEAM_ID = Read-Host "Assigned team ID"
-.\.venv\Scripts\python -m route_resolve.mcp_server --transport streamable-http
+```text
+Who owns Project Phoenix? Use the connected get_project_owner tool.
+Tell me the owner returned by the tool and explain what you still have not
+verified about an access request.
 ```
 
-**You should see:** a server listening on loopback port 8000.
-Use `http://127.0.0.1:8000/mcp`; leave Terminal A running.
-Do not open a public tunnel or start a different server for every specialist.
-Restarting it erases its in-memory action records.
-This address means **this laptop**, not your team's cloud project. Each teammate
-running code locally has a separate server/store. Start only one on this port per
-laptop; use the same laptop/process for the retry and final-demo evidence.
+When approval is requested, read the tool name and arguments **before** approving.
+Approve only the intended synthetic Phoenix lookup. If an unrelated or write
+operation appears, deny it and ask why the agent chose it.
 
-Open **Terminal B** for the workflow commands. Set the same team/model/project
-and Search variables from Missions 01/03 there; environment variables do not
-transfer between terminals. Reuse the correct cached CLI login.
+**You should see:** a real tool call/result and an answer consistent with that
+result. The owner name may vary with the supplied fixture; read the actual value.
+**What you learn:** the request is a claim/input; the tool result is an observed
+fact. A model-written "I checked" is not a trace.
 
-Authenticated hosted team tools also exist for coordinator-led rehearsals, but
-this customer starter's core runner uses local MCP. Do not paste a bearer-protected
-hosted URL into an unauthenticated local example or silently switch transports.
+## Step 3 - Inspect and explain the run
 
-## Step 3 - Build the smallest bounded multi-agent workflow
+Expand the run details/tool activity where available and find:
 
-**Where:** `resolve` and your helpers in `agents.py`.
-**Why:** specialists need only their own tools, and every model/tool loop must end.
+1. The called tool's actual name.
+2. Its project argument.
+3. The returned result or explicit error.
+4. The answer's claim based on that result.
 
-1. Reuse your triage and retrieval work. Create a Triage agent and three specialist
-   agents using the configured `FoundryChatClient` and existing deployment.
-   Triage chooses a specialist; specialists gather evidence and decide next steps.
-2. Register the agents in `HandoffBuilder`. Set Triage as the start and allow
-   handoff edges only to Access, Procurement and DataSharing. Require a real
-   handoff event, not a model-written sentence saying it handed off.
-3. Set explicit turn/output/time limits and a termination condition for a valid
-   specialist result. Start with a conservative cap, such as two Triage turns
-   and three specialist turns; report unfinished work rather than silently
-   raising limits or retrying forever.
-4. Attach the policy adapter and only the relevant MCP tools to each specialist:
+Ask a teammate to explain this chain without Copilot.
+Now ask:
 
-   | Specialist | Allowed MCP tools |
-   |---|---|
-   | Access | `check_user_access`, `get_project_owner`, `create_access_request`, `request_info` |
-   | Procurement | `lookup_supplier`, `create_purchase_request`, `request_info` |
-   | DataSharing | `check_partner`, `create_data_share_request`, `request_info` |
-
-   Use `MCPStreamableHTTPTool` against the **same** loopback server with explicit
-   `allowed_tools` and `load_prompts=False`. Triage does not need mock write tools.
-5. Retrieve evidence and inspect facts before a write. If fields are missing,
-   use `request_info` and keep the clarification result. If a tool reports
-   `isError`, preserve the failure; do not convert it into Execute.
-6. Construct the supplied `Result` dataclass. Preserve trusted ID, a valid category
-   and outcome, a meaningful explanation, a nonempty tuple of actual retrieved
-   citation strings, the observed action ID when applicable, and `simulation=True`.
-   A queued approval can have an action ID while still being **Route**.
-
-SDK orientation, not a solution:
-
-```powershell
-.\.venv\Scripts\python -c "import inspect; from agent_framework import MCPStreamableHTTPTool; from agent_framework.orchestrations import HandoffBuilder; print(inspect.signature(MCPStreamableHTTPTool)); print(inspect.signature(HandoffBuilder.with_autonomous_mode))"
+```text
+For fictional user user-02, check current Reader access to Project Phoenix.
+Use the access lookup and policy knowledge. Distinguish the current access fact
+from the policy approval requirement. Do not grant anything.
 ```
 
-The pinned handoff framework requires `require_per_service_call_history_persistence=True`
-on its agents. Consume actual workflow events/`AgentResponse` objects instead of
-assuming every event contains a list of messages. Close MCP and SDK clients
-reliably; `FoundryChatClient` itself is not an async context manager in the pinned
-version. If uncertain, inspect installed APIs with your team or coordinators.
+Here `user-02` is a **synthetic fixture user**, not your own Azure identity.
+Inspect the actual lookup and policy evidence separately.
 
-**Small-build checkpoints:** first construct the agents and allowed handoff
-graph; then attach retrieval and read-only lookups; then add permitted mock action
-tools and Result validation. Inspect one real practice trace before a batch.
-After each small change ask, "What observed evidence would prove this worked?"
-Do not let Copilot replace an unimplemented dependency with a success-shaped fake.
+**You should see:** a verified fact plus a cited rule, or a visible dependency
+failure. Do not convert that failure into a successful decision.
+**What you learn:** identity for signing into Foundry differs from the fictional
+user named inside the exercise.
 
-You can revisit [Foundry](https://ai.azure.com/) to compare the project/deployment
-details, but all orchestration runs from VS Code. You do not need a new project,
-model, APIM instance or hosted-agent deployment.
+## Step 4 - Test missing information and action boundaries
 
-## Step 4 - Observe one practice request end to end
+First send:
 
-**Where:** Terminal B, after the coordinators approve cloud calls.
-
-```powershell
-.\.venv\Scripts\python -m route_resolve.lab resolve --id P01 --allow-cloud
+```text
+Please give me access. I have not supplied a project or role.
+Tell me which information you need; do not invent it or claim completion.
 ```
 
-**You should see:** one Result with the original request ID and real evidence.
-Before running a batch, inspect a redacted trace showing:
+Check whether the agent asks for missing details. If it calls `request_info`,
+inspect the actual arguments and response.
 
-1. Which specialist actually received the handoff.
-2. Which policy passages/references were retrieved.
-3. Which MCP tool names, arguments and results were observed.
-4. Why the Result follows from those observations.
+**Mock writes are an optional coordinator-approved extension.** Only after the
+coordinators verify the connection and tool scope, enable the relevant
+`create_access_request`, `create_purchase_request` or `create_data_share_request`.
+Use a coordinator-supplied synthetic request ID and inputs. Keep approval on.
+Inspect whether the mock result is queued, completed or escalated; a queued
+request is not completed access/purchase/sharing.
 
-Do not accept a plausible paragraph instead of that trace. Check a missing-field
-case too. Test a same-ID/same-argument retry against the same server: no duplicate
-action should appear. That is a same-process property, not durable storage.
+**You should see:** missing details remain missing; any demonstrated mock action
+has actual tool evidence. If no write was enabled, say "not tested."
+**What you learn:** tool availability, human approval and business authorization
+are different checks. All operational effects here are simulated.
 
-## Step 5 - Run the final ten and keep your evidence
+## Step 5 - Demonstrate what your team actually built
 
-**Where:** Terminal B, once a practice flow and its trace work.
-**Why:** the final runner checks record shape, not whether your business answer
-is correct.
+Use your saved conversations rather than rerunning everything. Prepare this
+small table; record actual observations, not an invented score:
 
-```powershell
-.\.venv\Scripts\python -m route_resolve.lab final --allow-cloud
-```
+| Test | What you need to demonstrate | Actual observation / pass, issue or blocked |
+|---|---|---|
+| Normal intake | Correct category and extracted details | Fill from a real run |
+| Incomplete request | Missing fields are not invented | Fill from a real run |
+| Policy question | Actual supporting source is returned | Fill from a real run |
+| Operational lookup | Actual tool name, arguments and result | Fill from a real run |
+| Claimed approval | Requester text is not treated as verified approval | Fill from a real run |
 
-**You should see:** **Wrote 10 results** and `evidence/final-results.jsonl`.
-JSONL means one JSON object per line. The runner preserves IDs, checks Result
-shape, requires citation/simulation fields and refuses to overwrite existing
-output before calling an agent. Keep previous evidence; for an explicitly
-approved second run choose `--output evidence/final-results-02.jsonl`.
+Give a three-minute demo:
 
-Do not repeatedly run the whole batch to get a passing screenshot. If something
-fails, inspect one failing practice case first. No answer-key grader or private
-reference implementation is included.
+1. Show your named agent and say what problem it solves.
+2. Show one prompt improvement and its observed effect.
+3. Open one policy source and one tool result.
+4. Explain a failure/limitation and what the next improvement would be.
+
+**You should see:** a working demonstration or a precise record of which
+dependency is blocked. A blocked live capability must remain labelled blocked.
+**What you learn:** testing is explaining observed behavior and limitations, not
+just showing a polished response.
 
 ## Checkpoint - show the coordinators
 
-- [ ] Demonstrate one permitted mock action, one approval/clarification route and one escalation.
-- [ ] Point to actual handoff, retrieval and tool traces, not just model claims.
-- [ ] Show the ten saved Results with `simulation: true`; keep credentials out.
-- [ ] Explain one limitation and the fact that no real business system changed.
+- [ ] Show actual operational tool evidence and actual policy evidence.
+- [ ] Explain a missing-information case without inventing facts.
+- [ ] Show the five-row test table and a short team demo.
+- [ ] State what was not tested and that no real business system changed.
 
-## Step 6 - Optional bonus missions are still inside Challenges
+**Scope note:** this core lab builds and tests a Foundry prompt agent with
+knowledge and tools. It does **not** claim to implement a multi-agent handoff.
+The optional [code extension](code-extension/mission-04.md) builds that advanced
+workflow; finish the portal experience first.
 
-After the core demonstration, click **Optional bonus missions** in the Challenges
-toolbar or open the [bonus mission guide](bonus.md). Choose failure-path testing,
-evidence challenges or an offline evaluation report. Each is optional, takes
-about 20-30 extra minutes and does not add a fifth required milestone.
-The toolbar's Current/Last mission button returns to the core reader.
+## Optional bonus missions
 
-When finished, stop your local server in Terminal A with **Ctrl+C**. Do not delete
-shared Azure resources; the coordinators manage event cleanup.
+Open **Optional bonus missions** in the Challenges toolbar, or the
+[bonus guide](bonus.md). Choose resilience, evidence testing, offline evaluation
+or the advanced Python track. These are not a fifth mandatory mission.
+Leave shared Azure cleanup to coordinators; do not delete teammates' agents.
 
 ## Optional Copilot prompts
 
 ```text
-Read docs/mission-04.md and my existing triage/retrieval functions. Propose a
-bounded Triage-to-one-specialist workflow with least-privilege MCP tools. Use
-the pinned SDK and verify signatures/events. Require actual retrieval and tool
-evidence before constructing Result; keep trusted IDs and visible failures.
-Explain each change before editing. Do not invent traces, provide final-fixture
-answer labels, search private solutions or deploy more Azure resources.
+Ask me to explain this actual tool trace and policy citation. Help me write an
+honest five-case observation table, including failures. Do not fabricate traces,
+mark blocked tests as passing or change permissions.
 ```
 
 ## Troubleshooting
 
-| What you see | What to do next |
+| What happens | What to do |
 |---|---|
-| Loopback connection refused | Check Terminal A, port 8000 and the exact `/mcp` URL |
-| Wrong identity/config in Terminal B | Reapply non-secret variables there; compare your own cached CLI account/tenant |
-| Handoff never happens | Inspect actual events, allowed edges and Triage instructions; do not fake a specialist response |
-| Client/context/history error | Check the pinned SDK signatures and lifecycle notes in Step 3 |
-| Action ID but request still queued | Distinguish Route from Execute using the observed tool outcome |
-| Final output already exists | Preserve it; request approval for another run and use a new output path |
+| Tool connection missing | Ask coordinators to prepare/verify the authenticated remote connection |
+| Unauthorized tool call | Stop and report; do not expose tokens or disable authentication |
+| Agent never invokes a tool | Check the attached tool list and instructions; inspect the actual run |
+| Model says "completed" but no action result exists | Record an unsupported claim, not a successful action |
+| Policy works but tools fail | They are different connections/identities; report the failing component |
+
+**Read when useful:** [Foundry MCP tools](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/model-context-protocol).
+Coordinators must validate the exact integration supported by this workshop.

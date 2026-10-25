@@ -1,270 +1,168 @@
-# Environment Setup - start here before the challenges
+# Environment Setup - get ready to use Foundry
 
-Keep this page open beside VS Code. Follow these steps at your own pace, even
-when the presentation moves on. Setup is preparation, not a scored challenge;
-opening this page does not start your team's challenge timer.
+**Your first goal is simple: open your team's Foundry project and send a prompt.**
+You do not need to install Python, write code or ask Copilot to build anything
+before your first playground conversation.
 
-**Your route:** sign in to the console -> find your team -> confirm individual
-access -> join GitHub -> clone on your laptop -> prepare Python -> verify your
-own Azure sign-in -> configure your team's resources -> Mission 01.
+Keep this console open in one browser tab and Foundry in another.
+Follow one step, check what you see, then continue. Reading setup does not start
+your team's challenge timer.
 
-## First: open the console and find your team
+## 1. Sign in to the console and find your team
 
-1. Open the [workshop setup page](https://bosch-rnr-console-czfb3nscn5otc.azurewebsites.net/environment-setup).
-2. Sign in using the **shared team console username/password** delivered privately
-   by the coordinators. This is not your Bosch or GitHub password.
-3. Check the team roster on this console page and confirm your assigned team.
-   If the roster is missing or your assignment differs, ask a coordinator.
-4. Everyone follows the preparation below on **their own laptop**. The Foundry
-   buddy helps teammates; they are not the only person allowed to run code.
+Open the [workshop setup page](https://bosch-rnr-console-czfb3nscn5otc.azurewebsites.net/environment-setup).
+Use the **shared team console username/password** supplied privately by the
+coordinators, for example your assigned `team-01`.
+Expand **Show team members and roles** above this guide and find your name.
+If your name or team is wrong, ask a coordinator before using resource details.
 
-**Expected:** you know your team and can keep this guide open while working.
-**What you learn:** the console tracks team milestones, while individual sign-ins
-authorize code and service access. A console login does not grant Azure access.
+Everyone uses **their own laptop**. Foundry buddies help teammates; they are not
+the only people who can send prompts. Roles rotate.
 
-The team allocation is proposed until the coordinators confirm it. Roles are
-starting responsibilities, not restrictions: rotate coding, design, testing and
-demo work. Foundry access reported in registration is not a certification of
-expertise or proof of access to the workshop tenant.
+**You should see:** your team roster and this setup guide.
+**What you learn:** the console organizes team learning; it does not sign you
+into Azure or run an agent.
 
-## 1. Know which account to use
+## 2. Confirm your own workshop Azure access
 
-| Account | What it is for | What to use |
-|---|---|---|
-| Console team login | This setup page, challenges and team progress | Team username/password delivered privately by coordinators |
-| GitHub | Join the workshop organization, access the starter and optional Copilot | Your personal GitHub account, as directed on the joining image below |
-| Azure / Foundry | Run model and policy-retrieval calls | Your own approved Bosch work account after workshop access is confirmed, or an individually assigned approved training account |
-
-These are separate sign-ins. Joining GitHub does not grant Azure permissions.
-Never share passwords, MFA codes, temporary sign-in passes or tokens in the form,
-chat, source code or screenshots.
-
-**What you learn:** GitHub repository access, optional Copilot entitlement and
-Azure permissions are independent; success in one does not prove the others.
-
-## 2. Confirm your individual Azure access
-
-Coordinators already collected registration emails. Confirm that your team and
-Bosch work email are correct; follow their instructions for the updated form.
-Use it to supply requested individual confirmation, corrections or access issues.
-Do not submit repeated responses when your details are already confirmed.
+Coordinators already collected work emails. Confirm your team and the **Bosch
+work account you will actually use to sign in**. Follow their instructions for
+the updated individual access form; do not submit duplicates unnecessarily.
 
 [Open the individual Azure access confirmation form](https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR83ImEQa061Powk_w90_QApUMkM4TVROQVA2Vlk2OFFEQVpBNDNYWTYxTC4u)
 
-Use your own Bosch work email used for Microsoft 365, not a shared mailbox or
-distribution list. You do not need your own paid subscription or subscription
-Owner. Required workshop resource permissions must be assigned separately.
+Wait for coordinator confirmation, and accept any workshop invitation using your
+own approved identity. An individually assigned training account is an alternative
+only when coordinators explicitly provide one. Never use a teammate's credentials.
 
-**Expected:** your email/team and access status are confirmed with coordinators.
-Form submission is **not** proof that Azure permission is ready. Individual
-onboarding is subject to tenant policy and coordinator confirmation.
-**What you learn:** authentication identifies you; authorization determines
-which workshop services you can call. Continue local preparation while waiting.
+**You should see:** your email/team and access status are confirmed.
+**What you learn:** form submission does not automatically grant permissions.
+Existing Foundry access elsewhere does not authorize this workshop project.
+You do not need a personal paid subscription or subscription Owner.
 
-## 3. Join the workshop GitHub organization
+## 3. Know which account belongs where
 
-Use the coordinator-supplied joining image below. Scan its QR code with your
-phone, sign in with your personal GitHub account, enter the displayed joining
-code and follow the join instructions.
+| Place | Account | What it lets you do |
+|---|---|---|
+| This console | Shared assigned team login | Read challenges and track team milestones |
+| Foundry | Your own approved work/training identity | Use the assigned project, model and agents after authorization |
+| GitHub | Your own account with repository access | Read/download workshop references; optional coding |
+| Copilot | Your own entitled GitHub account | Optional help explaining code; not required for portal labs |
+
+Never share passwords, MFA, temporary passes, tokens or device codes.
+Do not paste credentials or real business data into prompts.
+
+**You should see:** you can explain which sign-in you will use next.
+**What you learn:** GitHub joining does not automatically grant Azure permissions;
+console login does not automatically sign you into Foundry.
+
+## 4. Open your team's Foundry project
+
+1. Open [Microsoft Foundry](https://ai.azure.com/) in a second tab.
+2. Sign in with your own approved identity.
+3. Use the **direct project link supplied by coordinators**.
+4. Check the project selector: it must show your assigned `team-XX`.
+
+If prompted, switch to the workshop directory. Do not create a resource,
+subscription, project or model deployment. If the screen differs, ask a
+coordinator to show you the correct workspace rather than guess.
+
+**You should see:** your project's home and its project name.
+**What you learn:** the project is your team's workspace. Your browser page
+address and the project's API endpoint serve different purposes.
+
+## 5. Check that the playground is available
+
+On the project home, look for **Test in playground**, or choose **View deployments**
+and click the existing chat deployment's name to open its playground. In the
+classic experience, use **Playgrounds > Chat**. Select the **existing chat deployment** supplied by
+the coordinators; do not select an embedding deployment or deploy a new model.
+
+Open **Setup > Tools** and remove any automatically added **Web search** for the
+first lab. Return to **Chat** and look for the message box and Send control.
+Mission 01 gives you the exact request to paste, compare and improve.
+
+**You should see:** a playground with a selected model deployment and input box.
+**What you learn:** you can experiment with a model without Python. Opening the
+portal alone does not prove that you can call a model or create an agent.
+
+If both playground entry paths are unavailable, deployments are missing or a 403
+blocks the actual model call:
+**stop and tell a coordinator**. This is an access/readiness issue. Do not try to
+fix it by changing roles, creating resources or borrowing another login.
+Coordinators must verify the participant experience before starting the mission.
+
+## 6. Know what you will build and test
+
+| Mission | Your hands-on task | What you keep |
+|---|---|---|
+| 01 | Send a prompt in Foundry, improve instructions, compare responses | Before/after observations |
+| 02 | Create a uniquely named prompt agent and test service-desk messages | Agent name and actual conversations |
+| 03 | Connect prepared team policy knowledge and inspect a citation | Retrieved source supporting an answer |
+| 04 | Connect prepared operational tools, inspect a real lookup and demonstrate behavior | Tool evidence and a small test table |
+
+Core work happens in **Foundry**, not in a Python terminal. Use the console to
+follow each step and show checkpoint evidence. The repository is reference
+material plus an optional advanced coding track, not the main exercise.
+
+**You should see:** a concrete goal beyond "read these files."
+**What you learn:** prompt design, agent configuration, grounding, tools and
+evaluation are separate skills. Do not claim retrieval or execution without evidence.
+
+## 7. Join GitHub when you need the workshop materials
+
+You may do this now or after your first Foundry prompt. GitHub/Copilot must not
+block the browser-based introduction if coordinators can supply the synthetic
+reference documents another approved way.
+
+Scan the supplied QR code, sign in using the personal GitHub account directed by
+the screenshot, and follow its joining instructions:
 
 ![GitHub workshop joining instructions, QR code and joining code supplied by the coordinators](assets/github-join.png)
 
-If the QR code is hard to scan on the same device, keep this page on your laptop
-and scan with your phone, or ask the coordinators for the joining URL.
-Do not guess the URL or share the joining image outside the workshop.
+Then open the [private AI-Hackathon repository](https://github.com/kirannn-kp/AI-Hackathon)
+with the GitHub account granted repository access. Joining the organization in
+the screenshot **does not automatically** grant access to this separately owned
+repository. A 404 usually needs coordinator invitation/access verification.
 
-**Expected:** the joining flow confirms your organization membership.
-Copilot availability depends on the assigned entitlement; if it is not active,
-ask the coordinators and continue without it. Do not enter card/payment details
-or buy a subscription to finish this workshop.
+**You should see:** the README, documentation, synthetic data and optional starter.
+**What you learn:** organization membership, repository permission and Copilot
+entitlement are different. Do not buy a subscription to finish the workshop.
+Keep the joining image within the workshop audience.
 
-**What you learn:** organization membership and Copilot entitlement are distinct
-from access to a particular private repository.
+## 8. Use the optional code track only when ready
 
-## 4. Open the private participant repository
+You do **not** need Git clone, Python, Azure CLI or environment variables for
+the four browser-based core missions. They are needed if you choose to implement
+the advanced Python workflow later.
 
-[Open AI-Hackathon on GitHub](https://github.com/kirannn-kp/AI-Hackathon)
+Start the [optional coding setup](code-extension/setup.md) only when the
+coordinators confirm time and cloud-call approval. It preserves the earlier
+triage, MCP, retrieval and handoff exercises without making them a beginner's
+first task.
 
-Sign in with the GitHub account granted repository access. The repository is
-private and currently hosted under `kirannn-kp`, separately from the organization
-shown in the joining image. **Joining that organization does not automatically
-grant access to this repository.** If you see 404, ask the coordinators to confirm
-your repository invitation/access; do not clone the console platform instead.
+**You should see:** a clear separation between the portal lab and optional code.
+**What you learn:** the playground demonstrates behavior; an application later
+reproduces it using APIs, authentication, configuration and tested code.
+Copilot is optional: review its suggestions and predict results before running them.
 
-**Expected:** the GitHub page shows `README.md`, `starter`, `data` and `docs`.
-Once the page is accessible, open PowerShell:
+## 9. Ready checklist - then open Mission 01
 
-```powershell
-git --version
-git clone https://github.com/kirannn-kp/AI-Hackathon.git
-cd AI-Hackathon
-code .
-```
+- [ ] I know my team and can read the console guide.
+- [ ] My own Azure access is confirmed.
+- [ ] I can open the assigned Foundry project, not a personal project.
+- [ ] I can open the playground with the assigned chat deployment.
+- [ ] I know where to type a message and read the response.
+- [ ] I understand that synthetic prompts cannot authorize real operations.
 
-If Git prompts for authentication, use its browser sign-in with the approved
-GitHub account. Do not put your password or a token into the clone URL.
-If a coordinator has already prepared the folder, open it in VS Code instead
-of cloning again. All four challenges use this same working folder.
+Open **Challenges > Mission 01** when coordinators start the workshop.
+Use **read -> predict -> do -> observe -> explain**: before each test, say what
+you expect; afterwards, point to what actually happened.
 
-Everyone uses their **own local clone**. Before running `git push`, agree which
-branch or contribution method your coordinators allow; do not overwrite another
-person's work or assume repository read access includes write access.
-**What you learn:** Git downloads editable code; the console is the guide, not
-the code execution environment.
+**You should see:** a first task you can perform, not a command you must trust.
+**What you learn:** a response, citation or tool result is evidence to inspect,
+not a reason to stop thinking.
 
-## 5. Prepare your Python environment
-
-**Where:** VS Code > Terminal > New Terminal > PowerShell, in the folder containing
-`pyproject.toml`. If any tool is missing, ask the coordinators or install only
-through an approved workstation procedure.
-
-```powershell
-Get-Location
-Get-ChildItem README.md, pyproject.toml
-python --version
-az version
-```
-
-**Expected:** the workshop root, Python 3.12 or newer and an installed Azure CLI.
-Git, VS Code, Python and Azure CLI are required; Docker is not.
-
-If this folder's `.venv` is not already prepared:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python -m pip install -e ".[mcp,cloud]"
-```
-
-Then run:
-
-```powershell
-.\.venv\Scripts\python -m route_resolve.lab check
-```
-
-**Expected:** **Contracts ready**. This checks local imports only, not model access.
-Use Ctrl+Shift+P > **Python: Select Interpreter** and choose this folder's `.venv`.
-No execution-policy or activation change is necessary with explicit Python paths.
-The unfinished functions in `agents.py` are intentional exercises.
-
-**What you learn:** a virtual environment isolates dependencies. Python and Azure
-CLI installation do not grant Azure permissions; `az version` is only an
-installation check. This offline check can run before your Azure access is ready.
-If `python` or `az` is not recognized, stop and ask for an approved installation;
-do not skip the failed step and assume the later commands will work.
-
-## 6. Optional: open GitHub Copilot in VS Code
-
-Use the VS Code Accounts menu to sign into the approved GitHub account, then
-open Chat. Follow any entitlement/sign-in prompt. Your approved Azure sign-in
-may differ from your GitHub account.
-
-You may ask:
-
-```text
-Read README.md and docs/START_HERE.md in this workspace. Do not edit files or run
-commands. Explain the business problem and what the first triage agent will do.
-```
-
-**Expected:** an explanation, not a resource deployment. Copilot is optional;
-the written missions and your teammates are sufficient to continue.
-
-**What you learn:** Copilot proposes changes; you remain responsible for
-understanding, reviewing and testing them. Before accepting a change, name the
-function being edited, predict its output and explain one failure it must reject.
-
-## 7. Everyone: verify your own Azure sign-in
-
-Only continue once coordinators confirm **your individual workshop access**.
-Accept any workshop directory invitation using your approved account.
-Do not use a coordinator's or teammate's credentials.
-
-Check the existing CLI sign-in first:
-
-```powershell
-az account show --query "{account:user.name,tenant:tenantId}" --output json
-```
-
-If it is already your approved account and workshop tenant, reuse it. Otherwise:
-
-```powershell
-$tenantId = Read-Host "Workshop tenant ID supplied by the coordinators"
-az login --tenant $tenantId --allow-no-subscriptions --use-device-code
-az account show --query "{account:user.name,tenant:tenantId}" --output json
-```
-
-Follow the CLI's displayed sign-in URL/code using your own approved account.
-Do not send that device code to another person. Use the tenant-specific sign-in;
-do not repeatedly log in once the correct cached identity works.
-
-Open [Microsoft Foundry](https://ai.azure.com/) as the same approved identity and open
-the team's assigned project using the coordinator's direct project link.
-Switch to the workshop directory if prompted. Do not create a new resource,
-subscription, project or model. Portal labels vary; a missing management screen
-does not imply permission to broaden access.
-
-**Expected:** your correct account/tenant and access to the assigned team project.
-The real model and retrieval calls in the challenges verify service access;
-successful sign-in alone is not proof of it.
-
-**What you learn:** the portal helps locate resources; your Python code uses the
-CLI identity. Browser sign-in alone does not sign the CLI in. Members share the
-assigned team project, not credentials. If access is pending, pair for local
-work and request help; do not change identities to bypass the failure.
-
-[Microsoft Learn: Foundry projects, SDKs and endpoints](https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/sdk-overview)
-
-## 8. Set your team's configuration
-
-The coordinators supply these non-secret addresses/names privately per team.
-Do not guess a project endpoint from the browser's URL or select another team:
-
-```powershell
-$env:TEAM_ID = Read-Host "Assigned team ID"
-$env:FOUNDRY_PROJECT_ENDPOINT = Read-Host "Assigned Foundry project endpoint"
-$env:FOUNDRY_MODEL = Read-Host "Assigned chat deployment name"
-$env:SEARCH_ENDPOINT = Read-Host "Assigned HTTPS Search endpoint"
-$env:TEAM_KNOWLEDGE_BASE = Read-Host "Assigned team knowledge-base name"
-```
-
-These assignments apply to this terminal only. `.env.example` documents names
-but is not automatically loaded. Shared service calls need coordinator approval
-and the runner's `--allow-cloud` flag; setup does not authorize unlimited calls.
-
-**What you learn:** configuration selects the project/model/knowledge base;
-credentials authorize the request. A project endpoint is not a portal URL, and
-a deployment name is not necessarily the model family name.
-All team members use the same assigned values on their own laptops.
-Stagger cloud experiments, run one small example before a batch, and ask for help
-on rate-limit errors rather than adding automatic retries or increasing limits.
-
-## 9. Ready checklist - then start Mission 01
-
-- [ ] My own approved email, team and individual access status are confirmed.
-- [ ] GitHub joining completed and the private repository opens.
-- [ ] One clone is open in VS Code with the correct `.venv`.
-- [ ] The offline check prints **Contracts ready**.
-- [ ] My own Azure access and assigned resource details are confirmed.
-- [ ] You understand that GitHub, console and Azure are separate sign-ins.
-
-When ready, open **Challenges** and build your first triage agent in Mission 01.
-If you already completed setup here, skip repeating the clone/install/sign-in
-steps there and begin its first-agent implementation step.
-
-If blocked, tell the coordinators your team number, the step above and a redacted
-error. Never include passwords, MFA codes or tokens.
-
-## How to learn rather than blindly accept generated code
-
-For each mission, use **read -> predict -> implement -> run -> explain**:
-
-1. Read the story and learning map before opening Copilot.
-2. Predict one input's output in your own words.
-3. Implement only the current small step, with or without Copilot.
-4. Review the changed function and run the specified check yourself.
-5. Explain the observed evidence to a teammate; if you cannot, pause and ask why.
-
-Every participant builds and tests Mission 01 locally. Then pair on specialist
-work, compare approaches and rotate roles. Agree one **team demo driver** for the
-final ten-case cloud run, so the team does not launch duplicate final batches.
-Each laptop's loopback MCP server has separate synthetic state; shared `TEAM_ID`
-does not synchronize local servers.
+If a required live capability is blocked, label it **blocked** and ask for help.
+Pasting policy into a prompt is not live retrieval; saying "tool ran" is not a tool
+trace. Do not mark those checkpoints complete without the actual evidence.

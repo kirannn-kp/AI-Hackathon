@@ -1,280 +1,177 @@
-# Mission 01 - Build your first triage agent (30 minutes)
+# Mission 01 - Send your first prompt in Foundry (30 minutes)
 
-## Your mission in the story
+## What you are going to do
 
-It is Monday morning at fictional Contoso Manufacturing. Maya is joining Project
-Phoenix and writes, "Please give me Reader access." The service desk also receives
-software-purchase and data-sharing requests. Today someone reads every message
-and decides which team should investigate it. You will build that first reader:
-the **triage agent**.
+Open **Microsoft Foundry**, send a request, read the answer, then improve the
+instructions and try again. **No Python or Copilot is needed for this mission.**
+You are not just reading a repository. You will make real model calls in a
+playground and keep a before/after example.
 
-**By the end:** your Python code sends one synthetic request to the assigned
-Foundry model and returns structured information about what it asks for.
-It does **not** grant access, approve spending or decide whether sharing is safe.
-Those decisions need facts and policy evidence in later missions.
+Imagine you work at the service desk of fictional Contoso Manufacturing.
+Maya writes: "I join Project Phoenix next week. Please give me Reader access."
+A helpful-sounding answer is easy. An answer that admits what it cannot verify
+is more useful. You will see that difference for yourself.
 
-**You change:** `triage(request)` in `starter/route_resolve/agents.py`.
-**You use:** the supplied runner, an existing Foundry project and its shared model.
-**You do not create:** Azure resources, model deployments or new accounts.
+**You finish with:** two observed responses and your explanation of what changed.
+**You learn:** a prompt is what you ask now; instructions describe how the model
+should behave. Neither gives it permission to change a business system.
 
-**Timebox:** orientation/setup 10 min; first agent 15 min; checkpoint 5 min.
-Tools and accounts should be prepared before the timed workshop. If installation
-or access blocks you, ask the coordinators rather than spending the whole mission
-troubleshooting. This guide is also `docs/mission-01.md` in your clone.
+## Before you click
 
-## Learning map - know why you are doing each step
+Complete **Environment Setup**, including your own approved Azure sign-in.
+Have your assigned project name/link and existing chat deployment name ready.
+Team members share the team project, not Azure passwords. Use synthetic text only.
+The coordinators must confirm playground access before starting the timer.
 
-| Step | What you learn | Explain it to a teammate |
-|---|---|---|
-| 1 - Open the clone | The console is a guide; local code is what you change | Where will my edits run? |
-| 2 - Check Python/files | An environment isolates dependencies; contracts define valid outputs | Why is Contracts ready not a working agent? |
-| 3 - Inspect Foundry | Identity, project endpoint and deployment have different jobs | Which value is the address, which selects the model, and who is calling? |
-| 4 - Configure | Environment variables configure this terminal only | What must I repeat in a new terminal? |
-| 5 - Implement triage | An instruction plus a schema turns text into validated fields | Why does classification not authorize an action? |
-| 6 - Run and inspect | An observed model response tests the implementation | Which fields came from the request, and which must stay missing? |
+**Where:** [Microsoft Foundry](https://ai.azure.com/) in your browser.
+**Why:** this is where you experience the model directly before building an agent.
+Keep this console open in a second tab so you can follow one step at a time.
 
-Before asking Copilot to edit, read P01 and write your prediction of its domain,
-project and role. After the run, compare that prediction to actual output.
-Everyone builds this first agent on their own laptop; the Foundry buddy helps,
-but must not be the only person who understands or runs it.
+## Step 1 - Open your team's existing project
 
-## Before you start: collect your team handout
+1. Sign in with your own approved workshop account.
+2. Open the project link supplied by the coordinators.
+3. Check the project selector at the top: it must show your assigned `team-XX`.
+4. Stay inside that project. Do not use **Create project**, **Deploy model** or a
+   personal subscription.
 
-If you completed the console's **Environment Setup** tab, do not clone, reinstall
-or sign in again. Confirm the same terminal has your configuration, then continue
-at **Step 5 - Build the first agent**. The [setup guide](environment-setup.md)
-remains available if you need to revisit a prerequisite.
+**You should see:** your team's project home. The home page can show **Build an
+agent**, **Use a model**, and the project endpoint.
+**What you learn:** a project is your team's workspace; it is not the agent itself.
 
-Ask the coordinators for all of these. Never guess another team's details.
+If your project is missing, stop here and ask a coordinator. Signing into the
+console or GitHub does not grant Foundry access.
 
-| Detail | Where you use it | What it means |
-|---|---|---|
-| Workshop repository URL or approved source folder | Step 1 | Your editable exercise code, not the HackboxConsole platform repository |
-| Console team login | This browser | Mission navigation and team progress |
-| Team ID | PowerShell | For example, your assigned `team-XX` |
-| Your approved Azure identity and tenant ID | Step 3 | Each participant signs in individually after coordinator confirmation |
-| Direct Foundry project link and project name | Step 3 | The team's already-created workspace |
-| Foundry project endpoint and chat deployment name | Step 4 | The address and deployed model your code calls |
-| Search endpoint and knowledge-base name | Mission 03 | Your team's policy evidence |
+## Step 2 - Open the model playground
 
-The console password, GitHub account and Azure identity are **different sign-ins**.
-Everyone uses their own laptop and approved identity; pair on the code, not passwords or MFA.
-Copilot is optional and requires its own entitlement.
+1. On the project home, choose **Test in playground**. Another normal entry is
+   **View deployments**, then click the existing chat deployment's **name** to
+   open its playground. Use this if the home shortcut is unavailable but the
+   deployment is visible and authorized; never force a disabled button.
+2. Select the **existing chat deployment** from your team handout. The workshop
+   deployment is supplied; do not choose an embedding model or deploy a new one.
+3. Open **Setup** and inspect **Tools**. If Foundry automatically added
+   **Web search**, use its actions menu > **Remove**. For this first comparison,
+   keep tools empty. We are testing instructions, not searching the web.
+4. Return to **Chat**. Find **Chat with the model...** and the **Send** button.
+5. Leave advanced parameters at their supplied defaults.
 
-## Step 1 - Get the code and open the right folder
+In the classic interface, the equivalent entry is **Playgrounds > Chat**.
+Follow the path matching the interface you actually see; do not switch projects
+to make a button work.
 
-**Where:** a PowerShell terminal on the workshop workstation.
-**Why:** the browser explains the exercise; VS Code is where you build it.
+**You should see:** a chat playground, the selected deployment and an input box.
+**What you learn:** a playground lets you experiment with a model without writing
+an application. A chat deployment runs language responses; embeddings do not.
 
-If the coordinators already opened the workshop folder for you, **do not clone
-again**. Confirm you can see `README.md`, `pyproject.toml`, `starter` and `data`.
-Otherwise clone the private **workshop** starter using an approved GitHub account
-with repository access:
+**If blocked:** a disabled button, empty deployment list or 403 is an access/setup
+problem, not an exercise to solve by granting yourself roles. Ask a coordinator.
+Do not treat the empty screen as a reason to deploy your own model.
 
-```powershell
-git clone https://github.com/kirannn-kp/AI-Hackathon.git
-cd AI-Hackathon
-code .
+## Step 3 - Send a first request and inspect the answer
+
+Paste this into the **message** box and press Send:
+
+```text
+I join Project Phoenix next week. Please give me Reader access.
+What should happen next?
 ```
 
-If a coordinator supplied an approved extracted folder instead, open that folder
-with **File > Open Folder** in VS Code. Do not run `git clone` on a ZIP file.
-If GitHub is unavailable, ask the coordinators for an approved source folder.
-Do not substitute the console platform or a private preparation repository.
+Before reading the response, predict: can this model actually grant access?
+Now read it. Does it ask a question, suggest a process, or claim it did something?
+There is no single guaranteed wording; record what **your run actually says**.
 
-**You should see:** a VS Code Explorer with the files listed above. In VS Code,
-open **Terminal > New Terminal**, select PowerShell, and check the working folder:
+**You should see:** a real response in the playground.
+**What you learn:** fluent text is not proof of a lookup, approval or action.
+This first model has no workshop operational tools connected.
 
-```powershell
-Get-Location
-Get-ChildItem README.md, pyproject.toml
+Save the prompt and response in a local note. Do not include passwords, tokens,
+account screenshots or real customer requests.
+
+## Step 4 - Give the model a clear job and try the same request
+
+Open **Setup** and find the **system message / instructions** area, separate from
+the user-message box. Replace its workshop instructions with the following,
+then apply/save if the playground requires it:
+
+```text
+You are the intake assistant for the fictional Contoso service desk.
+Read requests; do not claim to perform actions.
+Choose one category: Access, Procurement, or DataSharing.
+Keep your answer under 120 words. Reply with:
+1. Category
+2. Details supplied by the requester
+3. Missing details or checks needed
+4. Suggested next step
+Do not invent facts, approval, policy or tool results.
+If information is missing, say what you would ask.
+All examples are simulations, not real business operations.
 ```
 
-Keep this one folder for all missions. You will not download replacement code
-between challenges. [Repository setup reference](../README.md).
+Return to **Chat** and choose **New chat / clear chat**, keeping those instructions, and send
+the **same** Maya request again. Clearing the conversation avoids mixing the
+first answer's history into the comparison.
 
-## Step 2 - Prepare Python and understand the supplied files
+**You should see:** an answer that follows the requested structure more closely.
+It still has not granted access or checked a real policy.
+**What you learn:** a clear role, output format and boundaries change behavior.
+Instructions guide the model; they are not a guarantee of correct behavior.
 
-**Where:** the VS Code terminal, at the repository root.
-**Why:** the virtual environment installs this workshop's pinned SDK versions
-without changing the machine's other projects.
+If the response breaks a rule, underline the exact line and improve one
+instruction. Do not keep pressing Send until you get a lucky screenshot.
 
-Skip creation/install if the coordinators already prepared this same environment:
+## Step 5 - Test something incomplete, then something different
 
-```powershell
-python --version
-python -m venv .venv
-.\.venv\Scripts\python -m pip install -e ".[mcp,cloud]"
-.\.venv\Scripts\python -m route_resolve.lab check
+Start a fresh conversation for each test, retaining your instructions:
+
+```text
+Please give me access.
 ```
 
-**You should see:** Python 3.12+ and **Contracts ready**. This is an offline import
-check, **not** a working agent or proof of Azure access. Use **Ctrl+Shift+P >
-Python: Select Interpreter** and choose this folder's `.venv`.
-No activation or execution-policy change is needed with the explicit executable.
-
-Open these files in the Explorer:
-
-| File | Read it to understand |
-|---|---|
-| `starter/route_resolve/agents.py` | Three unfinished functions; implement only `triage` now |
-| `starter/route_resolve/models.py` | Allowed categories and the final Result contract |
-| `data/practice-requests.json` | Synthetic records; find P01 and read its `text` |
-| `starter/route_resolve/lab.py` | The supplied runner, which keeps trusted request/user IDs |
-
-`NotImplementedError` in the agent functions is deliberate. The task is to replace
-the current mission's stub, not remove checks until the command appears to pass.
-
-## Step 3 - Find your existing project in the Foundry portal
-
-**Where:** PowerShell for Azure login; [Microsoft Foundry](https://ai.azure.com/)
-in a browser for orientation.
-**Why:** the project endpoint tells your code **where** to work; the deployment
-name tells it **which model** to call. A portal page URL is not a project endpoint.
-
-1. First run `az account show --query user.name --output tsv`. If it shows the
-   your approved identity and the coordinators confirm its tenant, reuse that sign-in.
-2. If not signed in, use the supplied tenant ID. Do not repeatedly sign in when
-   the correct cached CLI account is already working:
-
-   ```powershell
-   $tenantId = Read-Host "Paste the Azure tenant ID from the coordinators"
-   az login --tenant $tenantId --allow-no-subscriptions --use-device-code
-   az account show --query "{account:user.name,tenant:tenantId}" --output json
-   ```
-
-3. In the browser, sign into Foundry as that **same approved identity**. Open the
-   coordinator's direct project link or choose the assigned project by name.
-   Check the directory/tenant if the project is missing; do not create a project.
-4. On the project's overview/details page, find **Project endpoint**. Compare it
-   with the handout. Its shape is an HTTPS address ending in
-   `/api/projects/<assigned-project>`, not the `ai.azure.com` browser address.
-5. Locate the existing model/deployment listing and compare the chat deployment
-   name with the handout. Labels differ between Foundry experiences; if the
-   participant cannot see a listing, ask the coordinators to confirm the value.
-   A missing management screen does not authorize you to deploy another model.
-
-**You should be able to explain:** "This is my team's project; this endpoint
-belongs to it; this deployment is the shared model." Sign-in alone does not prove
-model permission. A later real call will check that.
-
-**Read if needed:** [Foundry SDKs and project endpoints](https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/sdk-overview)
-and [What is Foundry Agent Service?](https://learn.microsoft.com/en-us/azure/foundry/agents/overview).
-Documentation can describe creating resources: skip those setup sections because
-the coordinators already supplied them. Do not add API keys or change roles.
-
-## Step 4 - Connect this terminal to the assigned resources
-
-**Where:** the same VS Code PowerShell terminal.
-**Why:** these environment variables are configuration, not an agent implementation.
-
-```powershell
-$env:TEAM_ID = Read-Host "Assigned team ID"
-$env:FOUNDRY_PROJECT_ENDPOINT = Read-Host "Assigned Foundry project endpoint"
-$env:FOUNDRY_MODEL = Read-Host "Shared chat deployment name"
+```text
+We need a EUR 600 software licence from Contoso Software.
 ```
 
-Use the exact handout values, including spelling. `FOUNDRY_MODEL` means the
-**deployment name**, not a model family you pick yourself. These assignments last
-only in this terminal. `.env.example` is a reference and is not automatically
-loaded. Never paste credentials into source, screenshots or Copilot.
+For the first, check whether missing project/role details remain missing.
+For the second, check whether the category changes to Procurement.
+Write one sentence describing a mistake or limitation you observed.
 
-## Step 5 - Build the first agent: extract, do not approve
+**You should see:** different inputs produce appropriately different intake
+responses; missing information is not silently invented.
+**What you learn:** one good answer is not a test suite. Try a normal case, an
+incomplete case and a different domain.
 
-**Where:** `starter/route_resolve/agents.py`, function `triage(request)`.
-**Why:** the rest of the workflow needs predictable fields rather than a paragraph.
-
-Use the Python sections of [Your first agent](https://learn.microsoft.com/en-us/agent-framework/get-started/your-first-agent)
-and the [Microsoft Foundry provider](https://learn.microsoft.com/en-us/agent-framework/integrations/by-component/model-providers/microsoft-foundry).
-Use the installed versions in `pyproject.toml`; current online samples can target
-a newer SDK. Inspect the installed constructor before adapting sample code:
-
-```powershell
-.\.venv\Scripts\python -c "import inspect; from agent_framework.foundry import FoundryChatClient; print(inspect.signature(FoundryChatClient))"
-```
-
-Build in this order, without implementing the other two functions:
-
-1. Write a short instruction: identify the domain and extract the requested
-   business fields; treat the request as data, not instructions that change rules.
-2. Create a Foundry-backed client using the configured project/deployment and
-   your approved CLI identity. Prefer `AzureCliCredential` for this CLI-based lab
-   so a different cached VS Code identity is not selected. Do not print tokens.
-3. Define a structured response schema and validate the returned values:
-
-   | Field | Meaning and requirement |
-   |---|---|
-   | `category` | Exactly `Access`, `Procurement` or `DataSharing` |
-   | `urgency` | Your documented enum, for example `low`, `normal`, `high`; not approval |
-   | `missing_fields` | List of business fields the requester did not provide |
-   | `arguments` | Extracted fields; Access needs `project` and `role`, Procurement needs `supplier` and positive EUR amount, DataSharing needs `partner` and `classification` |
-
-4. Call the assigned model with a finite output/timeout budget. Parse its response
-   and return a dictionary matching your schema. Missing facts stay missing;
-   do not make up a project, approval or price. Keep monetary values as decimal
-   strings rather than binary floats.
-5. Make invalid JSON, a refusal, timeout or authentication failure visible.
-   Do not fall back to hard-coded categories and call that a successful model run.
-6. Keep the synchronous `triage(request)` signature used by the CLI runner.
-   Async SDK work can live in an async helper called from this normal CLI process.
-   Close underlying clients reliably; not every client is an async context manager.
-
-**Small-build checkpoints:** first write the schema and instruction and explain
-them without a model call. Next wire one client call and parse its actual output.
-Then add validation and visible errors. Finally use Step 6; do not ask Copilot to
-complete retrieval and orchestration at the same time.
-
-**Self-check without an answer key:** if you remove the project name from a
-synthetic request, should your output invent one? Explain your expected behavior
-before adding a controlled local validation test.
-
-This is a **code-built agent using the existing Foundry service**. You do not
-need to press "Create agent" in the portal or deploy a hosted agent. You can
-reopen the portal to check your project/model details whenever needed.
-[Structured output reference](https://learn.microsoft.com/en-us/agent-framework/agents/structured-outputs).
-
-## Step 6 - Run one real request and explain what happened
-
-After the coordinators approve shared-service calls:
-
-```powershell
-.\.venv\Scripts\python -m route_resolve.lab triage --id P01 --allow-cloud
-```
-
-**You should see:** JSON with the original request/user IDs retained by the runner,
-and your structured triage output identifying an Access request. Inspect the
-extracted project/role against P01's text. This is **not** proof that access was
-granted. If the stub is still present, "Exercise not implemented yet" is the
-expected stop; return to Step 5.
+**Call budget:** aim for these four messages (baseline, improved and two tests).
+One reviewed correction is enough; stagger tests with your teammates.
 
 ## Checkpoint - show the coordinators
 
-- [ ] Explain the business problem and the difference between classification and approval.
-- [ ] Point to your clone, Python environment, assigned project and deployment.
-- [ ] Show a real model-backed P01 triage result and explain each field.
-- [ ] Explain where trusted IDs come from and what your agent must not invent.
+- [ ] Show your actual playground conversation, not a generated mock screenshot.
+- [ ] Compare the first and improved responses to the same request.
+- [ ] Explain the difference between instructions and a user message.
+- [ ] Point out one missing field and one thing the model has not verified.
+- [ ] Every member has sent at least one prompt with their own approved access.
 
-After coordinator approval, continue to [Mission 02](mission-02.md): let the
-workflow check operational facts through MCP tools.
+Next: [Mission 02](mission-02.md). You will save this behavior as a named prompt
+agent and test it in the agent playground.
 
 ## Optional Copilot prompts
 
 ```text
-Read docs/mission-01.md and my starter files. Explain what triage does and propose
-a short plan for triage(request) only. Use the installed Foundry/Agent Framework
-APIs, Azure CLI identity and assigned project/deployment. Help me validate the
-schema and make errors visible. Explain each change before editing. Do not
-implement the other missions, find private answers, deploy resources or expose
-credentials. Ask me to explain why a category is not an approval.
+Read my before/after responses. Do not generate replacement evidence or edit
+anything. Ask me which instruction changed the response and which claim still
+needs a real tool or policy source.
 ```
 
 ## Troubleshooting
 
-| What you see | What to do next |
+| What happens | What to do |
 |---|---|
-| No repository URL | Ask the coordinators for the approved source; do not clone a guessed repository |
-| Cannot find `pyproject.toml` | Use `Get-Location`; open the cloned workshop root, not `starter` |
-| Wrong Python/import failure | Select this folder's `.venv`; use its explicit Python executable |
-| Project missing or 401/403 | Compare your account, tenant, endpoint and deployment; ask the coordinators, not for broader roles |
-| Unexpected SDK argument | Inspect the installed signature; do not upgrade all packages to match a web sample |
-| JSON looks like prose | Recheck schema/instructions and reject invalid output; do not silently guess |
+| Test in playground is disabled | Stop and ask a coordinator to verify portal permissions; do not deploy a model |
+| No deployment is available | Compare the assigned project and handout; ask for help |
+| The model says it granted access | No tools are attached; identify the unsupported claim and strengthen the instruction |
+| Old answers influence the comparison | Start a new conversation while keeping the instructions |
+| Rate limit / service error | Stop, retain the error, and ask when to retry; do not loop automatically |
+
+**Read when useful:** [Microsoft Foundry playgrounds](https://learn.microsoft.com/en-us/azure/foundry/concepts/concept-playgrounds).
+The portal changes over time; coordinators verify the workshop's exact path.

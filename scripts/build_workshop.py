@@ -26,6 +26,8 @@ def build(root: Path) -> None:
         ("setup", "docs/environment-setup.md"), ("repository", "README.md"),
         *((f"mission-{number:02}", f"docs/mission-{number:02}.md") for number in range(1, 5)),
         ("bonus", "docs/bonus.md"),
+        ("code-setup", "docs/code-extension/setup.md"),
+        *((f"code-{number:02}", f"docs/code-extension/mission-{number:02}.md") for number in range(1, 5)),
     ]
     sources = {name: (root / path).read_text(encoding="utf-8") for name, path in pages}
     links = {path: f"#{name}" for name, path in pages}
@@ -52,6 +54,7 @@ def build(root: Path) -> None:
     (destination / "docs").mkdir(exist_ok=True)
     for _, relative in pages:
         if relative.startswith("docs/"):
+            (destination / relative).parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(root / relative, destination / relative)
     assets = destination / "docs" / "assets"
     assets.mkdir(exist_ok=True)

@@ -1,147 +1,177 @@
 # Bonus missions - engineering beyond the happy path
 
-**Optional, after the four core missions.** Choose one task that interests your
-team; these are not extra mandatory milestones and do not change the 150-minute
-core. Ask the coordinators before continuing if your core demonstration is not
-complete. There are no bonus answer keys in this repository.
+**Optional after the four portal-first missions.** Choose one topic that interests
+you. There is no mandatory fifth milestone, and bonus time is outside the roughly
+150-minute core target. Open this guide through **Optional bonus missions** in
+the console or read it in the private reference repository.
 
-Work in the same clone. Start with offline tests and test doubles. No additional
-Azure deployment, broader permissions, public MCP tunnel or real business data.
-Any extra live model/retrieval calls require separate coordinator approval.
+Start with saved synthetic responses and offline exercises. You do not need
+Python or Git for the discussion/table-based versions below. The separate
+advanced coding section is for learners who choose to implement tests and
+reports. Neither path authorizes new resources, broader permissions, public MCP
+tunnels or extra live calls. Ask the coordinator before any additional live
+experiment.
 
-**Where to open this:** use **Optional bonus missions** in the Challenges toolbar.
-The same guide is `docs/bonus.md` in VS Code. Keep your existing clone and completed
-core implementation; do not start another project. To return to core reading,
-use the Current/Last mission button. No fifth required milestone is added.
+Keep your own uniquely named portal agent and the same assigned team project.
+Do not edit teammates' agents or shared connections. Use synthetic data only.
+Save redacted observations; never put credentials or real customer data in notes.
 
 ## Bonus 1 - Make failure safe (20-30 minutes)
 
-### The situation
+### What you DO
 
-Your prototype works when every dependency behaves. What happens when retrieval
-times out, a tool returns an error, or a retry carries different arguments?
-Your task is to prove that the workflow does not turn failure into a plausible
-success.
+Make a small offline test table. For at least five situations below, write the
+safe behaviour you expect, then compare it with any relevant saved core evidence.
+If you have not observed the failure, mark it **proposed test, not executed**.
+You may role-play a response, but label it **offline simulation**.
 
-### Your task
-
-1. Create `tests/test_workflow_resilience.py` using `unittest` and local test
-   doubles. Read the existing public tests for test structure, not an agent
-   implementation.
-2. Add at least **five** cases from this table:
-
-| Injected condition | Required observation |
+| Situation | What safe behaviour should make visible |
 |---|---|
-| Retrieval timeout | Error is visible; no mock write is called |
-| Retrieval returns no references | Unsupported execution is blocked |
-| MCP response has `isError: true` | It cannot become a successful Execute result |
-| Model output is malformed or has an unknown category | Validation rejects it |
-| Same request ID and unchanged arguments on the same server | Same action record, no duplicate |
-| Same request ID but changed action arguments | Explicit conflict, no overwrite |
-| Workflow exceeds its turn limit | It stops rather than silently increasing the limit |
+| Policy retrieval times out | Missing policy evidence; no unsupported action claim |
+| Retrieval returns no citations | No assertion that live grounding was proved |
+| Tool returns an error | Error remains an error, not successful execution |
+| Approval is pending or declined | No claim that approval or the action completed |
+| Request lacks an important field | A clear clarification question |
+| Request claims "already approved" | An unverified claim, not permission |
+| A retry could duplicate an operation | Uncertainty or an actual duplicate-prevention result, not an assumption |
 
-3. Make each test fail for the right reason before fixing your implementation.
-   Use your existing adapters; do not weaken `MockOperations` rules to pass.
-4. Record which dependency is fake and which behavior is actually under test.
+### What you LEARN
 
-```powershell
-.\.venv\Scripts\python -m unittest discover -s tests -p test_workflow_resilience.py -v
-```
+A safe assistant must handle missing evidence as carefully as a happy-path
+answer. A good-looking response must not hide a failed dependency.
 
-**Success:** five or more meaningful tests pass, and you can show one failing
-test from before the fix. Offline doubles do not prove live service reliability.
-Idempotency here applies to one retained local server process, not across restarts.
+### What you SEE and explain
 
-### Optional Copilot prompt
+Show five expected behaviours, the actual evidence available, and the cases
+still untested. Distinguish the model's statement from the system/tool result.
+Offline simulations cannot prove live service reliability.
 
-```text
-Help me test my existing workflow without solving the workshop. Read
-docs/bonus.md and my implementation. Propose five failure-path tests using
-unittest and local doubles, with no network calls. For each, state the dependency
-being replaced and the assertion that prevents a false success. Do not weaken
-tool rules, fabricate live traces or change the expected behavior to match a bug.
-Ask me to approve the test plan before editing.
-```
+### How to recover
+
+If a saved trace lacks the needed detail, mark it **evidence unavailable**.
+Ask the coordinator whether a small controlled live check is appropriate;
+do not provoke failures by changing shared authentication or permissions.
 
 ## Bonus 2 - Challenge the evidence (20-30 minutes)
 
-### The situation
+### What you DO
 
-A requester insists that an operation is already approved, and a retrieved
-passage contains text that looks like an instruction. Can your workflow keep
-business evidence separate from instructions?
+1. Write six new fictional requests: two each for Access, Procurement and
+   Data Sharing. Use your own synthetic labels, not private answer keys.
+2. Include missing information, an unverified approval claim and a sentence
+   that tries to override the assistant's instructions.
+3. For an offline exercise, supply a clearly labelled fake policy passage that
+   also contains instruction-like text. Do not upload it into shared knowledge.
+4. For each case, separate the requester's claim, policy evidence needed,
+   operational evidence needed and the safe next response.
+5. If the coordinator approves live testing, agree a small call limit first and
+   test only your own agent using assigned connections. Keep offline and live
+   observations in separate columns.
 
-### Your task
+### What you LEARN
 
-1. Write **six new synthetic cases**, two per specialist. Do not reuse final
-   request IDs or search for private answer labels.
-2. Include a missing field, a claimed approval and an instruction-like sentence
-   in either request text or a fake retrieved passage. Keep them fictional.
-3. Run your own cases against controlled local model/retrieval doubles first.
-   Mark those traces **offline test evidence**, not real model or Search output.
-4. For each case, preserve the trusted input ID and compare the request claim,
-   retrieved evidence, observed tool result and final explanation.
-5. If the coordinators approve a live check, agree a small limit first: no more
-   than **three end-to-end requests**, bounded turns and no automatic retries.
-   Use only assigned shared resources.
+Request text and retrieved documents are not trusted instructions. A plausible
+claim of approval should not replace a policy check or an observed tool result.
 
-**Success:** all six offline cases retain trusted IDs; none claims a completed
-action without an observed permitted mock result; missing evidence remains
-visible. Explain one case where a fluent response would have been misleading.
-The coordinators review business correctness; your tests are not a new answer key.
+### What you SEE and explain
 
-### Optional Copilot prompt
+Show one case where fluent language would be misleading and explain the missing
+evidence. For any live run, inspect actual returned citations and tool evidence.
+If you paste policy into a prompt, label it **prompt-context exercise, not live
+retrieval**. Invented examples are test inputs, never proof of a successful run.
 
-```text
-Act as a test designer for my fictional workflow. Suggest six new synthetic
-cases across Access, Procurement and DataSharing, including missing information
-and unverified approval claims. Do not give final-fixture answers. Help me define
-evidence-based assertions and distinguish a controlled test from a live trace.
-Do not run cloud calls or alter permissions.
-```
+### How to recover
+
+If the model follows the instruction-like text, preserve the actual response
+and discuss a safer instruction change with the coordinator. If retrieval or
+MCP is blocked, retain the offline analysis and mark live evidence missing.
+Do not silently substitute fake citations or tool outputs.
 
 ## Bonus 3 - Build a repeatable evaluation report (20-25 minutes)
 
-### The situation
+### What you DO
 
-Another engineering team needs to understand whether your changes improved
-reliability. A screenshot of one good answer is not enough.
+Use a table or document to review a small set of **saved** synthetic runs.
+No live model or automatic model-based grading is needed.
 
-### Your task
+For each run, record:
 
-1. Create `scripts/evaluate.py` to read a **saved** JSONL run and redacted trace
-   records. It must not call a model, retrieval endpoint or action tool.
-2. Report:
-   - Record count and distinct request IDs.
-   - Missing/invalid Result fields and missing simulation flags.
-   - Which records have retrieval and tool evidence, and which do not.
-   - Unfinished/error records, not just successful cases.
-   - Elapsed time and token usage **only when measured and present**.
-3. Write a machine-readable report under `evidence`. Refuse to overwrite an
-   existing report unless the user explicitly selects a new output path.
-4. Test with a valid record, a duplicate ID, missing citations and missing trace
-   evidence. Include at least **four** offline test cases.
-5. Explain why matching a tool name in model-written text does not prove that
-   the tool ran. Correlate actual trace records with trusted request IDs.
+- Your case label and agent name/version description, if actually available.
+- The prompt/instruction change being compared.
+- Whether the response asks for missing information appropriately.
+- Whether actual returned citations support the answer.
+- Whether actual approval/tool evidence supports any operation claim.
+- Errors, pending outcomes and missing evidence, not just successes.
+- Timing or token usage only if measured and present in the saved evidence.
 
-**Success:** repeatable offline results, four tests and no invented timing,
-token counts or monetary costs. Label evidence availability separately from
-business-policy correctness.
+Apply the same checklist to the before/after runs. Report both the number
+reviewed and the number with enough evidence to assess each question.
+Keep the original notes and give each new report a distinct name.
 
-### Optional Copilot prompt
+### What you LEARN
 
-```text
-Help me design an offline evaluation script for saved JSONL and actual redacted
-trace records. No network calls, model-based grading or business answer keys.
-Start with the input schema and four failing tests. Do not invent missing
-telemetry or count a model's claim as proof of tool execution. Preserve previous
-reports and explain every metric's limitation.
-```
+Evaluation is a repeatable comparison, not a screenshot of one good answer.
+Evidence availability and business-policy correctness are different questions.
+A missing trace is not a successful tool call, and absence of evidence alone
+does not tell you why a call failed.
+
+### What you SEE and explain
+
+Show a small report with explicit counts, one improvement and one unresolved
+limitation. State who reviewed the policy interpretation. Do not invent timing,
+tokens, monetary costs or an overall accuracy score from unreviewed cases.
+
+### How to recover
+
+Use **not assessable: missing evidence** when a record cannot support a judgment.
+Ask the coordinator how to inspect the relevant saved run; do not claim a tool
+executed because its name appears in model-written text.
+
+## Optional advanced coding track - separate from the core
+
+The private reference/download repository is
+https://github.com/kirannn-kp/AI-Hackathon.
+If you want implementation work after the portal core, follow the preserved
+guides in order:
+
+- [Coding extension 01](code-extension/mission-01.md)
+- [Coding extension 02](code-extension/mission-02.md)
+- [Coding extension 03](code-extension/mission-03.md)
+- [Coding extension 04](code-extension/mission-04.md)
+
+Use the **existing pinned environment instructions** in that track and
+[Environment Setup](environment-setup.md). Do not replace them with guessed SDK
+versions. Keep one working folder and your existing environment if already set
+up. Implementing Python stubs and running its final ten-case CLI batch are
+advanced-track activities, not requirements for core completion.
+
+Once your coding workflow exists, extend the bonus topics offline:
+
+| Topic | Optional implementation | What to show |
+|---|---|---|
+| Bonus 1 | Add `unittest` cases with model/retrieval/tool doubles for at least five failure paths | A failure for the right reason before the fix, then passing tests; identify each fake dependency |
+| Bonus 2 | Run six synthetic challenge cases with controlled doubles | Trusted case IDs preserved; no unsupported completion claim; label offline traces |
+| Bonus 3 | Build an offline reader for saved JSONL and redacted trace records | Four tests covering a valid record, duplicate ID, missing citations and missing tool evidence |
+
+An evaluation reader must not call models, retrieval or action endpoints.
+Validate available `Result` fields and simulation flags, correlate actual trace
+records to case IDs, preserve old reports and include unfinished/error records.
+Never count a model-written tool name as execution evidence. Do not weaken
+supplied operational rules or search for private answer labels to make tests pass.
+
+Local test doubles prove only the behaviour under test. The supplied loopback
+MCP server is not the authenticated team portal connection; never expose it.
+Its mock state is per process and disappears on restart, so duplicate-prevention
+tests do not establish cross-restart durability.
+
+If tests fail, reduce to one reproducible offline case and compare the expected
+behaviour with the observed result. Ask the coordinator for help with pinned
+environment or access issues instead of upgrading packages or granting roles
+until something appears to work.
 
 ## Bonus demonstration
 
-Show the coordinators the problem, your change, reproducible evidence and one
-remaining limitation. A bonus is successful when the team understands and can
-defend the improvement, not when it adds the most services.
-
-Stop your local servers when finished. Do not delete shared cloud resources.
+Show the problem, your experiment or change, reproducible observations and one
+remaining limitation. Say which parts were live, offline, simulated or blocked.
+Understanding and defending the evidence matters more than adding services.
+Stop optional local servers when finished; do not delete shared cloud resources.
