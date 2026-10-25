@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install workshop test and authoring dependencies
-        run: python -m pip install -e ".[mcp,authoring]"
+        run: python -m pip install -e ".[mcp,cloud,authoring]"
       - name: Run offline tests
         run: python -m unittest discover -s tests -v
       - name: Rebuild workshop content
