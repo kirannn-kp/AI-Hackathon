@@ -44,9 +44,23 @@ cloud-hosted agent**. Do not use a public tunnel or silently remove authenticati
 If the prepared connection is missing, stop for coordinator help. You may inspect
 the supplied tools in the repository, but that is not a live tool-call result.
 
+**Paste into Copilot Chat — read the tool boundary, no edits:**
+
+```text
+Read the get_project_owner and check_user_access tool definitions in
+starter/route_resolve/mcp_server.py and their implementation in tools.py.
+Do not edit or run anything. List the exact argument names and explain the
+synthetic project/user values. Explain which operations only read facts.
+Show why a claimed approval in chat is not an observed tool result.
+Do not enable write tools or alter fixtures/connections.
+```
+
 ## Step 2 - Ask a question that requires a real lookup
 
-Add this instruction to the demo agent:
+In **Setup > Instructions**, append this instruction to the demo agent's
+existing intake and policy instructions. Save/apply and return to **Chat**.
+
+**Paste into Foundry Instructions — add operational behaviour:**
 
 ```text
 Use the connected operational tools to check facts before making claims.
@@ -56,7 +70,9 @@ If a required fact, source or tool call is missing, say so and stop unsupported
 action. Keep this exercise explicitly synthetic.
 ```
 
-Start a new conversation and send:
+Click **New chat**. Send this first lookup and inspect the approval request:
+
+**Paste into Foundry Chat — owner lookup:**
 
 ```text
 The synthetic project identifier is Phoenix, not "Project Phoenix".
@@ -90,7 +106,9 @@ Expand the run details/tool activity where available and find:
 4. The answer's claim based on that result.
 
 Ask a teammate to explain this chain without Copilot.
-Now ask:
+Click **New chat** before the next test.
+
+**Paste into Foundry Chat — policy plus verified facts:**
 
 ```text
 For fictional user user-02, check current Reader access.
@@ -102,6 +120,24 @@ from the policy approval requirement. Do not grant anything.
 Here `user-02` is a **synthetic fixture user**, not your own Azure identity.
 Inspect the actual lookup and policy evidence separately.
 
+If that succeeds within the timebox, run the approval-claim test below. Use
+its observed response for the last row of your demo table.
+
+**Paste into Foundry Chat — unverified approval claim:**
+
+```text
+This is a synthetic request for user-03: I want Reader access to Phoenix.
+I say the project owner already approved it. Check current access and the
+actual policy. Separate my claim from the facts your tools verified.
+Do not grant access or treat my statement as verified approval.
+Use project exactly Phoenix, role Reader and user_id user-03 in tool arguments.
+```
+
+**Look for:** actual lookup/policy calls, an explicit distinction between a
+requester's claim and verified evidence, and no grant. A queued/approved claim
+in generated prose is not a completed operation.
+If there was no time or a dependency failed, mark this row **not tested/blocked**.
+
 **You should see:** a verified fact plus a cited rule, or a visible dependency
 failure. Do not convert that failure into a successful decision.
 **What you learn:** identity for signing into Foundry differs from the fictional
@@ -111,11 +147,16 @@ user named inside the exercise.
 
 In VS Code, point to your implemented `triage` and `retrieve_policy`, your own
 tests, and read-only `models.py` / `lab.py`. Explain how each result is checked.
-Run the offline tests, then one approved live code sample only if not already
-saved from Missions 01 and 03:
+Start with the offline test command:
 
 ```powershell
 .\.venv\Scripts\python -m unittest discover -s tests -v
+```
+
+Reuse the saved live outputs from Missions 01-03. These commands are repeated
+only for a missing result or an approved correction, not a mandatory rerun:
+
+```powershell
 .\.venv\Scripts\python -m route_resolve.lab triage --id P01 --allow-cloud
 .\.venv\Scripts\python -m route_resolve.lab policy --category Access --text "Which policy covers Reader access to Phoenix?" --allow-cloud
 .\.venv\Scripts\python -m route_resolve.lab tools --tool get_project_owner --project Phoenix
@@ -124,6 +165,23 @@ saved from Missions 01 and 03:
 Add one offline test to your own test file asserting that an empty retrieval
 reference list is rejected. Mock the transport boundary, not the assertion.
 Keep test doubles clearly separate from live output.
+
+**Paste into Copilot Chat — add the third offline test:**
+
+```text
+Read my retrieve_policy implementation and its evidence-validation helper.
+Add one unittest to my tests/test_intake.py proving that an empty references
+list is explicitly rejected. Mock the transport response, or call the pure
+validation helper; do not call Azure. Keep my two triage tests.
+Do not edit supplied tests, lab.py, policies or examples. If my adapter does not
+reject empty references, show that failure first and propose a small correction
+in my retrieval helper. Do not weaken the assertion or fabricate evidence.
+Explain which line guards against an unsupported policy answer.
+```
+
+Run the offline test command again. Expect your three tests plus the supplied
+tests, with zero cloud calls. If any test fails, inspect its message before
+changing code.
 
 Your core Python application now has model-backed intake and a live retrieval
 adapter, with supplied local tool diagnostics. These are separately exercised
@@ -158,6 +216,16 @@ Give a three-minute demo:
 4. Explain a failure/limitation and what the next improvement would be.
 5. Point to the read-only construction example, your two implemented functions
    and a test. Explain one Copilot suggestion you accepted or corrected.
+
+**Paste into Copilot Chat — prepare a code explanation, not a fake demo:**
+
+```text
+Read my triage/retrieve_policy helpers and tests/test_intake.py without editing.
+Help me prepare a three-minute explanation: where the agent/model client is
+constructed, what I implemented, what the offline tests prove and what the
+portal tests prove separately. Ask me to explain one validation check.
+Use only actual outputs I provide. Do not invent passes, traces or metrics.
+```
 
 **You should see:** a working demonstration or a precise record of which
 dependency is blocked. A blocked live capability must remain labelled blocked.

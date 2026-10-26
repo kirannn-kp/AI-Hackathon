@@ -20,8 +20,30 @@ From the model playground, use **Save as agent**, give it a unique name such as
 assigned project. If the UI differs, ask the coordinator rather than creating
 resources. Remove automatically attached Web search.
 
-Add the instructions you tested in Mission 01. Send one complete request and
-one missing-field request: "Please give me access." Note the saved version.
+Open **Setup > Instructions** and retain the intake instructions from Mission 01.
+Save/apply them and note your agent name/version. Return to **Chat**.
+
+**Paste into Foundry Chat — missing information test:**
+
+```text
+Please give me access.
+```
+
+**Look for:** a request for the missing project and role, not made-up values or
+"done". The agent has no verified user identity or operational tools yet.
+
+Choose **New chat** before the second test.
+
+**Paste into Foundry Chat — another domain:**
+
+```text
+I need a EUR 600 software licence from Contoso Software.
+```
+
+**Look for:** `Procurement`, the supplied supplier/amount, and no claim of purchase
+or verified approval. Write one sentence comparing its behaviour with the first
+request. These two observations are your saved-agent tests, not screenshots of
+the configuration screen alone.
 
 **You should see:** your named agent and real responses.
 **What you learn:** the saved remote agent persists configuration; your local
@@ -37,6 +59,17 @@ Read `lab.py`'s `inspect_tools`: locate `ClientSession`, `list_tools` and
 
 Predict the difference between `Phoenix` and `Project Phoenix` as tool arguments.
 
+**Paste into Copilot Chat — read only:**
+
+```text
+Do not edit or run code. Open starter/route_resolve/mcp_server.py and locate
+get_project_owner. Follow its call into tools.py. Then open inspect_tools in
+lab.py and show ClientSession, list_tools and call_tool.
+Explain the journey from a tool name and arguments to a returned fixture value.
+Why might Phoenix succeed while Project Phoenix fails? Show the real code
+location supporting your answer, not a guessed explanation.
+```
+
 **You should see:** tool registration, actual synthetic records and error handling.
 **What you learn:** a tool is ordinary code behind a declared interface.
 
@@ -51,6 +84,20 @@ The runner starts its own local stdio server for each diagnostic. No cloud
 approval flag is needed for these local calls. Inspect tool names and actual
 results. This is not evidence that the portal called a remote MCP server.
 
+In the JSON, find `called`, `tools`, and `result`. Expand the returned text or
+structured content. `get_project_owner` should return a fixture owner; the second
+command returns an access fact, not a policy decision. If you cannot locate the
+value, use this prompt before changing anything.
+
+**Paste into Copilot Chat — explain actual output:**
+
+```text
+Here is the actual output of my route_resolve.lab tools command: [paste below].
+Without editing code, identify the called tool, the returned fact and any error.
+Explain why this local stdio MCP result does not prove a cloud portal tool ran.
+Do not make up missing output or change the fixture.
+```
+
 **You should see:** tool discovery and real local tool results.
 **What you learn:** local facts, cloud model calls and hosted tools have distinct
 authentication and runtime boundaries.
@@ -64,6 +111,25 @@ introduced in Mission 01.
 1. A response with an unsupported category must be rejected explicitly.
 2. A missing project must remain missing; it must not turn into `Phoenix`.
 
+**Paste into Copilot Chat — create only our offline tests:**
+
+```text
+Read my triage implementation and validation helper in
+starter/route_resolve/agents.py. Create tests/test_intake.py using unittest.
+Do not edit supplied tests/test_contracts.py, lab.py, models.py or examples.
+
+Write two offline tests:
+1. A synthetic model response with category "Other" is explicitly rejected.
+2. A synthetic Access response with missing project preserves that missing
+   value and does not fill in Phoenix.
+Use the schema my implementation actually accepts. Mock its narrow model-call
+boundary, or test the validation helper directly. Neither test may call Azure.
+Explain each assertion and exactly which dependency is fake.
+If validation is currently mixed with I/O, propose a small extraction in my
+agents.py first; do not replace the live model call or weaken its checks.
+Do not run cloud commands or implement retrieve_policy/resolve.
+```
+
 Use synthetic model-response doubles and label them as such. Run:
 
 ```powershell
@@ -73,6 +139,8 @@ Use synthetic model-response doubles and label them as such. Run:
 If your design mixes calling and validation, extract a small validation helper
 in `agents.py`. Do not replace the live implementation with a fake.
 Explain why these tests prove local validation, not live model reliability.
+**Check:** the terminal reports two tests passing. If it reports zero tests,
+that is not completion; check the filename and `test_` method names with Copilot.
 
 **You should see:** two executed tests and, if needed, a small corrective edit.
 **What you learn:** repeatable offline tests reduce expensive trial-and-error.

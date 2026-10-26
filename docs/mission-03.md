@@ -11,12 +11,14 @@ portal result, 20 implementing Python retrieval and 5 on the checkpoint.
 **You learn:** grounding means using supplied evidence. A citation must point to
 something actually retrieved, not a plausible filename the model invented.
 
-**Where:** your own or the agreed demo agent in Foundry.
+**Where:** your saved agent in Foundry, then `agents.py` in VS Code.
 **Why:** business decisions need current written rules, not the model's memory.
 
 ## Step 1 - See the problem before connecting knowledge
 
 Open the agent from Mission 02. Start a new conversation and send:
+
+**Paste into Foundry Chat — before knowledge is attached:**
 
 ```text
 Which Contoso policy and approval owner apply to Reader access to Project
@@ -45,6 +47,17 @@ You do not need to install Python. Read these four synthetic policies:
 
 Choose one rule and explain its condition to a teammate before asking the agent.
 Do not upload real Bosch policy, personal data or customer documents.
+
+**Paste into Copilot Chat — read only:**
+
+```text
+Open data/policies/access.md and starter/route_resolve/agents.py. Do not edit.
+Explain the difference between a policy requirement, a requester's claim and
+an operational fact. Show me the unfinished retrieve_policy function and the
+policy branch in lab.py that checks its returned references.
+Explain why reading a local policy file is not live cloud retrieval.
+Do not provide final-case answers or implement resolve.
+```
 
 **You should see:** concrete rules, not a generic "be helpful" instruction.
 **What you learn:** reading a policy yourself helps you evaluate an AI answer.
@@ -75,7 +88,10 @@ knowledge-base name for your team. It should match the assigned `team-XX`.
    Depending on the interface, Foundry IQ can appear as a knowledge tool backed
    by an MCP connection. Select the prepared connection, not an arbitrary catalog tool.
 3. Confirm the assigned knowledge-base name and save the agent configuration.
-4. Add the following instruction, keeping your intake instructions:
+4. Open **Setup > Instructions**. Append the following, keeping your intake
+   instructions. Save/apply, then return to **Chat**.
+
+**Paste into Foundry Instructions — add policy behaviour:**
 
 ```text
 For policy questions, use the connected Contoso policy knowledge source.
@@ -98,7 +114,16 @@ inspect the returned evidence. Nobody needs broader roles just to browse a list.
 
 ## Step 4 - Repeat your question and inspect the citation
 
-Start a fresh conversation. Send the **same question from Step 1**.
+Click **New chat**, then use the same question. It is repeated here so you do
+not have to scroll back:
+
+**Paste into Foundry Chat — after knowledge is attached:**
+
+```text
+Which Contoso policy and approval owner apply to Reader access to Project
+Phoenix? Show the source that supports your answer. If you do not have a policy
+source, say so rather than invent one.
+```
 
 1. Read the policy explanation.
 2. Open the citation/source details shown with the response.
@@ -122,7 +147,15 @@ visible retrieval failure that needs fixing.
 **What you learn:** a grounded answer is checked against evidence, not trusted
 because it sounds confident.
 
-Now try one other domain:
+**Look for:** a real `knowledge_base_retrieve` activity and an actual policy
+document such as ACCESS-001. Point to the passage that supports one sentence.
+The policy may describe owner approval, but it does not verify that anyone
+actually approved this request.
+
+If ahead of time and approved for another call, use this second-domain test.
+Otherwise keep it for bonus; the core priority is the Python adapter.
+
+**Paste into Foundry Chat — optional second-domain test:**
 
 ```text
 Which Contoso policy applies to a EUR 600 software purchase from Contoso
@@ -147,15 +180,82 @@ editing it: it requires a dictionary containing actual `references`.
    version `2026-08-01-preview`, with the question in `messages`.
 4. Check status before parsing. Preserve the returned passages, `references`
    and `activity`. Missing evidence and HTTP failures remain explicit errors.
-5. Run one approved query and point to its actual source:
+5. Separate HTTP transport from evidence validation so Mission 04 can test
+   missing evidence without calling Search.
+
+**The exact request contract — no extra recipe page is required:**
+
+```text
+POST {SEARCH_ENDPOINT}/knowledgebases/{TEAM_KNOWLEDGE_BASE}/retrieve?api-version=2026-08-01-preview
+Content-Type: application/json
+Authorization: Bearer <token obtained in memory, never copied into chat>
+```
+
+```json
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {"type": "text", "text": "Access: Which policy covers Reader access to Phoenix?"}
+      ]
+    }
+  ]
+}
+```
+
+The application replaces the example question with its category/request inputs.
+Use the configured Search endpoint, **not** the Foundry project endpoint.
+Use your CLI credential with scope `https://search.azure.com/.default`.
+
+**Paste into Copilot Chat — implement retrieval only:**
+
+```text
+Read my agents.py, the policy command in lab.py and this Mission 03.
+Implement only retrieve_policy(category, request) and small helpers in agents.py.
+Keep triage, resolve, the supplied runner, policies and examples unchanged.
+Explain the plan before editing.
+
+Validate category and nonempty question. Read SEARCH_ENDPOINT and
+TEAM_KNOWLEDGE_BASE from this prepared terminal. Use AzureCliCredential to get
+a token for https://search.azure.com/.default in memory. Never log the token,
+Authorization header or credentials.
+Make one bounded POST to the /knowledgebases/{name}/retrieve endpoint using
+api-version=2026-08-01-preview and the messages JSON shape in this guide.
+Use a transport available in the installed environment; do not add packages.
+Check HTTP status first. Preserve the actual returned response passages,
+references and activity in the returned dictionary. Do not guess an answer
+property, synthesize citations or read local files as a replacement.
+Reject missing/empty references explicitly; leave HTTP errors, timeouts and
+authentication errors visible. Separate transport and evidence validation so
+we can test empty evidence offline. Do not catch errors and return success.
+Do not make cloud calls until I approve the command. Do not implement resolve.
+```
+
+Review the HTTP endpoint, `messages` body and evidence-validation helper before
+accepting. Then run one approved query and point to its actual source:
 
 ```powershell
 .\.venv\Scripts\python -m route_resolve.lab policy --category Access --text "Which policy covers Reader access to Phoenix?" --allow-cloud
 ```
 
-Use [the reviewed request body and implementation steps](code-extension/mission-03.md).
-This is a focused core task, not a requirement to finish that entire extension.
-Do not ask Copilot to replace retrieval with local policy files.
+**Check the result:** the command must print a nonempty `references` collection
+and returned policy content. Find the Access source and explain one rule.
+A Python traceback or missing references is a failure to investigate, not
+permission to paste a filename into the result.
+
+**Paste into Copilot Chat — inspect actual retrieval evidence:**
+
+```text
+Here is my real policy command output or redacted error: [paste below].
+Show which returned fields contain the policy passage and source reference.
+If it failed, compare the actual status/response with my adapter and propose
+the smallest fix in my helpers. Do not fabricate citations, expose tokens,
+change permissions or use local files to disguise a failed cloud request.
+```
+
+[Detailed retrieval reference](code-extension/mission-03.md) is optional extra
+reading; the core instructions and request body are all above.
 
 **You should see:** the Python command's real returned references and passages.
 **What you learn:** a portal tool and a direct Python request can retrieve the
