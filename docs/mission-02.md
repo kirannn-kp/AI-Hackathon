@@ -13,7 +13,20 @@ problems. Portal instructions do not automatically update your Python code.
 **Where:** Foundry, VS Code and the same configured PowerShell terminal.
 **Why:** your application needs verified facts, not just plausible generated text.
 
+**The story so far:** In Mission 01, your service desk learned to recognise an
+access request and spot missing information. Now imagine another colleague
+arrives with a purchase request tomorrow. You need the assistant's instructions
+to be reusable, and you need checks that catch bad intake output before anyone
+uses it. You will also meet the tools that can answer factual questions later.
+Your Python triage and the portal agent remain two separate pieces of this build.
+
 ## Step 1 - Save your own portal agent (8 minutes)
+
+**Why this step matters:** A useful conversation is not yet a reusable service.
+Saving the agent keeps its name and instructions so you can return to it in
+Missions 03 and 04. The two requests below check whether that saved behaviour
+handles both missing information and a different business category; they do
+not give the agent permission to grant access or buy anything.
 
 From the model playground, use **Save as agent**, give it a unique name such as
 `team-XX-initials-intake`, then **Create and open playground**. Stay in your
@@ -51,6 +64,12 @@ the configuration screen alone.
 
 ## Step 2 - Read the tool implementation; do not edit it (7 minutes)
 
+**Why this step matters:** Knowing that a request concerns Phoenix is different
+from knowing who owns Phoenix or whether a person already has access. Those
+facts live in records, not in the request itself. Reading one supplied tool
+shows how an assistant can ask ordinary code for a specific fact instead of
+inventing it. You will connect the hosted versions in Mission 04.
+
 Open `starter/route_resolve/mcp_server.py` and find `get_project_owner`.
 Follow its call into `starter/route_resolve/tools.py`. Find the Phoenix fixture
 and the explicit error for an unknown project.
@@ -74,6 +93,11 @@ location supporting your answer, not a guessed explanation.
 **What you learn:** a tool is ordinary code behind a declared interface.
 
 ## Step 3 - Run a real local MCP diagnostic (5 minutes)
+
+**Why this step matters:** Before asking a model to choose a tool, you check the
+tool directly. That gives you a result you can recognise and helps you separate
+an argument mistake from an agent mistake. These commands exercise your local
+synthetic service-desk records; they do not yet test the remote Foundry connection.
 
 ```powershell
 .\.venv\Scripts\python -m route_resolve.lab tools --tool get_project_owner --project Phoenix
@@ -103,6 +127,12 @@ Do not make up missing output or change the fixture.
 authentication and runtime boundaries.
 
 ## Step 4 - Write two offline tests with Copilot (15 minutes)
+
+**Why this step matters:** Your intake component will see incomplete or
+unexpected answers, not just the successful Phoenix example. These tests check
+two promises you want the service desk to keep every time: reject an unknown
+category and do not invent a missing project. Because the model is replaced by
+a clearly labelled test double, you can repeat these checks without cloud calls.
 
 Create your own `tests/test_intake.py`; do not edit supplied contract tests.
 Keep test execution offline by mocking the narrow model-call boundary you
@@ -147,6 +177,11 @@ that is not completion; check the filename and `test_` method names with Copilot
 
 ## Step 5 - Review the change (5 minutes)
 
+**Why this step matters:** A passing test is only useful if the team knows what
+would make it fail. The reviewer checks that your two safety promises are
+actually being tested, not just that the terminal is green. This gives the next
+person a trustworthy starting point before you add company knowledge.
+
 Have the reviewer explain the fake dependency, each expected assertion and the
 actual test output. Record one limitation. Rotate roles before Mission 03.
 
@@ -178,5 +213,11 @@ Do not weaken supplied contracts or replace my live implementation.
 | Portal agent absent | Ask for coordinator help; do not create a new project |
 
 Next: [Mission 03](mission-03.md).
+
+**How the story continues:** You now have reusable portal instructions, a
+working intake component and two local safety tests. But neither a category nor
+a project-owner lookup tells the desk which company rule applies. In Mission 03
+you will give the same saved agent a policy source, compare its answer before
+and after, and build the Python route to that evidence.
 
 Reference: [Agent Framework MCP tools](https://learn.microsoft.com/en-us/agent-framework/agents/tools/).

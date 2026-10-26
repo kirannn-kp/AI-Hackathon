@@ -14,12 +14,33 @@ different jobs. Classification is not business authorization.
 **Why:** the playground helps you discover behaviour; code makes it repeatable.
 Complete [workstation setup](code-extension/setup.md) before the three-hour timer.
 
+**The story starts here:** You are helping the fictional Contoso service desk.
+A new colleague is joining Project Phoenix and needs access. A human can read
+that message, but an application needs to separate what was requested from what
+is missing. Your first job is to build that intake desk, not to grant access.
+You will try the conversation in Foundry, then make the same idea usable from
+Python. Keep this request in mind: it continues through the next missions.
+
 ## Step 1 - Predict, then send a first prompt (5 minutes)
+
+**Why this step matters:** Before you tell the assistant how to behave, you need
+to see what it does by itself. This first response is your starting point.
+Repeating the same request after adding instructions lets you see what those
+instructions actually changed, rather than assuming that a longer prompt is
+automatically better.
 
 Open your assigned project in [Microsoft Foundry](https://ai.azure.com/).
 Choose **Test in playground**, or **View deployments > route-resolve-chat**.
 If a shortcut is disabled, use the normal deployment route; never force a control.
 Remove automatically attached Web search for this exercise.
+
+**Which login to use:** Foundry uses your **Azure/Microsoft sign-in**, not your
+team's console username/password or your GitHub login. Use the same approved
+email/username and password you used for workshop Azure access, and complete MFA
+if asked. If you were explicitly given an individual workshop training account,
+use that account instead. Check the workshop directory and your assigned
+`team-XX` project after signing in. Never enter a password in the playground,
+Copilot Chat or a prompt; it belongs only on the Microsoft sign-in screen.
 
 1. In the playground, open **Chat** and find the message box at the bottom.
 2. **Paste into Foundry Chat — first request:**
@@ -62,6 +83,12 @@ request. The person's verified identity and approval are not. An answer saying
 
 ## Step 2 - Read the creation code; do not edit it (5 minutes)
 
+**Why this step matters:** The playground makes the assistant easy to try, but
+it hides some of the wiring. This short code tour shows who signs in, which
+project and model are used, and where reusable instructions belong. You are
+looking under the bonnet before writing your own function; you are not deploying
+another agent or changing the supplied example.
+
 Open [examples/agent_blueprint.py](../examples/agent_blueprint.py) in VS Code.
 Use **Ctrl+F** to locate `FoundryChatClient`, then `client.as_agent`.
 Read it only: do not run it as a deployment script or change the example.
@@ -99,6 +126,12 @@ answer about a file that Copilot has not actually opened.
 are separate operations.
 
 ## Step 3 - Implement only triage (20 minutes)
+
+**Why this step matters:** The service desk cannot reliably use a different
+paragraph shape on every request. Your triage function turns the message into
+named fields that later code can check. Copilot helps you write the plumbing,
+but you decide which fields are allowed and what happens when the model gives
+an unusable answer. Finding the category still does not approve the request.
 
 Open `starter/route_resolve/agents.py`. Edit only `triage(request)` and helpers
 you need for it. Leave `retrieve_policy` and `resolve` alone for now.
@@ -154,6 +187,15 @@ Do not call Azure or implement later missions on my behalf.
 helper. Ask Copilot to explain any unfamiliar line. You should not have edits
 outside the agreed function/helpers.
 
+**Prepared model details:** the existing deployment name (`FOUNDRY_MODEL`) is
+`route-resolve-chat`. Your `FOUNDRY_PROJECT_ENDPOINT` is
+`https://bosch-rnr-tcek5ldad64oc.services.ai.azure.com/api/projects/team-XX`,
+with `team-XX` replaced by your assigned project name. For example, team 03 uses
+`https://bosch-rnr-tcek5ldad64oc.services.ai.azure.com/api/projects/team-03`.
+Use these names in the configured terminal from setup; do not create a model or
+project. The endpoint is an address, not a credential: your own Azure sign-in
+still supplies the token.
+
 Everything required for this task is above.
 [Detailed triage reference](code-extension/mission-01.md) is extra reading, not
 a second exercise you must navigate to.
@@ -162,6 +204,12 @@ a second exercise you must navigate to.
 **What you learn:** Copilot helps implement code; you own its contract and errors.
 
 ## Step 4 - Run the application (5 minutes)
+
+**Why this step matters:** So far you have seen a portal conversation and
+written some code. Now you check that your own Python path really reaches the
+model and returns the fields you intended. Comparing the same Phoenix request
+across the two surfaces helps you connect the experiment to the application;
+a nice playground response alone cannot prove that your code works.
 
 After coordinator approval for cloud calls, run in the configured terminal:
 
@@ -196,6 +244,12 @@ Do not rerun cloud calls without my approval.
 
 ## Step 5 - Explain and hand over (5 minutes)
 
+**Why this step matters:** Another teammate needs to understand and maintain
+what you just built. Explaining a validation check in your own words is how you
+find out whether the team understands the suggestion it accepted. You are
+handing over an intake component with a clear boundary, not a finished system
+that can approve or execute business requests.
+
 Rotate driver and reviewer. Explain one changed instruction and one validation
 check without Copilot. Record a redacted error if blocked; ask the coordinator
 at the end of the timebox instead of making repeated calls.
@@ -229,5 +283,12 @@ errors and do not implement retrieval/resolve or invent evidence.
 | Timebox expires | Preserve work and ask for help; do not mark the code checkpoint passed |
 
 Next: [Mission 02](mission-02.md).
+
+**How the story continues:** You can now recognise the Phoenix access request
+and return a structured intake result. The service desk next needs a reusable
+assistant and a way to check that its intake stays safe. Mission 02 saves the
+portal behaviour, introduces the code behind factual lookups, and adds tests
+around the triage function you just wrote. Keep the same clone and your saved
+Before/After responses; you are extending this work, not starting over.
 
 Reference: [Agent Framework structured outputs](https://learn.microsoft.com/en-us/agent-framework/agents/structured-outputs).

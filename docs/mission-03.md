@@ -14,7 +14,20 @@ something actually retrieved, not a plausible filename the model invented.
 **Where:** your saved agent in Foundry, then `agents.py` in VS Code.
 **Why:** business decisions need current written rules, not the model's memory.
 
+**The story so far:** The Phoenix request has reached the right desk, but the
+desk still cannot explain the approval rule. A model may know what an access
+policy usually looks like; that is not the same as knowing Contoso's policy.
+This mission adds the rulebook to your saved agent and a retrieval function to
+your Python code. You will check whether the returned evidence really supports
+the answer, not just whether the answer sounds sensible.
+
 ## Step 1 - See the problem before connecting knowledge
+
+**Why this step matters:** You deliberately ask the policy question before
+giving the agent a policy source. This makes the missing connection visible:
+the agent may admit it cannot know, or it may produce an unsupported answer.
+Keeping that response gives you a fair comparison later. You are not trying
+to make it fail for a screenshot; you are finding out what evidence it lacks.
 
 Open the agent from Mission 02. Start a new conversation and send:
 
@@ -34,6 +47,12 @@ unsupported claim you can identify. Keep the actual observation.
 **What you learn:** asking for citations does not create a knowledge connection.
 
 ## Step 2 - Look at the workshop policy documents
+
+**Why this step matters:** You need to recognise the rule yourself before you
+can judge the agent's explanation. Reading these short fictional documents
+gives you something concrete to compare against the returned passage. The
+repository copy is for your understanding; opening it does not automatically
+upload it to Foundry or connect the agent to Search.
 
 Open the repository's `data/policies` folder in GitHub or your local copy.
 You do not need to install Python. Read these four synthetic policies:
@@ -65,6 +84,12 @@ Reading the repository is preparation for the experiment, not its completion.
 
 ## Step 3 - Connect only the prepared team knowledge
 
+**Why this step matters:** This is where you give the saved agent a route to
+the rulebook. The connection identifies the existing knowledge service and
+the identity it uses; the instructions explain when the agent should ask that
+service for evidence. Saving this wiring is preparation. The next step will
+show whether a real question actually travels through it and returns a source.
+
 **Workshop access update:** the coordinators have enabled read-only policy access
 for all eight Foundry project identities. The policy connection has successfully
 retrieved ACCESS-001 through the team-01 rehearsal agent. This verifies that path,
@@ -79,6 +104,29 @@ other teams' agents or changing real business systems.
 
 Ask the coordinators for the **exact prepared connection/tool name** and the
 knowledge-base name for your team. It should match the assigned `team-XX`.
+
+**Your team's exact values are below:** use the row matching the team you found
+on Environment Setup; you do not need to wait for someone to supply these names.
+The Search connection is for the Foundry IQ picker. The policy knowledge
+connection is the prepared MCP alternative for the same team knowledge base.
+
+| Your project | Existing Search connection | Prepared policy knowledge connection | Knowledge-base name |
+|---|---|---|---|
+| `team-01` | `team-01-policy-search` | `team-01-policy-knowledge` | `team-01-policy-kb` |
+| `team-02` | `team-02-policy-search` | `team-02-policy-knowledge` | `team-02-policy-kb` |
+| `team-03` | `team-03-policy-search` | `team-03-policy-knowledge` | `team-03-policy-kb` |
+| `team-04` | `team-04-policy-search` | `team-04-policy-knowledge` | `team-04-policy-kb` |
+| `team-05` | `team-05-policy-search` | `team-05-policy-knowledge` | `team-05-policy-kb` |
+| `team-06` | `team-06-policy-search` | `team-06-policy-knowledge` | `team-06-policy-kb` |
+| `team-07` | `team-07-policy-search` | `team-07-policy-knowledge` | `team-07-policy-kb` |
+| `team-08` | `team-08-policy-search` | `team-08-policy-knowledge` | `team-08-policy-kb` |
+
+For the Python step, `SEARCH_ENDPOINT` is
+`https://bosch-rnr-search-tcek5ldad64oc.search.windows.net`; set
+`TEAM_KNOWLEDGE_BASE` to the last cell in **your** row. The Search index uses
+the same team prefix, for example `team-03-policies` for `team-03`.
+These are resource names, not passwords or permission grants. Do not paste
+credentials into any connection-name field or create a replacement connection.
 
 1. In **Setup > Knowledge**, choose **Add > Connect to Foundry IQ**.
 2. Select the existing team Search connection and your assigned knowledge base.
@@ -113,6 +161,12 @@ prepared connection is setup help; **you** must still send the question and
 inspect the returned evidence. Nobody needs broader roles just to browse a list.
 
 ## Step 4 - Repeat your question and inspect the citation
+
+**Why this step matters:** Now you repeat the exact question from Step 1 so
+you can connect a change in the answer to the newly attached knowledge. The
+important part is not a citation-shaped label: it is the actual passage returned
+by retrieval and whether it supports the claim. This proves a route to the
+rulebook, not that an owner has personally approved the Phoenix request.
 
 Click **New chat**, then use the same question. It is repeated here so you do
 not have to scroll back:
@@ -166,6 +220,12 @@ Only run the additional domain query if you are ahead of the timebox and the
 coordinators approve capacity. Prioritize the Python task below.
 
 ## Step 5 - Build the retrieval adapter in Python
+
+**Why this step matters:** Your portal agent can now ask for policy evidence,
+but your Python application needs its own way to retrieve that evidence.
+This adapter is that bridge. Keeping real passages and references lets later
+code show where a rule came from; rejecting empty evidence prevents an outage
+from turning into a confident but unsupported answer.
 
 Open `starter/route_resolve/agents.py` and implement **only**
 `retrieve_policy(category, request)`. Keep `triage` and its tests working.
@@ -275,6 +335,12 @@ not live retrieval**. It does not pass the live knowledge checkpoint.
 
 Next: [Mission 04](mission-04.md). Let the agent check operational facts and inspect
 what it actually called.
+
+**How the story continues:** The service desk can now explain the rule for
+Phoenix access and show where that rule came from. It still needs current
+facts: who owns Phoenix, and does the fictional requester already have Reader
+access? Mission 04 connects those lookups to the same saved agent, then brings
+your policy evidence, Python work and tests together in the team demo.
 
 ## Optional Copilot prompts
 

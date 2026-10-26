@@ -17,10 +17,44 @@ tool scope matter more than a sentence saying "I did it."
 **Why:** a model cannot verify current access or project ownership from a message
 alone. Our tools use fictional records and perform no real business operations.
 
+**The story so far:** Your service desk can read a request, notice missing
+information and consult the rulebook. Now it must distinguish a rule from the
+current state of the world. "Owner approval is required" is a policy; "this is
+the owner" is a lookup; "the owner approved me" is still only a requester's claim.
+You will connect the factual tools, inspect those distinctions and demonstrate
+the parts your team actually built.
+
 ## Step 1 - Connect the team's prepared operational tools
+
+**Why this step matters:** The policy source explains what should happen, but
+it cannot tell you today's access state from a chat message. The operational
+connection gives your agent a separate route to the fictional service-desk
+records. You are enabling specific factual lookups, not giving the model
+general access to Azure or permission to change a business system.
 
 Ask for the exact prepared **operational MCP connection** for your team.
 This is separate from the policy knowledge connection in Mission 03.
+
+**Your exact operational connection is listed here:** use your own project's
+row instead of waiting for the connection name. This is not the
+`policy-knowledge` connection from the previous mission.
+
+| Your project | Prepared operational MCP connection |
+|---|---|
+| `team-01` | `team-01-operations` |
+| `team-02` | `team-02-operations` |
+| `team-03` | `team-03-operations` |
+| `team-04` | `team-04-operations` |
+| `team-05` | `team-05-operations` |
+| `team-06` | `team-06-operations` |
+| `team-07` | `team-07-operations` |
+| `team-08` | `team-08-operations` |
+
+Select the existing connection by name; its authenticated server settings are
+already stored. You do not need a bearer token or a server password. In this
+mission, the first tool you should recognise is `get_project_owner`; later you
+will also look for `check_user_access`. A missing row in the portal or a disabled
+picker is still a setup/access issue, not a reason to recreate the connection.
 
 1. Open the demo agent's tool configuration.
 2. Add/select the existing operational connection supplied by coordinators.
@@ -56,6 +90,12 @@ Do not enable write tools or alter fixtures/connections.
 ```
 
 ## Step 2 - Ask a question that requires a real lookup
+
+**Why this step matters:** Start with one small question whose evidence is
+easy to follow: who owns Phoenix? Watching the proposed tool name, argument and
+returned value shows you the whole lookup chain before you combine it with a
+policy question. Approving this one lookup allows that call to run; it is not
+the same as a project owner approving an access request.
 
 In **Setup > Instructions**, append this instruction to the demo agent's
 existing intake and policy instructions. Save/apply and return to **Chat**.
@@ -97,6 +137,12 @@ result. The owner name may vary with the supplied fixture; read the actual value
 fact. A model-written "I checked" is not a trace.
 
 ## Step 3 - Inspect and explain the run
+
+**Why this step matters:** This is where the story's two evidence routes meet.
+The policy route gives the rule; the operational route gives a current fact.
+You check them separately so the assistant cannot turn "I need access" or
+"someone approved me" into verified truth. A useful service-desk answer makes
+clear what it knows, where it learned it, and what is still unverified.
 
 Expand the run details/tool activity where available and find:
 
@@ -144,6 +190,12 @@ failure. Do not convert that failure into a successful decision.
 user named inside the exercise.
 
 ## Step 4 - Verify the Python build and action boundaries
+
+**Why this step matters:** A good portal conversation does not guarantee that
+your local application still works. You now check that triage, retrieval and
+their validation remain usable together as components. The empty-evidence test
+protects the boundary between "we found no supporting source" and "we have a
+policy-backed answer." You are not claiming a complete Python orchestrator.
 
 In VS Code, point to your implemented `triage` and `retrieve_policy`, your own
 tests, and read-only `models.py` / `lab.py`. Explain how each result is checked.
@@ -196,6 +248,12 @@ explicit boundary between the local application and portal agent.
 passing isolated tests does not prove a complete application.
 
 ## Step 5 - Demonstrate what your team actually built
+
+**Why this step matters:** Another team needs to understand why it should trust
+your result. The demo walks them from the original request to an observed
+source, a returned fact and a validation check. Showing a limitation is part of
+that explanation: it tells the audience where your evidence stops, rather than
+letting a polished answer imply that an action was completed.
 
 Use your saved conversations rather than rerunning everything. Prepare this
 small table; record actual observations, not an invented score:
@@ -251,6 +309,12 @@ Open **Optional bonus missions** in the Challenges toolbar, or the
 [bonus guide](bonus.md). Choose resilience, evidence testing, offline evaluation
 or the advanced Python track. These are not a fifth mandatory mission.
 Leave shared Azure cleanup to coordinators; do not delete teammates' agents.
+
+**How the story continues after the core:** Your desk now has an intake
+component, policy evidence, factual lookups and tests you can explain. The bonus
+is a chance to make one weak point more reliable, not a missing final core
+mission. Keep the same agent and saved evidence; choose a bonus only after the
+core checkpoints and the 15-minute recovery/demo buffer are complete.
 
 ## Optional Copilot prompts
 
