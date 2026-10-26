@@ -52,6 +52,18 @@ Reading the repository is preparation for the experiment, not its completion.
 
 ## Step 3 - Connect only the prepared team knowledge
 
+**Workshop access update:** the coordinators have enabled read-only policy access
+for all eight Foundry project identities. The policy connection has successfully
+retrieved ACCESS-001 through the team-01 rehearsal agent. This verifies that path,
+not every team's connection or individual sign-in. If your connection is missing,
+ask for setup help rather than assuming your test has passed.
+
+The fictional policy collection is shared for this workshop. Separate index names
+are organizational labels, **not an enforced policy-read boundary between team
+project identities**. Keep using your assigned connection so your evidence is
+repeatable. Shared policy access does not authorize editing policies, reading
+other teams' agents or changing real business systems.
+
 Ask the coordinators for the **exact prepared connection/tool name** and the
 knowledge-base name for your team. It should match the assigned `team-XX`.
 
@@ -93,6 +105,13 @@ Start a fresh conversation. Send the **same question from Step 1**.
 3. Identify the actual returned policy passage.
 4. Compare one claim in the answer to that passage.
 5. If available, expand the run/tool details and identify the retrieval call.
+
+If you see an approval request for `knowledge_base_retrieve`, inspect its query
+and choose **Approve > Approve once** for your intended policy question.
+The tested path returned the actual ACCESS-001 document and its source
+`policies/access.md`. It did not produce a clickable citation annotation in
+every answer. Inspect the returned tool document/source URL with the coordinator
+when needed; a filename written by the model alone still does not count.
 
 If the portal does not show enough source detail, ask the coordinator to inspect
 the actual retrieval trace with you. Do not infer success from a bracketed `[1]`

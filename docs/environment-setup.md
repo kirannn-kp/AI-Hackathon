@@ -167,3 +167,9 @@ not a reason to stop thinking.
 If a required live capability is blocked, label it **blocked** and ask for help.
 Pasting policy into a prompt is not live retrieval; saying "tool ran" is not a tool
 trace. Do not mark those checkpoints complete without the actual evidence.
+
+**Policy access update:** read-only access is enabled for all eight workshop
+project identities, and team-01 policy-tool retrieval has been rehearsed
+successfully. Your team's connection must still be attached and tested in
+[Mission 03](mission-03.md). Fictional policies are shared across team project
+identities; do not treat separate index names as a security boundary.
