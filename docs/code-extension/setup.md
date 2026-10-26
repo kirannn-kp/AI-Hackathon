@@ -14,7 +14,10 @@ cd AI-Hackathon
 code .
 ```
 
-If the clone already exists, open that folder instead. In VS Code, open a
+If the clone already exists, open that folder and run `git pull --ff-only`
+before the timer so the prepared connection helper and current guides are
+present. Keep your own changes; if Git reports a conflict, stop and get help,
+never reset the folder to make the update pass. In VS Code, open a
 PowerShell terminal at the folder containing `pyproject.toml`.
 Git, VS Code, Python 3.12+ and Azure CLI must be installed through an approved
 workstation procedure. Docker is not required.
@@ -40,7 +43,7 @@ account if it is your approved workshop identity and tenant:
 az account show --query "{account:user.name,tenant:tenantId}" --output json
 ```
 
-Otherwise use the coordinator-supplied tenant:
+Otherwise use this workshop tenant:
 
 For this workshop, the tenant ID is
 `c6670b79-8a8a-472a-8d88-728245ab89e1`. Enter this value below; use your

@@ -131,6 +131,10 @@ For access requests, separate the requester's claims, retrieved policy,
 verified operational facts and the safe next step. Never present a requester's
 claim of owner approval as verified approval. If evidence is missing or a
 lookup fails, say what is missing. Do not claim access was granted.
+When user_id, project and role are supplied and current access is requested,
+call check_user_access before answering; policy knowledge is not that lookup.
+If the lookup does not run, report the check as incomplete. Do not add approval
+or security-review requirements not stated in the retrieved rule for that role.
 ```
 
 Save/apply the change, start a new chat and paste the **identical BONUS-01
@@ -139,6 +143,9 @@ This repeat is your second prompt, not an invitation to keep retrying.
 
 **You should see:** a before/after pair with the same request and one explained
 instruction change. Both runs may pass; report that honestly.
+The change may also regress: an omitted required lookup or an unsupported
+policy condition is an **issue**, not an improvement. Preserve that result;
+do not keep retrying until an answer looks good.
 **What you learn:** a clearer response is an observation, not proof of universal
 safety or a synchronized change to your Python implementation.
 

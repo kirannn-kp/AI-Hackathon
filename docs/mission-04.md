@@ -130,6 +130,11 @@ action. Keep this exercise explicitly synthetic.
 These tools are read-only. If policy permits a mock action but none was
 performed, report eligible for a separate mock action, not executed or resolved.
 Use Resolve only when no new action is needed, such as access already existing.
+When a request supplies user_id, project and role and asks for current access,
+call check_user_access before answering. Policy knowledge is not a current
+access check. If that lookup does not run, report the check as incomplete.
+Apply only the conditions stated in the retrieved rule for the requested role;
+do not add an unsupported approval owner or security-review requirement.
 ```
 
 Click **New chat**. Send this first lookup and inspect the approval request:
