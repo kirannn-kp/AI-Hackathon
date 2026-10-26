@@ -30,7 +30,7 @@ are complete. Do not sacrifice the core demo to start a stretch task.
 | HackboxConsole | Instructions, team names, checkpoints and progress | Supplied shared team console login |
 | [Microsoft Foundry](https://ai.azure.com/) | Experiment, save your own agent, inspect real policy/tool calls | Your own approved Azure identity |
 | VS Code and GitHub Copilot | Read code, implement two functions, write tests, debug | Your own GitHub/Copilot entitlement |
-| [Public participant repository](https://github.com/kirannn-kp/AI-Hackathon) | One working clone for all missions | No invitation needed to read/clone; Copilot uses your own account |
+| [Participant repository](https://github.com/kirannn-kp/AI-Hackathon) | One working clone for all missions | Follow coordinator access instructions; Copilot uses your own account |
 
 Everyone uses their own laptop/identity. Rotate driver, reviewer, Foundry tester
 and evidence presenter; combine roles in smaller teams. Do not share passwords,

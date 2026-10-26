@@ -47,7 +47,7 @@ You do not need a personal paid subscription or subscription Owner.
 |---|---|---|
 | This console | Shared assigned team login | Read challenges and track team milestones |
 | Foundry | Your own approved work/training identity | Use the assigned project, model and agents after authorization |
-| GitHub | Public repository; your own account for Copilot | Clone the workshop and work on Python exercises |
+| GitHub | Your own account when sign-in is requested | Clone the workshop and work on Python exercises |
 | Copilot | Your own entitled GitHub account | Explain read-only code, implement focused changes and write tests |
 
 Never share passwords, MFA, temporary passes, tokens or device codes.
@@ -120,14 +120,15 @@ beforehand. If it is unavailable, pair-review the same code tasks manually.
 For workshop Copilot onboarding, open the authenticated console's
 [Environment Setup page](https://bosch-rnr-console-czfb3nscn5otc.azurewebsites.net/environment-setup).
 Follow the joining instructions shown there using your own GitHub account.
-The joining image and code are deliberately not included in the public repository.
+The joining image and code are deliberately not included in the repository.
 
 <!-- console-only-github-join -->
 
-Open the [public AI-Hackathon repository](https://github.com/kirannn-kp/AI-Hackathon).
-Reading and cloning it does not require an invitation. Joining the workshop
-organization **does not automatically** grant Azure permissions or prove that
-Copilot entitlement is active.
+Open the [AI-Hackathon repository](https://github.com/kirannn-kp/AI-Hackathon).
+If GitHub requests sign-in, use your own account. If it shows a 404 or asks for
+access, contact a coordinator; do not borrow credentials. Joining the workshop
+organization **does not automatically** grant repository/Azure permissions or
+prove that Copilot entitlement is active.
 
 **You should see:** the README, documentation, synthetic data and optional starter.
 **What you learn:** organization membership, repository permission and Copilot
