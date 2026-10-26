@@ -55,7 +55,8 @@ repository copy is for your understanding; opening it does not automatically
 upload it to Foundry or connect the agent to Search.
 
 Open the repository's `data/policies` folder in GitHub or your local copy.
-You do not need to install Python. Read these four synthetic policies:
+Reading these documents needs no additional setup beyond your prepared workstation.
+Read these four synthetic policies:
 
 | File | What you look for |
 |---|---|
@@ -128,16 +129,36 @@ the same team prefix, for example `team-03-policies` for `team-03`.
 These are resource names, not passwords or permission grants. Do not paste
 credentials into any connection-name field or create a replacement connection.
 
-1. In **Setup > Knowledge**, choose **Add > Connect to Foundry IQ**.
-2. Select the existing team Search connection and your assigned knowledge base.
-   If your least-privilege identity cannot list knowledge bases, stop the picker
-   and ask the coordinator to attach the **prepared knowledge MCP connection**
-   to this agent. Give them your agent name; do not create a new connection.
-   Depending on the interface, Foundry IQ can appear as a knowledge tool backed
-   by an MCP connection. Select the prepared connection, not an arbitrary catalog tool.
-3. Confirm the assigned knowledge-base name and save the agent configuration.
-4. Open **Setup > Instructions**. Append the following, keeping your intake
-   instructions. Save/apply, then return to **Chat**.
+**Use the prepared connection route below.** Rehearsal found that the Foundry IQ
+picker can show **Error loading knowledge bases** / 403 even when actual policy
+retrieval works, and **Custom > Model Context Protocol (MCP)** can be disabled.
+You do not need to fix that picker, create a connection or request a broader role.
+
+1. Save any pending edits in your own Mission 02 agent. Copy its exact name.
+2. In your existing configured VS Code terminal, run:
+
+   ```powershell
+   $agentName = Read-Host "Your own saved Foundry agent name (starts with your team ID)"
+   .\.venv\Scripts\python .\scripts\connect_prepared_agent.py --agent-name $agentName --connection policy --apply
+   ```
+
+3. The supplied helper uses your own CLI identity to attach the existing
+   `team-XX-policy-knowledge` connection to **your saved portal agent**. It prints
+   the saved version. It does not send a prompt, retrieve connection credentials,
+   change roles, edit the shared connection or implement your Python retrieval
+   exercise. Repeating it with matching settings does not add duplicate tools.
+4. Refresh the Foundry agent page and select the printed version. In **Setup >
+   Knowledge**, look for `team-XX-policy-kb`; the portal may display the MCP-backed
+   source under Knowledge rather than Tools. The read-only **YAML** tab also
+   shows the `project_connection_id` and allowed tool `knowledge_base_retrieve`.
+5. Open **Setup > Instructions**. Append the following, keeping your intake
+   instructions. Click **Save** when enabled and wait for saving to finish,
+   then return to **Chat**.
+
+The normal **Setup > Knowledge > Add > Connect to Foundry IQ** picker remains an
+alternative if it works for your identity. Select only the Search connection
+and knowledge base from your row. If it errors, cancel it and use the supplied
+helper above; never force a disabled control.
 
 **Paste into Foundry Instructions — add policy behaviour:**
 
@@ -325,7 +346,7 @@ same knowledge through different identities and interfaces.
 
 - [ ] Compare one answer before and after connecting knowledge.
 - [ ] Open an actual source and explain one supported claim.
-- [ ] Show a second-domain query or clearly record why it was blocked.
+- [ ] Optional second-domain query: show it if run, or record **not executed (optional)**.
 - [ ] Explain why a policy requirement is not proof of approval or completion.
 - [ ] Show your Python adapter and an actual returned reference; a portal-only run is insufficient.
 

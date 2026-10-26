@@ -142,9 +142,9 @@ Git, VS Code, Python 3.12+, Azure CLI, the pinned `.venv` and configured termina
 Select that `.venv` in VS Code. Run `route_resolve.lab check` and the supplied
 offline contract tests. **Contracts ready** does not prove Azure access.
 
-Verify your own CLI identity separately from browser sign-in. Obtain the assigned
-project endpoint, deployment, Search endpoint and knowledge-base name from the
-coordinator. The coordinator must verify individual model **and direct Search
+Verify your own CLI identity separately from browser sign-in. The workstation
+checklist supplies the exact event endpoints/deployment and derives the
+knowledge-base name from your assigned team ID. The coordinator must verify individual model **and direct Search
 retrieval** access before starting; the approved project-MI role does not grant
 your CLI user that permission. No participant should create role assignments.
 

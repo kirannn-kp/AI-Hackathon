@@ -42,6 +42,10 @@ az account show --query "{account:user.name,tenant:tenantId}" --output json
 
 Otherwise use the coordinator-supplied tenant:
 
+For this workshop, the tenant ID is
+`c6670b79-8a8a-472a-8d88-728245ab89e1`. Enter this value below; use your
+assigned Azure account when the device-code page asks you to sign in.
+
 ```powershell
 $tenantId = Read-Host "Workshop tenant ID"
 az login --tenant $tenantId --allow-no-subscriptions --use-device-code
@@ -51,14 +55,17 @@ Never borrow a teammate's login or print/share tokens.
 
 ## Configure this terminal
 
-Use coordinator-supplied values, not the browser address or another team's project:
+Use your assigned team ID and these prepared event values, not the browser
+address or another team's project. The remaining names are derived from your
+team; you do not need to ask a coordinator to find them.
 
 ```powershell
-$env:TEAM_ID = Read-Host "Assigned team ID"
-$env:FOUNDRY_PROJECT_ENDPOINT = Read-Host "Assigned project endpoint"
-$env:FOUNDRY_MODEL = Read-Host "Assigned chat deployment name"
-$env:SEARCH_ENDPOINT = Read-Host "Assigned HTTPS Search endpoint"
-$env:TEAM_KNOWLEDGE_BASE = Read-Host "Assigned team knowledge-base name"
+$env:TEAM_ID = Read-Host "Assigned team ID (team-01 to team-08)"
+if ($env:TEAM_ID -notmatch '^team-0[1-8]$') { throw "Enter your assigned team-01 to team-08." }
+$env:FOUNDRY_PROJECT_ENDPOINT = "https://bosch-rnr-tcek5ldad64oc.services.ai.azure.com/api/projects/$($env:TEAM_ID)"
+$env:FOUNDRY_MODEL = "route-resolve-chat"
+$env:SEARCH_ENDPOINT = "https://bosch-rnr-search-tcek5ldad64oc.search.windows.net"
+$env:TEAM_KNOWLEDGE_BASE = "$($env:TEAM_ID)-policy-kb"
 ```
 
 These values apply only to this terminal. `.env.example` is documentation, not an

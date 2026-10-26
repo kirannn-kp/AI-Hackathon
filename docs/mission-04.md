@@ -32,7 +32,7 @@ connection gives your agent a separate route to the fictional service-desk
 records. You are enabling specific factual lookups, not giving the model
 general access to Azure or permission to change a business system.
 
-Ask for the exact prepared **operational MCP connection** for your team.
+Use the prepared **operational MCP connection** for your team.
 This is separate from the policy knowledge connection in Mission 03.
 
 **Your exact operational connection is listed here:** use your own project's
@@ -56,15 +56,34 @@ mission, the first tool you should recognise is `get_project_owner`; later you
 will also look for `check_user_access`. A missing row in the portal or a disabled
 picker is still a setup/access issue, not a reason to recreate the connection.
 
-1. Open the demo agent's tool configuration.
-2. Add/select the existing operational connection supplied by coordinators.
-   If **Tools > Add > Add tools > Custom** is disabled or does not show the
-   prepared connection, ask the coordinator to attach it to your named demo
-   agent. Do not create a new server/connection or grant yourself a role.
-3. Begin with the read-only tools `get_project_owner`, `check_user_access`,
-   `lookup_supplier` and `check_partner`, plus clarification tool `request_info`.
-4. Keep tool approval enabled where supported. Save the configuration.
-5. Confirm which tools are actually listed and available to this agent.
+1. Save any pending edits in your own demo agent. In the configured terminal,
+   enter its exact name and attach the already-prepared operational connection:
+
+   ```powershell
+   $agentName = Read-Host "Your own saved Foundry agent name (starts with your team ID)"
+   .\.venv\Scripts\python .\scripts\connect_prepared_agent.py --agent-name $agentName --connection operations --apply
+   ```
+
+2. Refresh the Foundry agent page and select the version printed by the helper.
+   This adds to the policy connection from Mission 03; it does not replace it.
+3. Open **Setup > Tools** and identify the operational connection. Its allowed
+   tools are `get_project_owner`, `check_user_access`, `lookup_supplier` and
+   `check_partner`, plus clarification tool `request_info`. The read-only
+   **YAML** tab shows the same names if the card has not finished loading.
+4. The helper keeps approval at **always** and excludes all `create_*` mock
+   write tools. It uses your CLI identity, does not invoke a model, and does not
+   retrieve secrets or change roles/shared connections.
+5. Confirm the policy source is still present under **Setup > Knowledge**.
+   If you use the normal **Tools > Add > Add tools** picker instead, select only
+   your prepared connection. Rehearsal found the **Model Context Protocol (MCP)**
+   option under Custom disabled for the participant; do not force it. Use the
+   helper rather than creating a replacement server/connection.
+
+**Portal warning seen during rehearsal:** the operational tool card displayed
+**Not supported by the selected model**, but the approved `route-resolve-chat`
+lookup below executed successfully. Do not switch deployments or force controls
+to remove that warning. Judge the one approved lookup by its actual result; if
+invocation fails, preserve the error and stop rather than repeatedly retrying.
 
 **You should see:** real tool names and their argument descriptions.
 **What you learn:** MCP describes tools so the agent can discover and call them.
@@ -108,6 +127,9 @@ Do not invent a user ID, project owner, tool response or completed action.
 Use the policy knowledge tool for applicable rules.
 If a required fact, source or tool call is missing, say so and stop unsupported
 action. Keep this exercise explicitly synthetic.
+These tools are read-only. If policy permits a mock action but none was
+performed, report eligible for a separate mock action, not executed or resolved.
+Use Resolve only when no new action is needed, such as access already existing.
 ```
 
 Click **New chat**. Send this first lookup and inspect the approval request:
@@ -151,6 +173,28 @@ Expand the run details/tool activity where available and find:
 3. The returned result or explicit error.
 4. The answer's claim based on that result.
 
+In the rehearsed portal, click **Traces** below the answer, select the relevant
+**Tool** row, then read **Input + Output**. This response-detail view works without
+Application Insights; do not click **Connect** or create monitoring resources.
+Review the returned JSON, not just the model's summary.
+
+**If Traces shows only the last tool:** the response-detail view can omit an
+earlier access lookup when the same answer made a later policy call. Do not
+mistake the model's summary for that missing JSON. If needed, use this one
+approved isolated diagnostic in a **New chat**, then inspect its **Traces >
+Tool > Input + Output** and reuse the policy evidence you already saved:
+
+```text
+This is an isolated synthetic read-only diagnostic, not a new access request.
+Use only check_user_access with user_id user-02, project Phoenix and role Reader.
+Report the returned current-access fact. Do not call policy or another tool,
+infer approval, grant anything or claim that a workflow was completed.
+```
+
+Record that this was a separate lookup. If its output is still unavailable,
+mark the evidence **unavailable/blocked**, not passed. This is not a reason to
+repeat the full combined test.
+
 Ask a teammate to explain this chain without Copilot.
 Click **New chat** before the next test.
 
@@ -165,6 +209,9 @@ from the policy approval requirement. Do not grant anything.
 
 Here `user-02` is a **synthetic fixture user**, not your own Azure identity.
 Inspect the actual lookup and policy evidence separately.
+If the lookup says `has_access: false` but policy permits a mock action, this
+read-only demo has still not performed that action. Do not accept **Resolve** or
+**Execute completed** just because the policy allows a later action.
 
 If that succeeds within the timebox, run the approval-claim test below. Use
 its observed response for the last row of your demo table.
