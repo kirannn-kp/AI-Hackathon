@@ -58,9 +58,6 @@ def build(root: Path) -> None:
         if relative.startswith("docs/"):
             (destination / relative).parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(root / relative, destination / relative)
-    assets = destination / "docs" / "assets"
-    assets.mkdir(exist_ok=True)
-    shutil.copyfile(root / "docs" / "assets" / "github-join.png", assets / "github-join.png")
     for number in range(1, 5):
         (destination / f"challenge-{number:02}.md").write_text(
             rebase_links(sources[f"mission-{number:02}"], f"docs/mission-{number:02}.md", f"challenge-{number:02}.md"),

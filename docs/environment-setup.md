@@ -47,7 +47,7 @@ You do not need a personal paid subscription or subscription Owner.
 |---|---|---|
 | This console | Shared assigned team login | Read challenges and track team milestones |
 | Foundry | Your own approved work/training identity | Use the assigned project, model and agents after authorization |
-| GitHub | Your own account with repository access | Clone the workshop and work on Python exercises |
+| GitHub | Public repository; your own account for Copilot | Clone the workshop and work on Python exercises |
 | Copilot | Your own entitled GitHub account | Explain read-only code, implement focused changes and write tests |
 
 Never share passwords, MFA, temporary passes, tokens or device codes.
@@ -117,15 +117,17 @@ Complete this before the timed core. If repository access is unavailable, ask fo
 an approved source folder; do not borrow credentials. Confirm Copilot entitlement
 beforehand. If it is unavailable, pair-review the same code tasks manually.
 
-Scan the supplied QR code, sign in using the personal GitHub account directed by
-the screenshot, and follow its joining instructions:
+For workshop Copilot onboarding, open the authenticated console's
+[Environment Setup page](https://bosch-rnr-console-czfb3nscn5otc.azurewebsites.net/environment-setup).
+Follow the joining instructions shown there using your own GitHub account.
+The joining image and code are deliberately not included in the public repository.
 
-![GitHub workshop joining instructions, QR code and joining code supplied by the coordinators](assets/github-join.png)
+<!-- console-only-github-join -->
 
-Then open the [private AI-Hackathon repository](https://github.com/kirannn-kp/AI-Hackathon)
-with the GitHub account granted repository access. Joining the organization in
-the screenshot **does not automatically** grant access to this separately owned
-repository. A 404 usually needs coordinator invitation/access verification.
+Open the [public AI-Hackathon repository](https://github.com/kirannn-kp/AI-Hackathon).
+Reading and cloning it does not require an invitation. Joining the workshop
+organization **does not automatically** grant Azure permissions or prove that
+Copilot entitlement is active.
 
 **You should see:** the README, documentation, synthetic data and optional starter.
 **What you learn:** organization membership, repository permission and Copilot

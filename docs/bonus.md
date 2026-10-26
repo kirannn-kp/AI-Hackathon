@@ -3,7 +3,7 @@
 **Optional after completing the four Foundry + Python missions.** Choose one topic
 that interests you. There is no mandatory fifth milestone, and bonus time is
 outside the **180-minute core**. Open this guide through **Optional bonus missions** in
-the console or read it in the private reference repository.
+the console or read it in the public workshop repository.
 
 **Recommended live build: Bonus 1.** Improve your own agent, run a controlled
 before/after test and show whether the change helped. Bonus 2 adds an unseen
@@ -202,7 +202,7 @@ executed because its name appears in model-written text.
 
 ## Optional advanced coding track - separate from the core
 
-The private reference/download repository is
+The public workshop/reference repository is
 https://github.com/kirannn-kp/AI-Hackathon.
 The core already includes Python triage/retrieval and tests. For a larger
 integrated Python workflow after the three-hour core, use these detailed recipes

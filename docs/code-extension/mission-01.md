@@ -72,8 +72,7 @@ Copilot is optional and requires its own entitlement.
 
 If the coordinators already opened the workshop folder for you, **do not clone
 again**. Confirm you can see `README.md`, `pyproject.toml`, `starter` and `data`.
-Otherwise clone the private **workshop** starter using an approved GitHub account
-with repository access:
+Otherwise clone the public **workshop** starter; no repository invitation is needed:
 
 ```powershell
 git clone https://github.com/kirannn-kp/AI-Hackathon.git
