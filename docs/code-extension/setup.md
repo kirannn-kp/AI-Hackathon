@@ -1,9 +1,8 @@
-# Optional Python track - prepare your own workstation
+# Python workstation checklist - complete before the three-hour core
 
-Finish the [Foundry portal introduction](../mission-01.md) first. This advanced
-track is for participants who want to implement the workflow in code after the
-core lab. The three unfinished functions are deliberate exercises, not a working
-agent you can run without implementing them.
+This is setup for the mixed Foundry/Python core, not a fifth challenge. The
+unfinished functions are deliberate exercises. During the core implement
+`triage` and `retrieve_policy`; leave `resolve` for the after-core stretch.
 
 ## Clone and install
 
@@ -66,7 +65,23 @@ These values apply only to this terminal. `.env.example` is documentation, not a
 automatically loaded file. A new terminal needs configuration again.
 Cloud calls require coordinator approval and the runner's `--allow-cloud` flag.
 
-## Build in order
+## Verify before starting the timer
+
+Run the supplied offline tests:
+
+```powershell
+.\.venv\Scripts\python -m unittest discover -s tests -v
+```
+
+Ask the coordinator to verify your individual model and Search retrieval access.
+The project managed identity's policy role does not apply to your CLI user.
+Do not discover missing permissions halfway through the timed core.
+
+## Core versus detailed recipes
+
+Return to [Mission 01](../mission-01.md) once ready. The main four missions define
+the 180-minute scope. The detailed recipes below supply implementation help;
+do not complete the full advanced workflow inside the core.
 
 1. [Code extension 01](mission-01.md): implement model-backed `triage`.
 2. [Code extension 02](mission-02.md): inspect MCP facts and improve triage.

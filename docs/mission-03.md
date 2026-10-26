@@ -2,12 +2,12 @@
 
 ## What you are going to do
 
-Ask a policy question **before** adding knowledge, connect your team's prepared
-policy knowledge, then ask the **same** question again. Open the returned citation
-and check whether it supports the answer.
+Compare policy answers in Foundry, then implement the Python retrieval adapter.
+Spend 5 minutes on the baseline, 5 reading policy, 10 connecting/inspecting the
+portal result, 20 implementing Python retrieval and 5 on the checkpoint.
 
-**You finish with:** an observed grounded answer, its real source and a comparison
-with the ungrounded answer. You are not building a Search service.
+**You finish with:** a real portal policy result and a working Python
+`retrieve_policy` function with actual returned references.
 **You learn:** grounding means using supplied evidence. A citation must point to
 something actually retrieved, not a plausible filename the model invented.
 
@@ -129,24 +129,37 @@ Which Contoso policy applies to a EUR 600 software purchase from Contoso
 Software? Explain the approval requirement and cite the returned source.
 ```
 
-Use at most one additional domain query if the coordinators approve capacity.
+Only run the additional domain query if you are ahead of the timebox and the
+coordinators approve capacity. Prioritize the Python task below.
 
-## Step 5 - Test a missing fact
+## Step 5 - Build the retrieval adapter in Python
 
-Send in a fresh conversation:
+Open `starter/route_resolve/agents.py` and implement **only**
+`retrieve_policy(category, request)`. Keep `triage` and its tests working.
+Leave `resolve` as a stretch exercise. Read `lab.py`'s `policy` branch without
+editing it: it requires a dictionary containing actual `references`.
 
-```text
-Can I share a dataset with Fabrikam? I have not supplied its classification.
-Use the policy source and tell me what you need to know before deciding.
+1. Read `SEARCH_ENDPOINT` and `TEAM_KNOWLEDGE_BASE` from this terminal.
+2. Obtain a Search-scoped token with your approved CLI identity, in memory.
+   Portal project-identity access does not automatically grant this CLI user
+   Search access; coordinators must verify the user's direct retrieval permission.
+3. Use a bounded POST to the existing knowledge-base `retrieve` endpoint, API
+   version `2026-08-01-preview`, with the question in `messages`.
+4. Check status before parsing. Preserve the returned passages, `references`
+   and `activity`. Missing evidence and HTTP failures remain explicit errors.
+5. Run one approved query and point to its actual source:
+
+```powershell
+.\.venv\Scripts\python -m route_resolve.lab policy --category Access --text "Which policy covers Reader access to Phoenix?" --allow-cloud
 ```
 
-Discuss: does knowing the policy supply the missing dataset classification?
-Does the requester saying "approved" prove approval exists?
+Use [the reviewed request body and implementation steps](code-extension/mission-03.md).
+This is a focused core task, not a requirement to finish that entire extension.
+Do not ask Copilot to replace retrieval with local policy files.
 
-**You should see:** an evidence-backed explanation of what is missing, not a
-fabricated classification or a claim that data was transferred.
-**What you learn:** policy says what is required; operational tools check facts.
-You connect those tools in the next mission.
+**You should see:** the Python command's real returned references and passages.
+**What you learn:** a portal tool and a direct Python request can retrieve the
+same knowledge through different identities and interfaces.
 
 ## Checkpoint - show the coordinators
 
@@ -154,6 +167,7 @@ You connect those tools in the next mission.
 - [ ] Open an actual source and explain one supported claim.
 - [ ] Show a second-domain query or clearly record why it was blocked.
 - [ ] Explain why a policy requirement is not proof of approval or completion.
+- [ ] Show your Python adapter and an actual returned reference; a portal-only run is insufficient.
 
 If live knowledge is blocked, coordinators may demonstrate pasting one short
 synthetic policy excerpt into a prompt. Label that **prompt-context practice,
@@ -165,9 +179,10 @@ what it actually called.
 ## Optional Copilot prompts
 
 ```text
-Help me compare this observed answer with its actual returned policy passage.
-Which claim is supported and which still needs an operational fact? Do not
-fabricate citations, change permissions or substitute local files for retrieval.
+Help me implement only retrieve_policy using the reviewed request contract in
+docs/code-extension/mission-03.md. Inspect the actual response shape, preserve
+references and surface errors. Explain each change; do not fabricate citations,
+change permissions, implement resolve or substitute local files for retrieval.
 ```
 
 ## Troubleshooting

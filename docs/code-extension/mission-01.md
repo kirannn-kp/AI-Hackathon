@@ -1,7 +1,8 @@
 # Optional code extension 01 - Build your first triage agent
 
-This is the advanced Python track, not the portal-first core challenge.
-Complete the [Foundry prompt lab](../mission-01.md) first.
+This is a detailed implementation recipe. The mixed core uses its triage steps
+only; follow the timebox and checkpoint in [Mission 01](../mission-01.md).
+Do not redo completed setup or extend into orchestration during this mission.
 
 ## Your mission in the story
 
@@ -23,7 +24,7 @@ Those decisions need facts and policy evidence in later missions.
 **Timebox:** orientation/setup 10 min; first agent 15 min; checkpoint 5 min.
 Tools and accounts should be prepared before the timed workshop. If installation
 or access blocks you, ask the coordinators rather than spending the whole mission
-troubleshooting. This guide is also `docs/mission-01.md` in your clone.
+troubleshooting. The main timed guide is `docs/mission-01.md` in your clone.
 
 ## Learning map - know why you are doing each step
 

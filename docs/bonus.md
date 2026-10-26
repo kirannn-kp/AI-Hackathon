@@ -1,8 +1,8 @@
 # Bonus missions - engineering beyond the happy path
 
-**Optional after the four portal-first missions.** Choose one topic that interests
-you. There is no mandatory fifth milestone, and bonus time is outside the roughly
-150-minute core target. Open this guide through **Optional bonus missions** in
+**Optional after completing the four Foundry + Python missions.** Choose one topic
+that interests you. There is no mandatory fifth milestone, and bonus time is
+outside the **180-minute core**. Open this guide through **Optional bonus missions** in
 the console or read it in the private reference repository.
 
 **Recommended live build: Bonus 1.** Improve your own agent, run a controlled
@@ -204,8 +204,9 @@ executed because its name appears in model-written text.
 
 The private reference/download repository is
 https://github.com/kirannn-kp/AI-Hackathon.
-If you want implementation work after the portal core, follow the preserved
-guides in order:
+The core already includes Python triage/retrieval and tests. For a larger
+integrated Python workflow after the three-hour core, use these detailed recipes
+without redoing completed work:
 
 - [Coding extension 01](code-extension/mission-01.md)
 - [Coding extension 02](code-extension/mission-02.md)
@@ -215,8 +216,8 @@ guides in order:
 Use the **existing pinned environment instructions** in that track and
 [Environment Setup](environment-setup.md). Do not replace them with guessed SDK
 versions. Keep one working folder and your existing environment if already set
-up. Implementing Python stubs and running its final ten-case CLI batch are
-advanced-track activities, not requirements for core completion.
+up. Implementing the remaining `resolve` stub and running the final ten-case CLI
+batch are advanced-track activities, not requirements for core completion.
 
 Once your coding workflow exists, extend the bonus topics offline:
 

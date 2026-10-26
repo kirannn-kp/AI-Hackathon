@@ -51,6 +51,8 @@ def build(root: Path) -> None:
     )
     (destination / "workshop-theme.css").write_text(theme, encoding="utf-8", newline="\n")
     shutil.copyfile(root / "README.md", destination / "README.md")
+    (destination / "examples").mkdir(exist_ok=True)
+    shutil.copyfile(root / "examples" / "agent_blueprint.py", destination / "examples" / "agent_blueprint.py")
     (destination / "docs").mkdir(exist_ok=True)
     for _, relative in pages:
         if relative.startswith("docs/"):

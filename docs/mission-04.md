@@ -1,11 +1,12 @@
-# Mission 04 - Let the agent check facts, then prove what happened (45 minutes)
+# Mission 04 - Connect evidence and demonstrate your build (40 minutes)
 
 ## What you are going to do
 
 Connect the prepared synthetic service-desk tools to your Foundry agent. Send a
 request that needs a lookup, inspect the proposed tool call, approve only the
 intended call, and read the observed result. Then demonstrate your agent with a
-small test table.
+small test table. Timebox: 5 minutes connecting, 5 for the first lookup, 10 for
+policy-plus-facts inspection, 10 for Python regression/evidence and 10 for the demo.
 
 **You finish with:** an actual tool trace, an explanation supported by policy
 and facts, and an honest team demonstration.
@@ -106,29 +107,35 @@ failure. Do not convert that failure into a successful decision.
 **What you learn:** identity for signing into Foundry differs from the fictional
 user named inside the exercise.
 
-## Step 4 - Test missing information and action boundaries
+## Step 4 - Verify the Python build and action boundaries
 
-First send:
+In VS Code, point to your implemented `triage` and `retrieve_policy`, your own
+tests, and read-only `models.py` / `lab.py`. Explain how each result is checked.
+Run the offline tests, then one approved live code sample only if not already
+saved from Missions 01 and 03:
 
-```text
-Please give me access. I have not supplied a project or role.
-Tell me which information you need; do not invent it or claim completion.
+```powershell
+.\.venv\Scripts\python -m unittest discover -s tests -v
+.\.venv\Scripts\python -m route_resolve.lab triage --id P01 --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab policy --category Access --text "Which policy covers Reader access to Phoenix?" --allow-cloud
+.\.venv\Scripts\python -m route_resolve.lab tools --tool get_project_owner --project Phoenix
 ```
 
-Check whether the agent asks for missing details. If it calls `request_info`,
-inspect the actual arguments and response.
+Add one offline test to your own test file asserting that an empty retrieval
+reference list is rejected. Mock the transport boundary, not the assertion.
+Keep test doubles clearly separate from live output.
 
-**Mock writes are an optional coordinator-approved extension.** Only after the
-coordinators verify the connection and tool scope, enable the relevant
-`create_access_request`, `create_purchase_request` or `create_data_share_request`.
-Use a coordinator-supplied synthetic request ID and inputs. Keep approval on.
-Inspect whether the mock result is queued, completed or escalated; a queued
-request is not completed access/purchase/sharing.
+Your core Python application now has model-backed intake and a live retrieval
+adapter, with supplied local tool diagnostics. These are separately exercised
+components, **not yet one automatic Python end-to-end orchestrator**. The
+portal agent demonstrates the combined knowledge/tool behaviour.
+Do not run `resolve` or `final`: those still depend on the deliberate `resolve`
+stub and belong to the after-core specialist-handoff stretch.
 
-**You should see:** missing details remain missing; any demonstrated mock action
-has actual tool evidence. If no write was enabled, say "not tested."
-**What you learn:** tool availability, human approval and business authorization
-are different checks. All operational effects here are simulated.
+**You should see:** tested Python components, actual source/tool evidence and an
+explicit boundary between the local application and portal agent.
+**What you learn:** integrating components requires additional orchestration;
+passing isolated tests does not prove a complete application.
 
 ## Step 5 - Demonstrate what your team actually built
 
@@ -149,6 +156,8 @@ Give a three-minute demo:
 2. Show one prompt improvement and its observed effect.
 3. Open one policy source and one tool result.
 4. Explain a failure/limitation and what the next improvement would be.
+5. Point to the read-only construction example, your two implemented functions
+   and a test. Explain one Copilot suggestion you accepted or corrected.
 
 **You should see:** a working demonstration or a precise record of which
 dependency is blocked. A blocked live capability must remain labelled blocked.
@@ -161,11 +170,12 @@ just showing a polished response.
 - [ ] Explain a missing-information case without inventing facts.
 - [ ] Show the five-row test table and a short team demo.
 - [ ] State what was not tested and that no real business system changed.
+- [ ] Show Python triage, retrieval and your three offline tests, not only portal prompts.
 
 **Scope note:** this core lab builds and tests a Foundry prompt agent with
 knowledge and tools. It does **not** claim to implement a multi-agent handoff.
 The optional [code extension](code-extension/mission-04.md) builds that advanced
-workflow; finish the portal experience first.
+workflow; finish this mixed Foundry/Python core first.
 
 ## Optional bonus missions
 

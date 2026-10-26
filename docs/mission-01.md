@@ -1,177 +1,127 @@
-# Mission 01 - Send your first prompt in Foundry (30 minutes)
+# Mission 01 - From a Foundry prompt to Python triage (40 minutes)
 
 ## What you are going to do
 
-Open **Microsoft Foundry**, send a request, read the answer, then improve the
-instructions and try again. **No Python or Copilot is needed for this mission.**
-You are not just reading a repository. You will make real model calls in a
-playground and keep a before/after example.
+Try a request in Foundry, read how an agent is constructed, then implement the
+first small part of your Python application with GitHub Copilot.
 
-Imagine you work at the service desk of fictional Contoso Manufacturing.
-Maya writes: "I join Project Phoenix next week. Please give me Reader access."
-A helpful-sounding answer is easy. An answer that admits what it cannot verify
-is more useful. You will see that difference for yourself.
+**You finish with:** a real model-backed `triage` result, a before/after prompt
+comparison and an explanation of the agent construction code.
+**You learn:** instructions, identity, a model client and output validation have
+different jobs. Classification is not business authorization.
 
-**You finish with:** two observed responses and your explanation of what changed.
-**You learn:** a prompt is what you ask now; instructions describe how the model
-should behave. Neither gives it permission to change a business system.
+**Where:** Foundry and VS Code, in your single workshop clone.
+**Why:** the playground helps you discover behaviour; code makes it repeatable.
+Complete [workstation setup](code-extension/setup.md) before the three-hour timer.
 
-## Before you click
+## Step 1 - Predict, then send a first prompt (5 minutes)
 
-Complete **Environment Setup**, including your own approved Azure sign-in.
-Have your assigned project name/link and existing chat deployment name ready.
-Team members share the team project, not Azure passwords. Use synthetic text only.
-The coordinators must confirm playground access before starting the timer.
+Open your assigned project in [Microsoft Foundry](https://ai.azure.com/).
+Choose **Test in playground**, or **View deployments > route-resolve-chat**.
+If a shortcut is disabled, use the normal deployment route; never force a control.
+Remove automatically attached Web search for this exercise.
 
-**Where:** [Microsoft Foundry](https://ai.azure.com/) in your browser.
-**Why:** this is where you experience the model directly before building an agent.
-Keep this console open in a second tab so you can follow one step at a time.
+Open `data/practice-requests.json` in VS Code and find P01. Predict its category
+and missing fields. Send its exact `text` to the model. Press **Send** and keep
+the actual response. Add a system message / instructions asking for the category,
+supplied facts and missing facts, then repeat the same input.
 
-## Step 1 - Open your team's existing project
+**You should see:** an actual before/after comparison, not necessarily an improvement.
+**What you learn:** a helpful paragraph is not yet a structured application result.
 
-1. Sign in with your own approved workshop account.
-2. Open the project link supplied by the coordinators.
-3. Check the project selector at the top: it must show your assigned `team-XX`.
-4. Stay inside that project. Do not use **Create project**, **Deploy model** or a
-   personal subscription.
+## Step 2 - Read the creation code; do not edit it (5 minutes)
 
-**You should see:** your team's project home. The home page can show **Build an
-agent**, **Use a model**, and the project endpoint.
-**What you learn:** a project is your team's workspace; it is not the agent itself.
+Open [examples/agent_blueprint.py](../examples/agent_blueprint.py) in VS Code.
+Use **Ctrl+F** to locate `FoundryChatClient`, then `client.as_agent`.
+Read it only: do not run it as a deployment script or change the example.
 
-If your project is missing, stop here and ask a coordinator. Signing into the
-console or GitHub does not grant Foundry access.
+| Code to point at | Explain to your teammate |
+|---|---|
+| `AzureCliCredential()` | Which signed-in identity obtains the token? |
+| `project_endpoint` | Which existing team workspace does this address? |
+| `model` | Which deployment answers the request? |
+| `client.as_agent(...)` | Where do name and reusable instructions become a local agent object? |
+| `return agent, client` | Why has construction alone neither sent a prompt nor created a portal agent? |
 
-## Step 2 - Open the model playground
+This is local Agent Framework construction, **not** the implementation behind
+Foundry's Save as agent button. The two configurations do not synchronize.
+The example deliberately omits execution, tools and the triage solution.
 
-1. On the project home, choose **Test in playground**. Another normal entry is
-   **View deployments**, then click the existing chat deployment's **name** to
-   open its playground. Use this if the home shortcut is unavailable but the
-   deployment is visible and authorized; never force a disabled button.
-2. Select the **existing chat deployment** from your team handout. The workshop
-   deployment is supplied; do not choose an embedding model or deploy a new one.
-3. Open **Setup** and inspect **Tools**. If Foundry automatically added
-   **Web search**, use its actions menu > **Remove**. For this first comparison,
-   keep tools empty. We are testing instructions, not searching the web.
-4. Return to **Chat**. Find **Chat with the model...** and the **Send** button.
-5. Leave advanced parameters at their supplied defaults.
+**You should see:** the construction call and no invocation in this example.
+**What you learn:** creating an object, invoking a model and saving a remote agent
+are separate operations.
 
-In the classic interface, the equivalent entry is **Playgrounds > Chat**.
-Follow the path matching the interface you actually see; do not switch projects
-to make a button work.
+## Step 3 - Implement only triage (20 minutes)
 
-**You should see:** a chat playground, the selected deployment and an input box.
-**What you learn:** a playground lets you experiment with a model without writing
-an application. A chat deployment runs language responses; embeddings do not.
+Open `starter/route_resolve/agents.py`. Edit only `triage(request)` and helpers
+you need for it. Leave `retrieve_policy` and `resolve` alone for now.
+Read `models.py` and `lab.py` without editing them; the supplied runner retains
+trusted request/user IDs. It does not implement your agent.
 
-**If blocked:** a disabled button, empty deployment list or 403 is an access/setup
-problem, not an exercise to solve by granting yourself roles. Ask a coordinator.
-Do not treat the empty screen as a reason to deploy your own model.
+1. Define the instruction and a structured schema: `category` must be `Access`,
+   `Procurement` or `DataSharing`; `urgency` is a documented enum;
+   `missing_fields` is a list; `arguments` holds extracted business fields.
+2. Use the existing Foundry deployment and your CLI identity. Inspect the
+   installed SDK signatures; do not ask Copilot to upgrade dependencies.
+3. Make one bounded model call and parse/validate its real response.
+4. Missing values stay missing. Invalid JSON, refusal, authentication errors and
+   timeouts must remain explicit errors, not hard-coded successful answers.
 
-## Step 3 - Send a first request and inspect the answer
+Use [the detailed triage recipe](code-extension/mission-01.md)
+only for extra help. Do not complete its other missions now.
 
-Paste this into the **message** box and press Send:
+**You should see:** a small implementation replacing the deliberate triage stub.
+**What you learn:** Copilot helps implement code; you own its contract and errors.
 
-```text
-I join Project Phoenix next week. Please give me Reader access.
-What should happen next?
+## Step 4 - Run the application (5 minutes)
+
+After coordinator approval for cloud calls, run in the configured terminal:
+
+```powershell
+.\.venv\Scripts\python -m route_resolve.lab triage --id P01 --allow-cloud
 ```
 
-Before reading the response, predict: can this model actually grant access?
-Now read it. Does it ask a question, suggest a process, or claim it did something?
-There is no single guaranteed wording; record what **your run actually says**.
+Compare its fields with P01, not with an answer key. Point to the client call
+in your own function. Ask which output came from the model and which IDs came
+from the runner. A `NotImplementedError` means the exercise is unfinished.
 
-**You should see:** a real response in the playground.
-**What you learn:** fluent text is not proof of a lookup, approval or action.
-This first model has no workshop operational tools connected.
+**You should see:** real JSON from your implementation; not an access grant.
+**What you learn:** a Python invocation uses the service outside the playground.
 
-Save the prompt and response in a local note. Do not include passwords, tokens,
-account screenshots or real customer requests.
+## Step 5 - Explain and hand over (5 minutes)
 
-## Step 4 - Give the model a clear job and try the same request
+Rotate driver and reviewer. Explain one changed instruction and one validation
+check without Copilot. Record a redacted error if blocked; ask the coordinator
+at the end of the timebox instead of making repeated calls.
 
-Open **Setup** and find the **system message / instructions** area, separate from
-the user-message box. Replace its workshop instructions with the following,
-then apply/save if the playground requires it:
-
-```text
-You are the intake assistant for the fictional Contoso service desk.
-Read requests; do not claim to perform actions.
-Choose one category: Access, Procurement, or DataSharing.
-Keep your answer under 120 words. Reply with:
-1. Category
-2. Details supplied by the requester
-3. Missing details or checks needed
-4. Suggested next step
-Do not invent facts, approval, policy or tool results.
-If information is missing, say what you would ask.
-All examples are simulations, not real business operations.
-```
-
-Return to **Chat** and choose **New chat / clear chat**, keeping those instructions, and send
-the **same** Maya request again. Clearing the conversation avoids mixing the
-first answer's history into the comparison.
-
-**You should see:** an answer that follows the requested structure more closely.
-It still has not granted access or checked a real policy.
-**What you learn:** a clear role, output format and boundaries change behavior.
-Instructions guide the model; they are not a guarantee of correct behavior.
-
-If the response breaks a rule, underline the exact line and improve one
-instruction. Do not keep pressing Send until you get a lucky screenshot.
-
-## Step 5 - Test something incomplete, then something different
-
-Start a fresh conversation for each test, retaining your instructions:
-
-```text
-Please give me access.
-```
-
-```text
-We need a EUR 600 software licence from Contoso Software.
-```
-
-For the first, check whether missing project/role details remain missing.
-For the second, check whether the category changes to Procurement.
-Write one sentence describing a mistake or limitation you observed.
-
-**You should see:** different inputs produce appropriately different intake
-responses; missing information is not silently invented.
-**What you learn:** one good answer is not a test suite. Try a normal case, an
-incomplete case and a different domain.
-
-**Call budget:** aim for these four messages (baseline, improved and two tests).
-One reviewed correction is enough; stagger tests with your teammates.
+**You should see:** code, a run and a human explanation.
+**What you learn:** understanding an AI-generated change is part of engineering.
 
 ## Checkpoint - show the coordinators
 
-- [ ] Show your actual playground conversation, not a generated mock screenshot.
-- [ ] Compare the first and improved responses to the same request.
-- [ ] Explain the difference between instructions and a user message.
-- [ ] Point out one missing field and one thing the model has not verified.
-- [ ] Every member has sent at least one prompt with their own approved access.
-
-Next: [Mission 02](mission-02.md). You will save this behavior as a named prompt
-agent and test it in the agent playground.
+- [ ] Locate `client.as_agent` in the read-only example and your actual model call.
+- [ ] Show the prompt before/after and one live Python P01 result.
+- [ ] Explain why category and urgency do not authorize an action.
 
 ## Optional Copilot prompts
 
 ```text
-Read my before/after responses. Do not generate replacement evidence or edit
-anything. Ask me which instruction changed the response and which claim still
-needs a real tool or policy source.
+Read examples/agent_blueprint.py without editing it. Explain client.as_agent.
+Then help me implement only triage in starter/route_resolve/agents.py using the
+installed SDK. Propose the schema first, explain changes, preserve visible
+errors and do not implement retrieval/resolve or invent evidence.
 ```
 
 ## Troubleshooting
 
-| What happens | What to do |
+| Problem | Next step |
 |---|---|
-| Test in playground is disabled | Try the normal View deployments > existing chat name path; if unavailable, ask for help; never force a disabled control |
-| No deployment is available | Compare the assigned project and handout; ask for help |
-| The model says it granted access | No tools are attached; identify the unsupported claim and strengthen the instruction |
-| Old answers influence the comparison | Start a new conversation while keeping the instructions |
-| Rate limit / service error | Stop, retain the error, and ask when to retry; do not loop automatically |
+| Missing clone, interpreter or identity | Return to setup with a coordinator; do not borrow credentials |
+| Playground or Python 401/403 | Check the exact identity/project, not broader roles |
+| `Please give me access.` produces invented details | Test missing fields; do not fill them silently |
+| Unexpected SDK parameter | Inspect the installed signature; no speculative upgrades |
+| Timebox expires | Preserve work and ask for help; do not mark the code checkpoint passed |
 
-**Read when useful:** [Microsoft Foundry playgrounds](https://learn.microsoft.com/en-us/azure/foundry/concepts/concept-playgrounds).
-The portal changes over time; coordinators verify the workshop's exact path.
+Next: [Mission 02](mission-02.md).
+
+Reference: [Agent Framework structured outputs](https://learn.microsoft.com/en-us/agent-framework/agents/structured-outputs).

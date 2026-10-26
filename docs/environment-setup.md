@@ -1,8 +1,9 @@
-# Environment Setup - get ready to use Foundry
+# Environment Setup - get ready for Foundry and Python
 
 **Your first goal is simple: open your team's Foundry project and send a prompt.**
-You do not need to install Python, write code or ask Copilot to build anything
-before your first playground conversation.
+You can try that before installing Python, but the three-hour core includes
+Python implementation and tests. Complete workstation preparation before the
+challenge timer starts; do not leave it until Mission 03.
 
 Keep this console open in one browser tab and Foundry in another.
 Follow one step, check what you see, then continue. Reading setup does not start
@@ -46,8 +47,8 @@ You do not need a personal paid subscription or subscription Owner.
 |---|---|---|
 | This console | Shared assigned team login | Read challenges and track team milestones |
 | Foundry | Your own approved work/training identity | Use the assigned project, model and agents after authorization |
-| GitHub | Your own account with repository access | Read/download workshop references; optional coding |
-| Copilot | Your own entitled GitHub account | Optional help explaining code; not required for portal labs |
+| GitHub | Your own account with repository access | Clone the workshop and work on Python exercises |
+| Copilot | Your own entitled GitHub account | Explain read-only code, implement focused changes and write tests |
 
 Never share passwords, MFA, temporary passes, tokens or device codes.
 Do not paste credentials or real business data into prompts.
@@ -97,24 +98,24 @@ Coordinators must verify the participant experience before starting the mission.
 
 | Mission | Your hands-on task | What you keep |
 |---|---|---|
-| 01 | Send a prompt in Foundry, improve instructions, compare responses | Before/after observations |
-| 02 | Create a uniquely named prompt agent and test service-desk messages | Agent name and actual conversations |
-| 03 | Connect prepared team policy knowledge and inspect a citation | Retrieved source supporting an answer |
-| 04 | Connect prepared operational tools, inspect a real lookup and demonstrate behavior | Tool evidence and a small test table |
+| 01 / 40 min | Compare Foundry prompts, read construction code, implement Python triage | Real model call and code explanation |
+| 02 / 40 min | Save a portal agent, inspect local MCP tools, write two tests | Agent, tool result and tests |
+| 03 / 45 min | Inspect portal policy evidence and implement Python retrieval | Actual references in both surfaces |
+| 04 / 40 min | Combine portal knowledge/tools, add a third test and demo code | Evidence table and working components |
 
-Core work happens in **Foundry**, not in a Python terminal. Use the console to
-follow each step and show checkpoint evidence. The repository is reference
-material plus an optional advanced coding track, not the main exercise.
+Core work uses **both Foundry and VS Code**. Reserve the last 15 minutes for
+recovery/checkpoints: 40 + 40 + 45 + 40 + 15 = **180 minutes**.
+Bonus is outside the three-hour core, after the required work is complete.
 
 **You should see:** a concrete goal beyond "read these files."
 **What you learn:** prompt design, agent configuration, grounding, tools and
 evaluation are separate skills. Do not claim retrieval or execution without evidence.
 
-## 7. Join GitHub when you need the workshop materials
+## 7. Join GitHub and open the workshop materials
 
-You may do this now or after your first Foundry prompt. GitHub/Copilot must not
-block the browser-based introduction if coordinators can supply the synthetic
-reference documents another approved way.
+Complete this before the timed core. If repository access is unavailable, ask for
+an approved source folder; do not borrow credentials. Confirm Copilot entitlement
+beforehand. If it is unavailable, pair-review the same code tasks manually.
 
 Scan the supplied QR code, sign in using the personal GitHub account directed by
 the screenshot, and follow its joining instructions:
@@ -131,21 +132,23 @@ repository. A 404 usually needs coordinator invitation/access verification.
 entitlement are different. Do not buy a subscription to finish the workshop.
 Keep the joining image within the workshop audience.
 
-## 8. Use the optional code track only when ready
+## 8. Prepare VS Code, Python and your CLI identity before the timer
 
-You do **not** need Git clone, Python, Azure CLI or environment variables for
-the four browser-based core missions. They are needed if you choose to implement
-the advanced Python workflow later.
+Follow the [workstation checklist](code-extension/setup.md) in your one clone:
+Git, VS Code, Python 3.12+, Azure CLI, the pinned `.venv` and configured terminal.
+Select that `.venv` in VS Code. Run `route_resolve.lab check` and the supplied
+offline contract tests. **Contracts ready** does not prove Azure access.
 
-Start the [optional coding setup](code-extension/setup.md) only when the
-coordinators confirm time and cloud-call approval. It preserves the earlier
-triage, MCP, retrieval and handoff exercises without making them a beginner's
-first task.
+Verify your own CLI identity separately from browser sign-in. Obtain the assigned
+project endpoint, deployment, Search endpoint and knowledge-base name from the
+coordinator. The coordinator must verify individual model **and direct Search
+retrieval** access before starting; the approved project-MI role does not grant
+your CLI user that permission. No participant should create role assignments.
 
-**You should see:** a clear separation between the portal lab and optional code.
-**What you learn:** the playground demonstrates behavior; an application later
-reproduces it using APIs, authentication, configuration and tested code.
-Copilot is optional: review its suggestions and predict results before running them.
+**You should see:** a prepared coding environment and an individually verified
+identity, not just a portal tab.
+**What you learn:** browser, CLI, application runtime and Copilot are distinct
+contexts. Review suggestions and predict results before running them.
 
 ## 9. Ready checklist - then open Mission 01
 
@@ -155,6 +158,9 @@ Copilot is optional: review its suggestions and predict results before running t
 - [ ] I can open the playground with the assigned chat deployment.
 - [ ] I know where to type a message and read the response.
 - [ ] I understand that synthetic prompts cannot authorize real operations.
+- [ ] My clone, selected Python environment and offline tests are ready.
+- [ ] My own CLI model/retrieval access and terminal configuration are verified.
+- [ ] I know which functions to edit and which reference code is read-only.
 
 Open **Challenges > Mission 01** when coordinators start the workshop.
 Use **read -> predict -> do -> observe -> explain**: before each test, say what

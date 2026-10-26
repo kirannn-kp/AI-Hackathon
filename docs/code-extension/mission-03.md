@@ -1,7 +1,8 @@
 # Optional code extension 03 - Give decisions real policy evidence
 
-This is the advanced Python track, not the portal-first core challenge.
-Start with the [core knowledge lab](../mission-03.md).
+This is a detailed retrieval recipe. The mixed core uses its adapter request
+contract and one live query; follow the timebox in [Mission 03](../mission-03.md).
+The full multi-domain exercise is an after-core extension.
 
 ## Your mission in the story
 
@@ -18,7 +19,7 @@ Do not implement final business decisions yet.
 **You use:** your team's existing Foundry IQ / Azure AI Search knowledge base.
 **Timebox:** policy/configuration 10 min; adapter 25 min; checks/checkpoint 10 min.
 Prerequisite: Missions 01-02 passed; the coordinators confirm the four policy
-documents are loaded and your identity is authorized. This guide is
+documents are loaded and your identity is authorized. The main timed guide is
 `docs/mission-03.md` in your clone.
 
 ## Learning map - know why you are doing each step
