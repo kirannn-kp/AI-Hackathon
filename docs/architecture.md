@@ -1,5 +1,61 @@
 # Architecture - two runtimes, one learning journey
 
+## Our solution: Route & Resolve
+
+The goal is an evidence-driven request assistant, not a chatbot that promises an
+action. Think of triage as the reception desk, a specialist as the person who
+understands a policy area, and a tool as a factual lookup.
+
+```text
+Fictional employee request
+          |
+          v
+Triage: category, urgency, missing information
+          |
+          v
+Relevant domain: Access | Procurement | DataSharing
+          |
+          +--> Policy evidence: prepared knowledge MCP / Azure AI Search
+          |
+          +--> Observed facts: read-only operational MCP tools
+          |                   (project owner and current access)
+          v
+Compare the request, policy and actual tool results
+          |
+          v
+Explain a supported next step, ask for information or escalate
+          |
+          v
+Human review / approval before any real-world action
+```
+
+This is the **logical solution design**, not a claim that the complete automatic
+pipeline is supplied. In the core, you build and demonstrate its components in
+Foundry and Python. Automatic specialist handoff, the Python `resolve` function
+and the final ten-case batch are after-core extensions.
+
+| Component | Purpose in our solution | Where you use it |
+|---|---|---|
+| HackboxConsole | Problem, setup, mission instructions, team checkpoints | This website; it does not execute the agents |
+| Team Foundry project | Workspace for your own saved agents and approved connections | One assigned `team-XX` project per team |
+| `route-resolve-chat` | Existing model deployment for interpreting requests and drafting responses | Foundry playground/agents and Python model calls |
+| Policy knowledge | Supplies actual policy passages and source references | Prepared knowledge MCP in Foundry; Search retrieval API in Python |
+| Operational MCP | Returns observed synthetic owner/current-access facts | Prepared read-only tools in Foundry; local stdio MCP for Python exercises |
+| VS Code and Copilot | Explain supplied code, implement focused functions and write tests | Each learner's clone; Copilot is a development assistant, not an automatic connection to the portal |
+| Human reviewer | Checks the evidence and decides whether approval is appropriate | Team demo and coordinator checkpoints; no real action is performed |
+
+### Example journey
+
+For **"Please give user-02 Reader access to Phoenix"**, identify the request
+category, retrieve the applicable policy, inspect the owner and current-access
+tool outputs, and explain what is still required. An owner lookup is not an
+approval; `has_access: false` is not a request to change permissions. A tool name
+written in a response is not evidence that the tool ran.
+
+Access, Procurement and DataSharing are the three domain roles in the design.
+The prepared owner/access tools demonstrate the Access example; do not assume
+they provide purchasing, data-sharing or write capabilities.
+
 ## Foundry + Python
 
 ```text

@@ -4,6 +4,30 @@ Contoso Manufacturing receives fictional access, software-purchase and
 data-sharing requests. A fluent chatbot might promise help without checking
 anything. Your task is to build and test a more evidence-driven prototype.
 
+## The problem you are solving
+
+Imagine the support desk receives: **"Please give user-02 Reader access to
+Phoenix."** Other requests ask to buy software or share a dataset. The messages
+are written in everyday language and may omit an owner, an approval or important
+context. A confident answer is not enough to decide what should happen.
+
+Today, a person would need to classify the request, find the relevant policy,
+check available facts and explain the next step. Our prototype helps with those
+checks without pretending it has authority to grant access, spend money or
+share real data.
+
+**Your solution should help a reviewer answer:**
+
+1. Is this Access, Procurement or DataSharing, and what information is missing?
+2. Which actual policy passage supports the recommendation?
+3. What did a real read-only tool return, rather than what did the model assume?
+4. Can we explain a safe next step, or must we ask for information or escalate?
+
+The proof is a model response, returned policy references, observed tool results
+and tests, not just a convincing paragraph. All requests and operational records
+are synthetic. See the [solution architecture](architecture.md) for how the
+components fit together and which parts belong to the core versus the stretch.
+
 ## Three hours: Foundry + code + explanation
 
 Prepare accounts, VS Code, Python, CLI and the clone **before** the timed core.
